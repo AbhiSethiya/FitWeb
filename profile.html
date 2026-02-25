@@ -1,508 +1,615 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - WorkIn&amp;Out</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* ── Sidebar nav-link classes ── */
-        .sidebar-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 16px; border-bottom: 1px solid var(--nav-border); flex-shrink: 0;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 10px;
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.05rem;
-            color: var(--text-primary); text-decoration: none;
-        }
-        .logo span { color: var(--accent-primary); }
-        .sidebar-close {
-            background: none; border: none; cursor: pointer; color: var(--text-muted);
-            font-size: 1rem; padding: 6px 8px; border-radius: var(--radius-sm);
-            line-height: 1; transition: background var(--transition-fast); display: none;
-        }
-        .sidebar-close:hover { background: var(--bg-secondary); }
-        .nav-links {
-            list-style: none; padding: 12px 10px; margin: 0;
-            flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
-        }
-        .nav-links li { margin: 0; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-            border-radius: var(--radius-md); color: var(--text-secondary);
-            font-weight: 500; font-size: 0.9rem; text-decoration: none;
-            transition: all var(--transition-fast); position: relative;
-        }
-        .nav-link:hover { background: rgba(var(--accent-primary-rgb),0.08); color: var(--accent-primary); }
-        .nav-link.active { background: rgba(var(--accent-primary-rgb),0.12); color: var(--accent-primary); font-weight: 600; }
-        .nav-link.active::before {
-            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
-            width: 3px; background: var(--accent-primary); border-radius: 0 3px 3px 0;
-        }
-        .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
-        @media (max-width: 768px) { .sidebar-close { display: flex; align-items: center; justify-content: center; } }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — WorkIn&amp;Out</title>
 
-        /* ── Topbar hamburger ── */
-        .topbar-hamburger {
-            background: none; border: none; font-size: 1.4rem; cursor: pointer;
-            color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius-sm);
-            display: none; line-height: 1;
-        }
-        @media (max-width: 768px) { .topbar-hamburger { display: block; } }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* ── Profile header ── */
-        .profile-avatar {
-            width: 100px; height: 100px; border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 2.4rem;
-            color: #fff; flex-shrink: 0; box-shadow: var(--shadow-lg);
-            letter-spacing: 0.02em;
-        }
-        .profile-name {
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.8rem;
-            color: var(--text-primary); margin: 0 0 4px;
-        }
-        .profile-email { font-size: 0.9rem; color: var(--text-muted); }
-        .profile-member { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/style.css" />
 
-        /* ── Body stats ── */
-        .body-stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;
-        }
-        .body-stat-card {
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg); padding: 20px 16px; text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-        .body-stat-value {
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 2rem;
-            line-height: 1; color: var(--text-primary);
-        }
-        .body-stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
-        .bmi-underweight { color: #4a90d9; }
-        .bmi-normal      { color: var(--accent-success); }
-        .bmi-overweight  { color: var(--accent-warning); }
-        .bmi-obese       { color: var(--accent-danger); }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ── Body type badge ── */
-        .body-type-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(var(--accent-primary-rgb),0.1); color: var(--accent-primary);
-            padding: 8px 18px; border-radius: var(--radius-full);
-            font-weight: 700; font-size: 0.9rem;
-        }
+    :root {
+      --nav-bg:            #111111;
+      --page-bg:           #0d0d0d;
+      --card-bg:           #1a1a1a;
+      --border:            rgba(255,255,255,0.06);
+      --accent:            #22c55e;
+      --accent-dim:        rgba(34,197,94,0.15);
+      --accent-rgb:        34,197,94;
+      --text:              #ffffff;
+      --text-muted:        #a0a0a0;
+      --text-dim:          #666666;
+      --radius-sm:         6px;
+      --radius-md:         10px;
+      --radius-lg:         14px;
+      --sidebar-w:         260px;
+      --sidebar-collapsed: 64px;
+      --transition:        0.22s ease;
+    }
 
-        /* ── Body type cards (edit form) ── */
-        .body-type-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
-        .body-type-card {
-            border: 2px solid var(--border-color); border-radius: var(--radius-lg);
-            padding: 16px 12px; text-align: center; cursor: pointer;
-            transition: all var(--transition-fast); background: var(--bg-card);
-        }
-        .body-type-card:hover { border-color: var(--accent-primary); }
-        .body-type-card.selected { border-color: var(--accent-primary); background: rgba(var(--accent-primary-rgb),0.08); }
-        .body-type-card-icon  { font-size: 1.8rem; margin-bottom: 6px; }
-        .body-type-card-name  { font-weight: 700; font-size: 0.85rem; }
-        .body-type-card-desc  { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+    html, body {
+      height: 100%; background: var(--page-bg); color: var(--text);
+      font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-        /* ── Goals pills ── */
-        .goals-list { display: flex; flex-wrap: wrap; gap: 10px; }
-        .goal-pill {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 8px 16px; border-radius: var(--radius-full);
-            font-weight: 600; font-size: 0.85rem; border: 2px solid;
-        }
+    /* ── Layout ─────────────────────────────── */
+    .layout { display: flex; min-height: 100vh; }
 
-        /* ── Activity stats ── */
-        .activity-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;
-        }
-        .activity-stat {
-            background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px 16px; text-align: center;
-        }
-        .activity-stat-value {
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.8rem;
-            color: var(--accent-primary);
-        }
-        .activity-stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    /* ── Sidebar ────────────────────────────── */
+    .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-w); background: var(--nav-bg); display: flex; flex-direction: column; z-index: 200; transition: width var(--transition), transform var(--transition); overflow: hidden; border-right: 1px solid var(--border); }
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 22px 20px 18px; flex-shrink: 0; }
+    .sidebar-logo-mark { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; white-space: nowrap; line-height: 1; }
+    .sidebar-logo-full { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; transition: opacity var(--transition); }
+    .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 10px; scrollbar-width: none; }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+    .nav-section-label { display: block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); padding: 14px 10px 6px; white-space: nowrap; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: var(--radius-md); color: var(--text-muted); font-size: 0.88rem; font-weight: 500; transition: background var(--transition), color var(--transition); white-space: nowrap; position: relative; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { color: var(--text); background: var(--accent-dim); }
+    .nav-item.active::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 0 3px 3px 0; background: var(--accent); }
+    .nav-item-icon { font-size: 1.1rem; flex-shrink: 0; width: 22px; text-align: center; }
+    .nav-item-text { transition: opacity var(--transition); }
+    .sidebar-footer { padding: 10px 10px 14px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: var(--radius-md); cursor: pointer; margin-top: 8px; transition: background var(--transition); overflow: hidden; }
+    .sidebar-user:hover { background: rgba(255,255,255,0.05); }
+    .sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-user-info { overflow: hidden; }
+    .sidebar-user-name { font-size: 0.82rem; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sidebar-user-role { font-size: 0.72rem; color: var(--text-dim); }
 
-        /* ── Settings section ── */
-        .settings-row {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 0; border-bottom: 1px solid var(--border-color);
-        }
-        .settings-row:last-child { border-bottom: none; }
-        .settings-row-label { font-weight: 600; font-size: 0.9rem; }
-        .settings-row-sub   { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .sidebar { width: var(--sidebar-collapsed); }
+      .sidebar-logo-full, .nav-section-label, .nav-item-text, .sidebar-user-info { opacity: 0; pointer-events: none; }
+      .nav-item { justify-content: center; padding: 10px; gap: 0; }
+      .nav-item.active::before { display: none; }
+      .sidebar-user { justify-content: center; }
+    }
+    @media (max-width: 767px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); box-shadow: 4px 0 24px rgba(0,0,0,0.5); }
+      .sidebar.open { transform: translateX(0); }
+    }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199; backdrop-filter: blur(2px); }
+    .sidebar-overlay.active { display: block; }
 
-        /* ── Toggle switch ── */
-        .toggle-switch { position: relative; width: 48px; height: 26px; flex-shrink: 0; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute; inset: 0; background: var(--border-color);
-            border-radius: 13px; cursor: pointer; transition: background 0.2s;
-        }
-        .toggle-slider::before {
-            content: ''; position: absolute; width: 20px; height: 20px;
-            top: 3px; left: 3px; background: #fff; border-radius: 50%;
-            transition: transform 0.2s; box-shadow: var(--shadow-sm);
-        }
-        .toggle-switch input:checked + .toggle-slider { background: var(--accent-primary); }
-        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
+    /* ── Main Content ───────────────────────── */
+    .main-content { flex: 1; margin-left: var(--sidebar-w); min-width: 0; display: flex; flex-direction: column; transition: margin-left var(--transition); }
+    @media (min-width: 768px) and (max-width: 1024px) { .main-content { margin-left: var(--sidebar-collapsed); } }
+    @media (max-width: 767px) { .main-content { margin-left: 0; } }
 
-        /* ── Danger zone ── */
-        .danger-zone {
-            border: 2px solid rgba(var(--accent-danger-rgb),0.3);
-            border-radius: var(--radius-lg); padding: 20px;
-            background: rgba(var(--accent-danger-rgb),0.04);
-        }
+    /* ── Topbar ─────────────────────────────── */
+    .topbar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; height: 58px; background: rgba(13,13,13,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.05); transition: background var(--transition); }
+    .hamburger:hover { background: rgba(255,255,255,0.1); }
+    .hamburger span { display: block; height: 2px; width: 18px; margin: 0 auto; background: var(--text-muted); border-radius: 2px; }
+    @media (max-width: 767px) { .hamburger { display: flex; } }
+    .theme-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.05); font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+    .theme-btn:hover { background: rgba(255,255,255,0.1); }
 
-        /* ── Units button group ── */
-        .unit-group { display: flex; gap: 0; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--border-color); }
-        .unit-btn {
-            padding: 7px 18px; background: none; border: none; cursor: pointer;
-            font-weight: 600; font-size: 0.85rem; color: var(--text-secondary);
-            transition: background var(--transition-fast), color var(--transition-fast);
-        }
-        .unit-btn.active { background: var(--accent-primary); color: #fff; }
+    /* ── Page Container ─────────────────────── */
+    .page-container { max-width: 1100px; width: 100%; margin: 0 auto; padding: 28px 28px 60px; }
+    @media (max-width: 767px) { .page-container { padding: 20px 16px 80px; } }
 
-        /* ── Confirm modal ── */
-        .confirm-modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-            z-index: 1000; align-items: center; justify-content: center;
-        }
-        .confirm-modal-overlay.open { display: flex; animation: overlayFade 0.2s ease; }
-        .confirm-modal {
-            background: var(--bg-card); border-radius: var(--radius-xl); padding: 28px 32px;
-            max-width: 400px; width: 90%; box-shadow: var(--shadow-xl);
-            animation: scaleIn 0.2s ease;
-        }
+    /* ── Card ───────────────────────────────── */
+    .section { margin-bottom: 24px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: transform var(--transition), box-shadow var(--transition); }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+    .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
 
-        @media (max-width: 640px) {
-            .form-row   { grid-template-columns: 1fr; }
-            .profile-avatar { width: 76px; height: 76px; font-size: 1.8rem; }
-            .profile-name   { font-size: 1.4rem; }
-        }
-    </style>
+    /* ── Profile Hero ───────────────────────── */
+    .profile-hero { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+    .profile-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--accent-dim); color: var(--accent);
+      font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      border: 2px solid rgba(34,197,94,0.3);
+    }
+    .profile-info { flex: 1; }
+    .profile-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .profile-email { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 6px; }
+    .profile-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .profile-member { font-size: 0.78rem; color: var(--text-dim); }
+    .body-type-badge {
+      font-size: 0.78rem; font-weight: 600; padding: 4px 12px;
+      border-radius: 20px; background: var(--accent-dim); color: var(--accent);
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+
+    /* ── Activity stats ─────────────────────── */
+    .act-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 700px) { .act-grid { grid-template-columns: repeat(2, 1fr); } }
+    .act-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px 14px; text-align: center; transition: transform var(--transition); }
+    .act-card:hover { transform: translateY(-4px); }
+    .act-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+    .act-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
+
+    /* ── Body stats ─────────────────────────── */
+    .body-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 700px) { .body-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .body-stat { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px 14px; text-align: center; }
+    .body-stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 4px; }
+    .body-stat-value.bmi-underweight { color: #60a5fa; }
+    .body-stat-value.bmi-normal      { color: var(--accent); }
+    .body-stat-value.bmi-overweight  { color: #f59e0b; }
+    .body-stat-value.bmi-obese       { color: #f87171; }
+    .body-stat-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
+    .bmi-category { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Goals ──────────────────────────────── */
+    .goals-list { display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px; }
+    .goal-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 14px; border-radius: 20px; border: 1px solid;
+      font-size: 0.8rem; font-weight: 600;
+    }
+
+    /* ── Form ───────────────────────────────── */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .form-input, .form-select {
+      width: 100%; padding: 10px 13px; background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      transition: border-color var(--transition); outline: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--text-dim); }
+    .form-select option { background: #1a1a1a; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    @media (max-width: 600px) { .form-row-3 { grid-template-columns: 1fr 1fr; } }
+
+    /* ── Buttons ────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: var(--radius-md); font-size: 0.88rem; font-weight: 600; transition: all var(--transition); cursor: pointer; border: none; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); }
+    .btn-ghost { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .btn-outline-accent { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .btn-outline-accent:hover { background: var(--accent-dim); transform: translateY(-1px); }
+    .btn-danger { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); transform: translateY(-1px); }
+    .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+
+    /* ── Body type cards ────────────────────── */
+    .body-type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px; }
+    @media (max-width: 600px) { .body-type-grid { grid-template-columns: repeat(2, 1fr); } }
+    .body-type-card {
+      padding: 14px 10px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); text-align: center; cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .body-type-card:hover { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.04); }
+    .body-type-card.selected { border-color: var(--accent); background: var(--accent-dim); }
+    .body-type-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .body-type-name { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .body-type-desc { font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; }
+
+    /* ── Goal checkboxes ────────────────────── */
+    .goal-checks { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+    @media (max-width: 480px) { .goal-checks { grid-template-columns: 1fr; } }
+    .goal-check-label {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+      font-size: 0.85rem; color: var(--text-muted);
+    }
+    .goal-check-label:hover { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.04); }
+    .goal-check:checked + .goal-check-label { border-color: var(--accent); color: var(--text); background: var(--accent-dim); }
+    .goal-check { display: none; }
+
+    /* ── Settings ───────────────────────────── */
+    .setting-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+    .setting-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .toggle-switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; border-radius: 12px;
+      background: rgba(255,255,255,0.12); cursor: pointer;
+      transition: background var(--transition);
+    }
+    .toggle-track::after {
+      content: ''; position: absolute; left: 3px; top: 3px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--text-muted); transition: all var(--transition);
+    }
+    .toggle-switch input:checked + .toggle-track { background: var(--accent-dim); border: 1px solid var(--accent); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(18px); background: var(--accent); }
+    .unit-btns { display: flex; gap: 6px; }
+    .unit-btn { padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all var(--transition); }
+    .unit-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .unit-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+    /* ── Danger zone ────────────────────────── */
+    .danger-zone { border-color: rgba(239,68,68,0.2); }
+    .danger-zone .card-title { color: #f87171; }
+    .danger-warning {
+      background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15);
+      border-radius: var(--radius-md); padding: 12px 16px;
+      font-size: 0.82rem; color: #fca5a5; line-height: 1.5; margin-bottom: 16px;
+    }
+
+    /* ── Confirmation Modal ─────────────────── */
+    .confirm-modal {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .confirm-modal.open { display: flex; }
+    .confirm-box {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px; max-width: 420px; width: 100%;
+    }
+    .confirm-box h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: #f87171; }
+    .confirm-box p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* ── Edit section ───────────────────────── */
+    .d-none { display: none !important; }
+
+    /* ── Layout helpers ─────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+    .d-flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-8 { gap: 8px; }
+    .gap-10 { gap: 10px; }
+    .gap-12 { gap: 12px; }
+    .flex-wrap { flex-wrap: wrap; }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .mb-12 { margin-bottom: 12px; }
+    .text-sm { font-size: 0.85rem; }
+    .text-muted { color: var(--text-muted); }
+    .font-bold { font-weight: 700; }
+    hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  </style>
 </head>
 <body>
-<div class="app-layout">
+<div class="layout">
 
-    <!-- ══════════ SIDEBAR ══════════ -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">🏋️ <span>WorkIn&amp;Out</span></div>
-            <button class="sidebar-close" id="sidebarClose">✕</button>
-        </div>
-        <ul class="nav-links">
-            <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
-            <li><a href="workout.html"   class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
-            <li><a href="bmi.html"       class="nav-link"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
-            <li><a href="diet.html"      class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
-            <li><a href="sessions.html"  class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
-            <li><a href="progress.html"  class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
-            <li><a href="sleep.html"     class="nav-link"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
-            <li><a href="profile.html"   class="nav-link active"><span class="nav-icon">👤</span><span>Profile</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">🌙 Dark Mode</button>
-            <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
-        </div>
+  <!-- ── Sidebar ──────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-logo" href="dashboard.html">
+      <span class="sidebar-logo-mark">W&amp;O</span>
+      <span class="sidebar-logo-full">WorkIn&amp;Out</span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a class="nav-item" href="dashboard.html"><span class="nav-item-icon">🏠</span><span class="nav-item-text">Dashboard</span></a>
+      <a class="nav-item" href="bmi.html"><span class="nav-item-icon">📊</span><span class="nav-item-text">BMI</span></a>
+      <a class="nav-item" href="diet.html"><span class="nav-item-icon">🥗</span><span class="nav-item-text">Diet</span></a>
+      <a class="nav-item" href="workout.html"><span class="nav-item-icon">🏋️</span><span class="nav-item-text">Workout</span></a>
+      <a class="nav-item" href="sessions.html"><span class="nav-item-icon">⏱️</span><span class="nav-item-text">Sessions</span></a>
+      <span class="nav-section-label">Tracking</span>
+      <a class="nav-item" href="progress.html"><span class="nav-item-icon">📈</span><span class="nav-item-text">Progress</span></a>
+      <a class="nav-item" href="sleep.html"><span class="nav-item-icon">💤</span><span class="nav-item-text">Recovery</span></a>
+      <a class="nav-item active" href="profile.html"><span class="nav-item-icon">👤</span><span class="nav-item-text">Profile</span></a>
     </nav>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <button class="hamburger" id="hamburger">☰</button>
-
-    <!-- ══════════ MAIN CONTENT ══════════ -->
-    <main class="main-content">
-
-        <!-- Topbar -->
-        <div class="topbar">
-            <div class="d-flex items-center gap-8">
-                <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
-                <span class="topbar-title">My Profile</span>
-            </div>
-            <div class="topbar-actions">
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
+    <div class="sidebar-footer">
+      <button class="nav-item" data-theme-toggle style="width:100%;text-align:left;">
+        <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+        <span class="nav-item-text">Toggle Theme</span>
+      </button>
+      <button class="nav-item" onclick="Auth && Auth.logout()" style="width:100%;text-align:left;color:#f87171;">
+        <span class="nav-item-icon">🚪</span>
+        <span class="nav-item-text">Logout</span>
+      </button>
+      <div class="sidebar-user" onclick="window.location.href='profile.html'">
+        <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role">Fitness Member</div>
         </div>
-
-        <div class="page-container">
-
-            <!-- ══ 1. Profile Header ══ -->
-            <div class="section reveal">
-                <div class="card p-12">
-                    <div class="d-flex items-center gap-12 flex-wrap">
-                        <div class="profile-avatar" id="profile-avatar">?</div>
-                        <div class="flex-1">
-                            <h2 class="profile-name" id="profile-name">Loading...</h2>
-                            <div class="profile-email" id="profile-email"></div>
-                            <div class="profile-member" id="profile-member"></div>
-                            <div class="mt-8">
-                                <span class="body-type-badge" id="body-type-badge">💪 Mesomorph</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" id="edit-profile-btn">✏️ Edit Profile</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ 2. Body Stats ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">📊 Body Stats</h3>
-                </div>
-                <div class="body-stats-grid" id="body-stats-grid">
-                    <div class="body-stat-card">
-                        <div class="body-stat-value" id="stat-age">--</div>
-                        <div class="body-stat-label">Age (years)</div>
-                    </div>
-                    <div class="body-stat-card">
-                        <div class="body-stat-value" id="stat-height">--</div>
-                        <div class="body-stat-label">Height (cm)</div>
-                    </div>
-                    <div class="body-stat-card">
-                        <div class="body-stat-value" id="stat-weight">--</div>
-                        <div class="body-stat-label">Weight (kg)</div>
-                    </div>
-                    <div class="body-stat-card">
-                        <div class="body-stat-value" id="stat-bmi">--</div>
-                        <div class="body-stat-label">BMI</div>
-                        <div style="font-size:0.72rem;margin-top:4px" id="bmi-category"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ 3. Edit Profile Form ══ -->
-            <div class="section reveal d-none" id="edit-profile-section">
-                <div class="section-header d-flex items-center justify-between">
-                    <h3 class="section-title">✏️ Edit Profile</h3>
-                    <button class="btn btn-ghost btn-sm" id="cancel-edit-btn">Cancel</button>
-                </div>
-                <div class="card p-12">
-                    <form id="edit-profile-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label required">Full Name</label>
-                                <input type="text" id="edit-name" class="form-input" placeholder="Your full name">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label required">Email</label>
-                                <input type="email" id="edit-email" class="form-input" placeholder="your@email.com" disabled style="opacity:0.6;cursor:not-allowed">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label required">Age</label>
-                                <input type="number" id="edit-age" class="form-input" min="10" max="120">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Gender</label>
-                                <select id="edit-gender" class="form-select">
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Height (cm)</label>
-                                <input type="number" id="edit-height" class="form-input" min="50" max="280">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Weight (kg)</label>
-                                <input type="number" id="edit-weight" class="form-input" min="10" max="500" step="0.1">
-                            </div>
-                        </div>
-
-                        <!-- Body type selection -->
-                        <div class="form-group">
-                            <label class="form-label">Body Type</label>
-                            <div class="body-type-cards" id="body-type-cards">
-                                <div class="body-type-card" data-type="ectomorph">
-                                    <div class="body-type-card-icon">🏃</div>
-                                    <div class="body-type-card-name">Ectomorph</div>
-                                    <div class="body-type-card-desc">Lean &amp; long, struggles to build muscle</div>
-                                </div>
-                                <div class="body-type-card" data-type="mesomorph">
-                                    <div class="body-type-card-icon">💪</div>
-                                    <div class="body-type-card-name">Mesomorph</div>
-                                    <div class="body-type-card-desc">Athletic build, gains muscle easily</div>
-                                </div>
-                                <div class="body-type-card" data-type="endomorph">
-                                    <div class="body-type-card-icon">🏋️</div>
-                                    <div class="body-type-card-name">Endomorph</div>
-                                    <div class="body-type-card-desc">Higher body fat, builds muscle well</div>
-                                </div>
-                                <div class="body-type-card" data-type="custom">
-                                    <div class="body-type-card-icon">🎯</div>
-                                    <div class="body-type-card-name">Custom</div>
-                                    <div class="body-type-card-desc">Mixed or unique body composition</div>
-                                </div>
-                            </div>
-                            <input type="hidden" id="edit-bodytype" value="mesomorph">
-                        </div>
-
-                        <!-- Fitness goals -->
-                        <div class="form-group">
-                            <label class="form-label">Fitness Goals</label>
-                            <div style="display:flex;flex-wrap:wrap;gap:10px">
-                                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                                    <input type="checkbox" value="lose_weight" class="goal-check" style="accent-color:var(--accent-primary)"> Lose Weight
-                                </label>
-                                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                                    <input type="checkbox" value="build_muscle" class="goal-check" style="accent-color:var(--accent-primary)"> Build Muscle
-                                </label>
-                                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                                    <input type="checkbox" value="improve_cardio" class="goal-check" style="accent-color:var(--accent-primary)"> Improve Cardio
-                                </label>
-                                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                                    <input type="checkbox" value="increase_flexibility" class="goal-check" style="accent-color:var(--accent-primary)"> Increase Flexibility
-                                </label>
-                                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                                    <input type="checkbox" value="better_sleep" class="goal-check" style="accent-color:var(--accent-primary)"> Better Sleep
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-8 flex-wrap mt-8">
-                            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-                            <button type="button" class="btn btn-ghost" id="cancel-edit-btn2">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- ══ 4. Fitness Goals Display ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🎯 Fitness Goals</h3>
-                </div>
-                <div class="card p-12">
-                    <div class="goals-list" id="goals-list">
-                        <span class="text-muted" style="font-size:0.9rem">No goals set yet</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ 5. Activity Summary ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">📈 Activity Summary</h3>
-                </div>
-                <div class="activity-grid">
-                    <div class="activity-stat">
-                        <div class="activity-stat-value" id="act-total">0</div>
-                        <div class="activity-stat-label">Total Workouts</div>
-                    </div>
-                    <div class="activity-stat">
-                        <div class="activity-stat-value" id="act-streak">0</div>
-                        <div class="activity-stat-label">Current Streak</div>
-                    </div>
-                    <div class="activity-stat">
-                        <div class="activity-stat-value" id="act-best">0</div>
-                        <div class="activity-stat-label">Best Streak</div>
-                    </div>
-                    <div class="activity-stat">
-                        <div class="activity-stat-value" id="act-hours">0</div>
-                        <div class="activity-stat-label">Total Hours</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ 6. Settings ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">⚙️ Settings</h3>
-                </div>
-                <div class="card p-12">
-
-                    <!-- Theme -->
-                    <div class="settings-row">
-                        <div>
-                            <div class="settings-row-label">Dark Mode</div>
-                            <div class="settings-row-sub">Switch between light and dark theme</div>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="theme-toggle-setting">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
-                    <!-- Units -->
-                    <div class="settings-row">
-                        <div>
-                            <div class="settings-row-label">Units</div>
-                            <div class="settings-row-sub">Choose your preferred measurement system</div>
-                        </div>
-                        <div class="unit-group">
-                            <button class="unit-btn active" id="unit-metric" onclick="setUnits('metric')">Metric</button>
-                            <button class="unit-btn" id="unit-imperial" onclick="setUnits('imperial')">Imperial</button>
-                        </div>
-                    </div>
-
-                    <!-- Notifications -->
-                    <div class="settings-row">
-                        <div>
-                            <div class="settings-row-label">Workout Reminders</div>
-                            <div class="settings-row-sub">Daily reminders to stay on track</div>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="notif-workout" onchange="saveNotifPrefs()">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div class="settings-row">
-                        <div>
-                            <div class="settings-row-label">Sleep Reminders</div>
-                            <div class="settings-row-sub">Reminder to log your sleep</div>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="notif-sleep" onchange="saveNotifPrefs()">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
-                    <!-- Export -->
-                    <div class="settings-row">
-                        <div>
-                            <div class="settings-row-label">Export My Data</div>
-                            <div class="settings-row-sub">Download all your data as a JSON file</div>
-                        </div>
-                        <button class="btn btn-secondary btn-sm" onclick="exportData()">⬇ Export</button>
-                    </div>
-                </div>
-
-                <!-- Danger zone -->
-                <div class="danger-zone mt-12">
-                    <h4 style="color:var(--accent-danger);font-weight:700;margin-bottom:8px">⚠️ Danger Zone</h4>
-                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px">
-                        Permanently delete all your workout logs, progress data, sleep entries, and personal records. This cannot be undone.
-                    </p>
-                    <button class="btn btn-danger" id="clear-data-btn">🗑 Clear All Data</button>
-                </div>
-            </div>
-
-        </div><!-- /page-container -->
-    </main>
-</div><!-- /app-layout -->
-
-<!-- ── Confirm Modal ── -->
-<div class="confirm-modal-overlay" id="confirm-modal">
-    <div class="confirm-modal">
-        <h3 style="font-family:'Poppins',sans-serif;font-weight:800;margin-bottom:12px;color:var(--accent-danger)">⚠️ Are you sure?</h3>
-        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:24px">
-            This will permanently delete <strong>all</strong> your fitness data including workouts, sessions, progress entries, and sleep logs. This action cannot be undone.
-        </p>
-        <div class="d-flex gap-8 justify-end">
-            <button class="btn btn-ghost" id="confirm-cancel">Cancel</button>
-            <button class="btn btn-danger" id="confirm-delete">Yes, Delete Everything</button>
-        </div>
+      </div>
     </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ── Main ─────────────────────────────────────── -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="topbarHamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="topbar-title">Profile</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-btn" data-theme-toggle title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <div class="page-container">
+
+      <!-- ── Profile Card ──────────────────────────── -->
+      <div class="section">
+        <div class="card">
+          <div class="profile-hero">
+            <div class="profile-avatar" id="profile-avatar">?</div>
+            <div class="profile-info">
+              <h2 class="profile-name" id="profile-name">Loading…</h2>
+              <div class="profile-email" id="profile-email"></div>
+              <div class="profile-meta">
+                <span class="profile-member" id="profile-member"></span>
+                <span class="body-type-badge" id="body-type-badge">—</span>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="edit-profile-btn">✏️ Edit Profile</button>
+          </div>
+
+          <!-- Goals -->
+          <div>
+            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:10px;">Goals</div>
+            <div class="goals-list" id="goals-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Activity Stats ─────────────────────────── -->
+      <div class="section">
+        <div class="card">
+          <div class="card-title">📊 Activity Summary</div>
+          <div class="act-grid">
+            <div class="act-card">
+              <div class="act-value" id="act-total">0</div>
+              <div class="act-label">Total Workouts</div>
+            </div>
+            <div class="act-card">
+              <div class="act-value" id="act-streak">0</div>
+              <div class="act-label">Current Streak</div>
+            </div>
+            <div class="act-card">
+              <div class="act-value" id="act-best">0</div>
+              <div class="act-label">Best Streak</div>
+            </div>
+            <div class="act-card">
+              <div class="act-value" id="act-hours">0</div>
+              <div class="act-label">Hours Trained</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Body Stats ──────────────────────────────── -->
+      <div class="section">
+        <div class="card">
+          <div class="card-title">📏 Body Stats</div>
+          <div class="body-stats-grid">
+            <div class="body-stat">
+              <div class="body-stat-value" id="stat-age">--</div>
+              <div class="body-stat-label">Age</div>
+            </div>
+            <div class="body-stat">
+              <div class="body-stat-value" id="stat-height">--</div>
+              <div class="body-stat-label">Height (cm)</div>
+            </div>
+            <div class="body-stat">
+              <div class="body-stat-value" id="stat-weight">--</div>
+              <div class="body-stat-label">Weight (kg)</div>
+            </div>
+            <div class="body-stat">
+              <div class="body-stat-value" id="stat-bmi">--</div>
+              <div class="body-stat-label">BMI</div>
+              <div class="bmi-category" id="bmi-category"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Edit Profile Form ──────────────────────── -->
+      <div class="section d-none" id="edit-profile-section">
+        <div class="card">
+          <div class="card-title">✏️ Edit Profile</div>
+          <form id="edit-profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="edit-name" class="form-input" placeholder="Your name" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" id="edit-email" class="form-input" placeholder="you@example.com" />
+              </div>
+            </div>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label class="form-label">Age</label>
+                <input type="number" id="edit-age" class="form-input" placeholder="25" min="10" max="120" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Height (cm)</label>
+                <input type="number" id="edit-height" class="form-input" placeholder="175" min="50" max="280" step="0.5" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Weight (kg)</label>
+                <input type="number" id="edit-weight" class="form-input" placeholder="70" min="20" max="400" step="0.1" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select id="edit-gender" class="form-select">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer_not">Prefer not to say</option>
+              </select>
+            </div>
+
+            <!-- Body type -->
+            <div class="form-group">
+              <label class="form-label">Body Type</label>
+              <input type="hidden" id="edit-bodytype" value="mesomorph" />
+              <div class="body-type-grid">
+                <div class="body-type-card" data-type="ectomorph">
+                  <div class="body-type-icon">🏃</div>
+                  <div class="body-type-name">Ectomorph</div>
+                  <div class="body-type-desc">Lean &amp; long, struggles to build muscle</div>
+                </div>
+                <div class="body-type-card selected" data-type="mesomorph">
+                  <div class="body-type-icon">💪</div>
+                  <div class="body-type-name">Mesomorph</div>
+                  <div class="body-type-desc">Athletic, gains muscle easily</div>
+                </div>
+                <div class="body-type-card" data-type="endomorph">
+                  <div class="body-type-icon">🏋️</div>
+                  <div class="body-type-name">Endomorph</div>
+                  <div class="body-type-desc">Higher body fat, builds muscle well</div>
+                </div>
+                <div class="body-type-card" data-type="custom">
+                  <div class="body-type-icon">🎯</div>
+                  <div class="body-type-name">Custom</div>
+                  <div class="body-type-desc">Mixed or unique composition</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Goals -->
+            <div class="form-group">
+              <label class="form-label">Fitness Goals</label>
+              <div class="goal-checks">
+                <input type="checkbox" class="goal-check" id="gc-lose" value="lose_weight" />
+                <label class="goal-check-label" for="gc-lose">⚖️ Lose Weight</label>
+
+                <input type="checkbox" class="goal-check" id="gc-muscle" value="build_muscle" />
+                <label class="goal-check-label" for="gc-muscle">💪 Build Muscle</label>
+
+                <input type="checkbox" class="goal-check" id="gc-cardio" value="improve_cardio" />
+                <label class="goal-check-label" for="gc-cardio">🏃 Improve Cardio</label>
+
+                <input type="checkbox" class="goal-check" id="gc-flex" value="increase_flexibility" />
+                <label class="goal-check-label" for="gc-flex">🧘 Flexibility</label>
+
+                <input type="checkbox" class="goal-check" id="gc-sleep" value="better_sleep" />
+                <label class="goal-check-label" for="gc-sleep">�� Better Sleep</label>
+
+                <input type="checkbox" class="goal-check" id="gc-general" value="general_fitness" />
+                <label class="goal-check-label" for="gc-general">🏅 General Fitness</label>
+              </div>
+            </div>
+
+            <div class="d-flex gap-10 mt-16">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="button" class="btn btn-ghost" id="cancel-edit-btn">Cancel</button>
+              <button type="button" class="btn btn-ghost" id="cancel-edit-btn2" style="display:none;">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── Account Settings ───────────────────────── -->
+      <div class="section">
+        <div class="card">
+          <div class="card-title">⚙️ Account Settings</div>
+
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Dark Mode</div>
+              <div class="setting-desc">Toggle between light and dark interface</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="theme-toggle-setting" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Units</div>
+              <div class="setting-desc">Choose your preferred measurement system</div>
+            </div>
+            <div class="unit-btns">
+              <button class="unit-btn" id="unit-metric" onclick="setUnits('metric')">Metric</button>
+              <button class="unit-btn" id="unit-imperial" onclick="setUnits('imperial')">Imperial</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Workout Reminders</div>
+              <div class="setting-desc">Get reminded to log your sessions</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notif-workout" onchange="saveNotifPrefs()" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Sleep Reminders</div>
+              <div class="setting-desc">Get notified at your target bedtime</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notif-sleep" onchange="saveNotifPrefs()" />
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Data Export ────────────────────────────── -->
+      <div class="section">
+        <div class="card">
+          <div class="card-title">📦 Data Export</div>
+          <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
+            Download a full copy of all your WorkIn&amp;Out data — workouts, sessions, measurements,
+            personal records and settings — as a JSON file.
+          </p>
+          <button class="btn btn-outline-accent" onclick="exportData()">⬇ Export All Data</button>
+        </div>
+      </div>
+
+      <!-- ── Danger Zone ────────────────────────────── -->
+      <div class="section">
+        <div class="card danger-zone">
+          <div class="card-title">🗑️ Danger Zone</div>
+          <div class="danger-warning">
+            ⚠️ <strong>Warning:</strong> Deleting all data is permanent and cannot be undone.
+            This will remove all your workouts, sessions, measurements, personal records,
+            progress photos, and settings from this device.
+          </div>
+          <button class="btn btn-danger" id="clear-data-btn">Delete All My Data</button>
+        </div>
+      </div>
+
+    </div><!-- /page-container -->
+  </main>
+</div><!-- /layout -->
+
+<!-- Confirmation Modal -->
+<div class="confirm-modal" id="confirm-modal">
+  <div class="confirm-box">
+    <h3>⚠️ Delete All Data?</h3>
+    <p>This action is <strong>permanent</strong> and cannot be reversed. All your fitness data will be erased and you will be logged out.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost btn-sm" id="confirm-cancel">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="confirm-delete">Yes, Delete Everything</button>
+    </div>
+  </div>
 </div>
 
 <script src="js/utils.js"></script>
@@ -560,8 +667,7 @@
     function renderProfile() {
         if (!user) return;
 
-        // Avatar initials
-        const parts   = (user.name || '?').trim().split(/\s+/);
+        const parts    = (user.name || '?').trim().split(/\s+/);
         const initials = parts.length >= 2
             ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
             : parts[0].slice(0, 2).toUpperCase();
@@ -571,11 +677,9 @@
         document.getElementById('profile-member').textContent =
             'Member since ' + Utils.formatDate(user.createdAt);
 
-        // Body type badge
         const bt   = BODY_TYPE_META[user.bodyType] || BODY_TYPE_META.mesomorph;
         document.getElementById('body-type-badge').textContent = `${bt.icon} ${bt.label}`;
 
-        // Body stats
         const h   = user.height || 0;
         const w   = user.weight || 0;
         const bmi = h > 0 ? (w / ((h / 100) ** 2)) : 0;
@@ -596,7 +700,6 @@
             catEl.textContent = cat;
         }
 
-        // Goals
         renderGoals(user.goals || []);
     }
     renderProfile();
@@ -609,7 +712,7 @@
             return;
         }
         container.innerHTML = goals.map(g => {
-            const meta = GOAL_META[g] || { label: g, icon: '🎯', color: 'var(--accent-primary)' };
+            const meta = GOAL_META[g] || { label: g, icon: '🎯', color: 'var(--accent)' };
             return `<span class="goal-pill" style="border-color:${meta.color};color:${meta.color};background:${meta.color}18">
                 ${meta.icon} ${meta.label}
             </span>`;
@@ -626,7 +729,6 @@
         document.getElementById('act-total').textContent = sessions.length;
         document.getElementById('act-streak').textContent = streak;
 
-        // Best streak (brute force)
         const days = sessions.map(s => s.startTime ? s.startTime.slice(0, 10) : null)
             .filter(Boolean).sort();
         const uniq = [...new Set(days)];
@@ -659,7 +761,6 @@
 
     function showEditForm() {
         if (!user) return;
-        // Pre-fill
         document.getElementById('edit-name').value   = user.name || '';
         document.getElementById('edit-email').value  = user.email || '';
         document.getElementById('edit-age').value    = user.age || '';
@@ -668,13 +769,11 @@
         document.getElementById('edit-weight').value = user.weight || '';
         document.getElementById('edit-bodytype').value = user.bodyType || 'mesomorph';
 
-        // Body type cards
         selectedBodyType = user.bodyType || 'mesomorph';
         document.querySelectorAll('.body-type-card').forEach(card => {
             card.classList.toggle('selected', card.dataset.type === selectedBodyType);
         });
 
-        // Goal checkboxes
         const goals = user.goals || [];
         document.querySelectorAll('.goal-check').forEach(cb => {
             cb.checked = goals.includes(cb.value);
@@ -690,7 +789,6 @@
     document.getElementById('cancel-edit-btn').addEventListener('click', hideEditForm);
     document.getElementById('cancel-edit-btn2').addEventListener('click', hideEditForm);
 
-    // Body type card selection
     document.querySelectorAll('.body-type-card').forEach(card => {
         card.addEventListener('click', () => {
             selectedBodyType = card.dataset.type;
@@ -701,7 +799,6 @@
         });
     });
 
-    // Save profile
     document.getElementById('edit-profile-form').addEventListener('submit', function (e) {
         e.preventDefault();
         const goals = [...document.querySelectorAll('.goal-check:checked')].map(cb => cb.value);
@@ -718,7 +815,6 @@
         const result = Auth.updateProfile(updates);
         if (result.success) {
             Utils.showToast('Profile updated! 🎉', 'success');
-            // Refresh user reference
             const fresh = Auth.getCurrentUser();
             Object.assign(user, fresh);
             renderProfile();
@@ -732,8 +828,6 @@
     // ════════════════════════════════════════
     //  SETTINGS
     // ════════════════════════════════════════
-
-    // Theme toggle
     const themeSettingToggle = document.getElementById('theme-toggle-setting');
     themeSettingToggle.checked = document.documentElement.getAttribute('data-theme') === 'dark';
     themeSettingToggle.addEventListener('change', () => {
@@ -743,7 +837,6 @@
         }, 50);
     });
 
-    // Units
     window.setUnits = function (unit) {
         localStorage.setItem('workinout_units', unit);
         document.getElementById('unit-metric').classList.toggle('active', unit === 'metric');
@@ -753,7 +846,6 @@
     const savedUnits = localStorage.getItem('workinout_units') || 'metric';
     setUnits(savedUnits);
 
-    // Notification prefs
     const notifPrefs = JSON.parse(localStorage.getItem('workinout_notif_prefs') || '{}');
     document.getElementById('notif-workout').checked = notifPrefs.workout || false;
     document.getElementById('notif-sleep').checked   = notifPrefs.sleep   || false;
@@ -767,7 +859,6 @@
         Utils.showToast('Preferences saved', 'success');
     };
 
-    // Export data
     window.exportData = function () {
         const allKeys = Object.keys(localStorage).filter(k => k.startsWith('workinout_'));
         const data = {};
@@ -787,7 +878,6 @@
         Utils.showToast('Data exported! ⬇', 'success');
     };
 
-    // Clear all data modal
     const confirmModal  = document.getElementById('confirm-modal');
     document.getElementById('clear-data-btn').addEventListener('click', () => {
         confirmModal.classList.add('open');
