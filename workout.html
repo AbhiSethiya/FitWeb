@@ -1,516 +1,740 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Planner - WorkIn&amp;Out</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* ── Body type selection cards ── */
-        .body-type-cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 0;
-        }
-        .body-type-card {
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 16px 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            background: var(--bg-card);
-        }
-        .body-type-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        .body-type-card.selected {
-            border-color: var(--accent-primary);
-            background: rgba(var(--accent-primary-rgb), 0.07);
-            box-shadow: 0 0 0 3px rgba(var(--accent-primary-rgb), 0.12);
-        }
-        .bt-emoji     { font-size: 2.2rem; display: block; margin-bottom: 6px; }
-        .bt-name      { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
-        .bt-desc      { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
-        .bt-chars     { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 8px; }
-        .bt-char-tag  {
-            font-size: 0.62rem;
-            padding: 2px 7px;
-            border-radius: var(--radius-full);
-            background: rgba(var(--accent-primary-rgb), 0.1);
-            color: var(--accent-primary);
-            font-weight: 600;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Planning — WorkIn&Out</title>
 
-        /* ── Category tabs (scrollable) ── */
-        .category-tabs-scroll {
-            overflow-x: auto;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-        }
-        .category-tabs-scroll::-webkit-scrollbar { display: none; }
-        .category-tabs {
-            display: flex;
-            gap: 8px;
-            white-space: nowrap;
-            min-width: max-content;
-        }
-        .cat-tab {
-            padding: 8px 18px;
-            border-radius: var(--radius-full);
-            border: 2px solid var(--border-color);
-            background: var(--bg-card);
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        .cat-tab:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-        .cat-tab.active {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(var(--accent-primary-rgb), 0.3);
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* ── Exercise grid ── */
-        .exercise-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 12px;
-        }
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/style.css" />
 
-        /* Extend exercise card with add button */
-        .exercise-card-wrap {
-            position: relative;
-        }
-        .exercise-card-wrap .exercise-card {
-            padding-right: 52px;
-        }
-        .exercise-add-btn {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-md);
-            border: 2px solid var(--border-color);
-            background: var(--bg-secondary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-fast);
-        }
-        .exercise-add-btn:hover,
-        .exercise-add-btn.added {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: #fff;
-        }
+  <style>
+    /* ─── Reset / Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ── Plan cards ── */
-        .plan-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 18px 20px;
-            transition: all var(--transition-normal);
-        }
-        .plan-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-        .plan-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        .plan-card-title { font-weight: 700; font-size: 1rem; }
-        .plan-card-meta  { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-        .plan-card-exercises {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-        }
+    :root {
+      --nav-bg:      #111111;
+      --page-bg:     #0d0d0d;
+      --card-bg:     #1a1a1a;
+      --border:      rgba(255,255,255,0.06);
+      --accent:      #22c55e;
+      --accent-dim:  rgba(34,197,94,0.18);
+      --accent-rgb:  34,197,94;
+      --text:        #ffffff;
+      --text-muted:  #a0a0a0;
+      --text-dim:    #666666;
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   14px;
+      --sidebar-w:   260px;
+      --sidebar-collapsed: 64px;
+      --transition:  0.22s ease;
+    }
 
-        /* ── Scheduler ── */
-        .scheduler-day {
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 12px 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            min-height: 100px;
-        }
-        .scheduler-day:hover { border-color: var(--accent-primary); }
-        .scheduler-day.has-workout {
-            border-color: var(--accent-primary);
-            background: rgba(var(--accent-primary-rgb), 0.06);
-        }
-        .scheduler-day.today-sched {
-            border-color: var(--accent-secondary);
-            background: rgba(var(--accent-secondary-rgb), 0.06);
-        }
-        .sched-day-name { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
-        .sched-day-num {
-            width: 28px; height: 28px; border-radius: 50%;
-            background: var(--bg-secondary);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 0.85rem;
-            margin: 4px auto;
-        }
-        .scheduler-day.today-sched .sched-day-num { background: var(--accent-secondary); color: #fff; }
-        .sched-workout-label {
-            font-size: 0.68rem; color: var(--accent-primary); font-weight: 600;
-            line-height: 1.3; margin-top: 4px;
-        }
-        .sched-rest { font-size: 0.68rem; color: var(--text-muted); margin-top: 4px; }
+    html, body {
+      height: 100%;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* ── Empty state ── */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-        .empty-state-icon { font-size: 3rem; margin-bottom: 12px; }
-        .empty-state-text { font-size: 0.9rem; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-        /* ── Modal exercise picker ── */
-        .exercise-picker-list {
-            max-height: 280px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 8px;
-        }
-        .picker-exercise-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: background var(--transition-fast);
-        }
-        .picker-exercise-row:hover { background: var(--bg-secondary); }
-        .picker-exercise-row.selected { background: rgba(var(--accent-primary-rgb), 0.08); }
-        .picker-check {
-            width: 18px; height: 18px;
-            accent-color: var(--accent-primary);
-            flex-shrink: 0;
-        }
-        .picker-ex-name { font-weight: 600; font-size: 0.875rem; }
-        .picker-ex-cat  { font-size: 0.72rem; color: var(--text-muted); }
+    /* ─── Layout ────────────────────────────────────────── */
+    .layout { display: flex; min-height: 100vh; }
 
-        /* ── Responsive ── */
-        @media (max-width: 900px) {
-            .body-type-cards { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .exercise-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    /* ─── Sidebar ───────────────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--nav-bg);
+      display: flex;
+      flex-direction: column;
+      z-index: 200;
+      transition: width var(--transition), transform var(--transition);
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 22px 20px 18px; flex-shrink: 0;
+    }
+    .sidebar-logo-mark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--accent); letter-spacing: -0.5px;
+      white-space: nowrap; line-height: 1;
+    }
+    .sidebar-logo-full {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text-muted); white-space: nowrap;
+      transition: opacity var(--transition);
+    }
+
+    .sidebar-nav {
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      padding: 8px 10px; scrollbar-width: none;
+    }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+
+    .nav-section-label {
+      display: block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); padding: 14px 10px 6px;
+      white-space: nowrap; transition: opacity var(--transition);
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 9px 10px; border-radius: var(--radius-md);
+      color: var(--text-muted); font-size: 0.875rem; font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+      white-space: nowrap; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+
+    .nav-item-icon { font-size: 1.1rem; flex-shrink: 0; width: 22px; text-align: center; }
+    .nav-item-text { transition: opacity var(--transition); }
+
+    .sidebar-footer {
+      padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: var(--radius-md);
+      cursor: pointer; margin-top: 4px;
+      transition: background var(--transition);
+    }
+    .sidebar-user:hover { background: rgba(255,255,255,0.05); }
+    .sidebar-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent-dim); color: var(--accent);
+      font-size: 0.9rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-user-info { min-width: 0; overflow: hidden; }
+    .sidebar-user-name {
+      font-size: 0.82rem; font-weight: 600; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sidebar-user-role { font-size: 0.72rem; color: var(--text-dim); }
+
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 199;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* Tablet: collapsed sidebar */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .sidebar { width: var(--sidebar-collapsed); }
+      .sidebar-logo-full,
+      .nav-section-label,
+      .nav-item-text,
+      .sidebar-user-info { opacity: 0; pointer-events: none; }
+      .nav-item { justify-content: center; padding: 10px; gap: 0; }
+      .sidebar-user { justify-content: center; }
+    }
+    @media (max-width: 767px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-logo-full, .nav-item-text, .sidebar-user-info { opacity: 1; pointer-events: auto; }
+      .nav-item { justify-content: flex-start; padding: 9px 10px; gap: 12px; }
+    }
+
+    /* ─── Main Content ──────────────────────────────────── */
+    .main-content {
+      flex: 1; margin-left: var(--sidebar-w); min-width: 0;
+      display: flex; flex-direction: column;
+      transition: margin-left var(--transition);
+    }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .main-content { margin-left: var(--sidebar-collapsed); }
+    }
+    @media (max-width: 767px) { .main-content { margin-left: 0; } }
+
+    /* ─── Topbar ────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 58px;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem; font-weight: 600; color: var(--text);
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05);
+      transition: background var(--transition);
+    }
+    .hamburger:hover { background: rgba(255,255,255,0.1); }
+    .hamburger span {
+      display: block; height: 2px; width: 18px; margin: 0 auto;
+      background: var(--text-muted); border-radius: 2px;
+      transition: all var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 767px) { .hamburger { display: flex; } }
+
+    .theme-btn {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05); font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* ─── Page Container ────────────────────────────────── */
+    .page-container {
+      max-width: 1200px; width: 100%;
+      margin: 0 auto; padding: 28px 28px 60px;
+    }
+    @media (max-width: 767px) { .page-container { padding: 20px 16px 80px; } }
+
+    /* ─── Page Header ───────────────────────────────────── */
+    .page-header {
+      margin-bottom: 28px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      flex-wrap: wrap; gap: 14px;
+    }
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    @media (max-width: 480px) { .page-header h1 { font-size: 1.5rem; } }
+
+    /* ─── Section ───────────────────────────────────────── */
+    .section { margin-bottom: 36px; }
+    .section-label {
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 14px;
+    }
+
+    /* ─── Cards ─────────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .card-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+
+    /* ─── Body-Type Filter Tabs ─────────────────────────── */
+    .filter-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .filter-tab {
+      padding: 7px 18px; border-radius: 999px;
+      font-size: 0.82rem; font-weight: 500;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: var(--card-bg);
+      transition: all var(--transition);
+    }
+    .filter-tab:hover { border-color: rgba(34,197,94,0.4); color: var(--text); }
+    .filter-tab.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ─── Exercise Grid ─────────────────────────────────── */
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .exercise-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .exercise-grid { grid-template-columns: 1fr; } }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+    .exercise-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      border-color: rgba(34,197,94,0.2);
+    }
+
+    .exercise-card-top {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+    }
+    .exercise-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .exercise-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem; font-weight: 600; color: var(--text);
+      line-height: 1.3; flex: 1;
+    }
+
+    .exercise-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.03em;
+    }
+    .tag-muscle {
+      background: rgba(99,102,241,0.15);
+      color: #a5b4fc;
+    }
+    .tag-easy {
+      background: rgba(34,197,94,0.12);
+      color: #86efac;
+    }
+    .tag-intermediate {
+      background: rgba(245,158,11,0.12);
+      color: #fcd34d;
+    }
+    .tag-hard {
+      background: rgba(239,68,68,0.12);
+      color: #fca5a5;
+    }
+
+    .exercise-meta {
+      font-size: 0.78rem; color: var(--text-muted);
+      display: flex; gap: 12px;
+    }
+    .exercise-meta span { display: flex; align-items: center; gap: 4px; }
+
+    .btn-add-plan {
+      margin-top: auto;
+      padding: 7px 0; width: 100%;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-sm);
+      color: var(--accent); font-size: 0.8rem; font-weight: 600;
+      background: transparent;
+      transition: background var(--transition), color var(--transition);
+    }
+    .btn-add-plan:hover { background: var(--accent-dim); }
+
+    /* ─── Weekly Schedule ───────────────────────────────── */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 700px) { .week-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 420px) { .week-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .day-col {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 10px;
+      min-height: 120px;
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .day-col:hover { border-color: rgba(34,197,94,0.3); background: #1f1f1f; }
+    .day-col.has-exercises { border-color: rgba(34,197,94,0.25); }
+
+    .day-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 10px;
+    }
+    .day-exercises { display: flex; flex-direction: column; gap: 4px; }
+    .day-exercise-chip {
+      font-size: 0.7rem; color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--radius-sm);
+      padding: 3px 7px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .day-empty-hint {
+      font-size: 0.72rem; color: var(--text-dim);
+      text-align: center; padding-top: 10px;
+    }
+
+    /* ─── Plan Builder Form ─────────────────────────────── */
+    .plan-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 540px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label {
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .form-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 13px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.875rem;
+      transition: border-color var(--transition);
+      outline: none;
+    }
+    .form-input:focus { border-color: rgba(34,197,94,0.5); }
+    .form-input::placeholder { color: var(--text-dim); }
+
+    select.form-input option { background: #1a1a1a; color: var(--text); }
+
+    /* ─── Plans Container ───────────────────────────────── */
+    .plans-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .plan-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .plan-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
+
+    .plan-info-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem; font-weight: 600; color: var(--text);
+    }
+    .plan-info-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 3px; }
+
+    .plan-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* ─── Buttons ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 20px; border-radius: var(--radius-sm);
+      font-size: 0.875rem; font-weight: 600; font-family: 'Inter', sans-serif;
+      transition: all var(--transition); cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent); color: #000; border: none;
+    }
+    .btn-primary:hover { background: #16a34a; }
+    .btn-ghost {
+      background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+    .btn-danger {
+      background: transparent; border: 1px solid rgba(239,68,68,0.3); color: #f87171;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.1); }
+    .btn-sm { padding: 5px 12px; font-size: 0.8rem; }
+
+    /* ─── Modals ────────────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 500;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      width: 100%; max-width: 480px;
+      max-height: 80vh; overflow-y: auto;
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem; font-weight: 600;
+    }
+    .modal-close {
+      width: 30px; height: 30px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05); color: var(--text-muted);
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+    .exercise-picker-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .picker-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: background var(--transition), border-color var(--transition);
+      cursor: pointer;
+    }
+    .picker-item:hover { background: rgba(34,197,94,0.05); border-color: rgba(34,197,94,0.2); }
+    .picker-item input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
+    .picker-item-name { font-size: 0.85rem; font-weight: 500; }
+
+    /* ─── Notes textarea ─────────────────────────────────── */
+    textarea.form-input { resize: vertical; min-height: 80px; }
+
+    /* ─── Empty state ────────────────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 40px 20px;
+      color: var(--text-dim); font-size: 0.875rem;
+    }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+    /* ─── Utility ───────────────────────────────────────── */
+    .d-none { display: none !important; }
+    .flex-row { display: flex; gap: 10px; align-items: center; }
+    .ml-auto { margin-left: auto; }
+  </style>
 </head>
 <body>
-<div class="app-layout">
+<div class="layout">
 
-    <!-- ══════════ SIDEBAR ══════════ -->
-    <aside class="sidebar" id="sidebar">
-        <a class="sidebar-logo" href="dashboard.html">
-            <div class="sidebar-logo-icon">🏋️</div>
-            <div class="sidebar-logo-text">WorkIn<span>&amp;Out</span></div>
-        </a>
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <aside class="sidebar" id="sidebar">
 
-        <nav class="sidebar-nav">
-            <span class="nav-section-label">Main</span>
-            <a class="nav-item" href="dashboard.html">
-                <span class="nav-item-icon">📊</span> Dashboard
-            </a>
-            <a class="nav-item active" href="workout.html">
-                <span class="nav-item-icon">🏋️</span> Workouts
-            </a>
-            <a class="nav-item" href="bmi.html">
-                <span class="nav-item-icon">⚖️</span> BMI
-            </a>
-            <a class="nav-item" href="diet.html">
-                <span class="nav-item-icon">🥗</span> Diet
-            </a>
-            <a class="nav-item" href="sessions.html">
-                <span class="nav-item-icon">⏱️</span> Sessions
-            </a>
-            <span class="nav-section-label">Tracking</span>
-            <a class="nav-item" href="progress.html">
-                <span class="nav-item-icon">📈</span> Progress
-            </a>
-            <a class="nav-item" href="sleep.html">
-                <span class="nav-item-icon">🌿</span> Recovery
-            </a>
-            <a class="nav-item" href="profile.html">
-                <span class="nav-item-icon">👤</span> Profile
-            </a>
-        </nav>
+    <!-- Logo -->
+    <a class="sidebar-logo" href="dashboard.html">
+      <span class="sidebar-logo-mark">W&amp;O</span>
+      <span class="sidebar-logo-full">WorkIn&amp;Out</span>
+    </a>
 
-        <div class="sidebar-footer">
-            <button class="nav-item" data-theme-toggle style="border:none;width:100%;text-align:left;background:none;">
-                <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
-                <span>Toggle Theme</span>
-            </button>
-            <button class="nav-item text-danger" onclick="Auth.logout()" style="border:none;width:100%;text-align:left;background:none;">
-                <span class="nav-item-icon">🚪</span> Logout
-            </button>
-            <div class="sidebar-user" onclick="window.location.href='profile.html'">
-                <div class="sidebar-avatar" id="sidebar-avatar">U</div>
-                <div class="sidebar-user-info">
-                    <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
-                    <div class="sidebar-user-role">Fitness Member</div>
-                </div>
-            </div>
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+
+      <a class="nav-item" href="dashboard.html">
+        <span class="nav-item-icon">🏠</span>
+        <span class="nav-item-text">Dashboard</span>
+      </a>
+      <a class="nav-item" href="bmi.html">
+        <span class="nav-item-icon">📊</span>
+        <span class="nav-item-text">BMI</span>
+      </a>
+      <a class="nav-item" href="diet.html">
+        <span class="nav-item-icon">🥗</span>
+        <span class="nav-item-text">Diet</span>
+      </a>
+      <a class="nav-item active" href="workout.html">
+        <span class="nav-item-icon">🏋️</span>
+        <span class="nav-item-text">Workout</span>
+      </a>
+      <a class="nav-item" href="sessions.html">
+        <span class="nav-item-icon">⏱️</span>
+        <span class="nav-item-text">Sessions</span>
+      </a>
+
+      <span class="nav-section-label">Tracking</span>
+
+      <a class="nav-item" href="progress.html">
+        <span class="nav-item-icon">📈</span>
+        <span class="nav-item-text">Progress</span>
+      </a>
+      <a class="nav-item" href="sleep.html">
+        <span class="nav-item-icon">💤</span>
+        <span class="nav-item-text">Recovery</span>
+      </a>
+      <a class="nav-item" href="profile.html">
+        <span class="nav-item-icon">👤</span>
+        <span class="nav-item-text">Profile</span>
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <button class="nav-item" data-theme-toggle style="width:100%;text-align:left;">
+        <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+        <span class="nav-item-text">Toggle Theme</span>
+      </button>
+      <button class="nav-item" onclick="Auth && Auth.logout()" style="width:100%;text-align:left;color:#f87171;">
+        <span class="nav-item-icon">🚪</span>
+        <span class="nav-item-text">Logout</span>
+      </button>
+      <div class="sidebar-user" onclick="window.location.href='profile.html'">
+        <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role">Fitness Member</div>
         </div>
-    </aside>
-
-    <!-- ══════════ MAIN CONTENT ══════════ -->
-    <main class="main-content">
-
-        <!-- Top bar -->
-        <div class="topbar">
-            <div class="d-flex items-center gap-8">
-                <button class="hamburger" id="hamburger" aria-label="Menu">
-                    <span></span><span></span><span></span>
-                </button>
-                <div>
-                    <span class="topbar-title">Workout Planner</span>
-                    <span class="badge badge-secondary" id="topbar-body-type" style="margin-left:10px;">Mesomorph</span>
-                </div>
-            </div>
-            <div class="topbar-actions">
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Page body -->
-        <div class="page-container">
-
-            <!-- ── Body Type Section ── -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🧬 Body Type</h3>
-                    <span class="text-sm text-muted">Select your type to personalise recommendations</span>
-                </div>
-                <div class="body-type-cards" id="body-type-cards">
-                    <div class="body-type-card" data-type="ectomorph">
-                        <span class="bt-emoji">🦴</span>
-                        <div class="bt-name">Ectomorph</div>
-                        <div class="bt-desc">Naturally lean with a fast metabolism and difficulty gaining mass.</div>
-                        <div class="bt-chars">
-                            <span class="bt-char-tag">Lean</span>
-                            <span class="bt-char-tag">Fast Metabolism</span>
-                            <span class="bt-char-tag">Hard Gainer</span>
-                        </div>
-                    </div>
-                    <div class="body-type-card" data-type="mesomorph">
-                        <span class="bt-emoji">💪</span>
-                        <div class="bt-name">Mesomorph</div>
-                        <div class="bt-desc">Athletic build, responds well to training and gains muscle naturally.</div>
-                        <div class="bt-chars">
-                            <span class="bt-char-tag">Athletic</span>
-                            <span class="bt-char-tag">Balanced</span>
-                            <span class="bt-char-tag">Adaptable</span>
-                        </div>
-                    </div>
-                    <div class="body-type-card" data-type="endomorph">
-                        <span class="bt-emoji">🏋️</span>
-                        <div class="bt-name">Endomorph</div>
-                        <div class="bt-desc">Solid frame, gains muscle and fat easily, benefits from cardio.</div>
-                        <div class="bt-chars">
-                            <span class="bt-char-tag">Stocky</span>
-                            <span class="bt-char-tag">Strong</span>
-                            <span class="bt-char-tag">Slow Metabolism</span>
-                        </div>
-                    </div>
-                    <div class="body-type-card" data-type="custom">
-                        <span class="bt-emoji">🎯</span>
-                        <div class="bt-name">Custom</div>
-                        <div class="bt-desc">Build your own program based on personal goals and preferences.</div>
-                        <div class="bt-chars">
-                            <span class="bt-char-tag">All Exercises</span>
-                            <span class="bt-char-tag">Flexible</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Body type recommendation note -->
-                <div class="card mt-10" id="bt-recommendation" style="border-left:4px solid var(--accent-primary);padding:14px 18px;">
-                    <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px;" id="bt-focus">Focus: Athletic performance &amp; aesthetics</div>
-                    <div style="font-size:0.82rem;color:var(--text-muted);" id="bt-notes">Balanced approach — mix compound and isolation work. 2-3 cardio sessions. Maintain slight surplus or maintenance calories.</div>
-                </div>
-            </div>
-
-            <!-- ── Exercise Library ── -->
-            <div class="section">
-                <div class="section-header">
-                    <h3 class="section-title">📚 Exercise Library</h3>
-                    <button class="btn btn-primary btn-sm" id="open-create-plan-btn">
-                        + Create Plan
-                    </button>
-                </div>
-
-                <!-- Category tabs -->
-                <div class="category-tabs-scroll mb-12">
-                    <div class="category-tabs" id="category-tabs">
-                        <button class="cat-tab active" data-cat="all">All</button>
-                        <button class="cat-tab" data-cat="chest">💪 Chest</button>
-                        <button class="cat-tab" data-cat="back">🔝 Back</button>
-                        <button class="cat-tab" data-cat="shoulders">🤸 Shoulders</button>
-                        <button class="cat-tab" data-cat="arms">💪 Arms</button>
-                        <button class="cat-tab" data-cat="legs">🦵 Legs</button>
-                        <button class="cat-tab" data-cat="core">⬛ Core</button>
-                        <button class="cat-tab" data-cat="cardio">🏃 Cardio</button>
-                    </div>
-                </div>
-
-                <!-- Exercise grid -->
-                <div class="exercise-grid" id="exercise-grid">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- ── My Workout Plans ── -->
-            <div class="section">
-                <div class="section-header">
-                    <h3 class="section-title">📋 My Workout Plans</h3>
-                </div>
-                <div id="plans-container">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- ── Weekly Scheduler ── -->
-            <div class="section">
-                <div class="section-header">
-                    <h3 class="section-title">📅 Weekly Schedule</h3>
-                    <button class="btn btn-ghost btn-sm" id="clear-schedule-btn">Clear All</button>
-                </div>
-                <div class="week-grid" id="week-scheduler">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-        </div><!-- /page-container -->
-    </main>
-</div><!-- /app-layout -->
-
-<!-- ── Bottom Nav (mobile) ── -->
-<nav class="bottom-nav">
-    <div class="bottom-nav-inner">
-        <a class="bottom-nav-item" href="dashboard.html">
-            <span class="nav-icon">📊</span>
-            <span>Home</span>
-        </a>
-        <a class="bottom-nav-item active" href="workout.html">
-            <span class="nav-icon">🏋️</span>
-            <span>Workout</span>
-        </a>
-        <a class="bottom-nav-item" href="diet.html">
-            <span class="nav-icon">🥗</span>
-            <span>Diet</span>
-        </a>
-        <a class="bottom-nav-item" href="progress.html">
-            <span class="nav-icon">📈</span>
-            <span>Progress</span>
-        </a>
-        <a class="bottom-nav-item" href="profile.html">
-            <span class="nav-icon">👤</span>
-            <span>Profile</span>
-        </a>
+      </div>
     </div>
-</nav>
 
-<!-- ══════════ CREATE PLAN MODAL ══════════ -->
-<div class="modal-overlay hidden" id="create-plan-modal">
-    <div class="modal modal-lg">
-        <div class="modal-header">
-            <div>
-                <div class="modal-title">🏋️ Create Workout Plan</div>
-                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;">Name your plan and pick exercises</div>
-            </div>
-            <button class="modal-close" data-modal-close aria-label="Close">✕</button>
-        </div>
+  </aside>
+  <!-- /sidebar -->
 
-        <div class="form-group">
-            <label class="form-label required">Plan Name</label>
-            <input type="text" class="form-input" id="plan-name-input" placeholder="e.g. Push Day, Full Body Blast…">
-        </div>
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <div class="form-group">
-            <label class="form-label">Schedule Days</label>
-            <div class="d-flex flex-wrap gap-6" id="plan-days-picker">
-                <label class="form-check">
-                    <input type="checkbox" class="form-check-input plan-day-cb" value="monday"> <span class="form-check-label">Mon</span>
-                </label>
-                <label class="form-check">
-                    <input type="checkbox" class="form-check-input plan-day-cb" value="tuesday"> <span class="form-check-label">Tue</span>
-                </label>
-                <label class="form-check">
-                    <input type="checkbox" class="form-check-input plan-day-cb" value="wednesday"> <span class="form-check-label">Wed</span>
-                </label>
-                <label class="form-check">
-                    <input type="checkbox" class="form-check-input plan-day-cb" value="thursday"> <span class="form-check-label">Thu</span>
-                </label>
-                <label class="form-check">
-                    <input type="checkbox" class="form-check-input plan-day-cb" value="friday"> <span class="form-check-label">Fri</span>
-                </label>
-                <label class="form-check">
-                    <input type="checkbox" class="form-check-input plan-day-cb" value="saturday"> <span class="form-check-label">Sat</span>
-                </label>
-                <label class="form-check">
-                    <input type="checkbox" class="form-check-input plan-day-cb" value="sunday"> <span class="form-check-label">Sun</span>
-                </label>
-            </div>
-        </div>
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <main class="main-content">
 
-        <div class="form-group">
-            <label class="form-label">Select Exercises</label>
-            <div class="exercise-picker-list" id="exercise-picker-list">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-ghost" data-modal-close>Cancel</button>
-            <button class="btn btn-primary" id="save-plan-btn">💾 Save Plan</button>
-        </div>
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="topbarHamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="topbar-title">Workout Planning</span>
+      </div>
+      <div class="topbar-actions" id="topbar-body-type">
+        <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
     </div>
+
+    <!-- Page body -->
+    <div class="page-container">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1>Workout Planning</h1>
+        <button class="btn btn-primary" id="open-create-plan-btn">
+          ＋ New Plan
+        </button>
+      </div>
+
+      <!-- ── Body Type Filter ── -->
+      <div class="section">
+        <p class="section-label">Filter by Body Type</p>
+        <div class="filter-tabs" id="bt-focus">
+          <button class="filter-tab active" data-bt="all">All</button>
+          <button class="filter-tab" data-bt="ectomorph">Ectomorph</button>
+          <button class="filter-tab" data-bt="mesomorph">Mesomorph</button>
+          <button class="filter-tab" data-bt="endomorph">Endomorph</button>
+          <button class="filter-tab" data-bt="custom">Custom</button>
+        </div>
+      </div>
+
+      <!-- ── Exercise Library ── -->
+      <div class="section">
+        <p class="section-label">Exercise Library</p>
+        <div class="exercise-grid" id="exercise-grid">
+          <!-- Populated by JS -->
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="empty-icon">🏋️</div>
+            <div>Loading exercises…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Weekly Schedule ── -->
+      <div class="section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <p class="section-label" style="margin-bottom:0">Weekly Schedule</p>
+          <button class="btn btn-ghost btn-sm" id="clear-schedule-btn">Clear All</button>
+        </div>
+        <div class="week-grid" id="week-scheduler">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ── Saved Plans ── -->
+      <div class="section">
+        <p class="section-label">Saved Plans</p>
+        <div class="plans-list" id="plans-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ── Custom Plan Builder ── -->
+      <div class="section">
+        <p class="section-label">Custom Plan Builder</p>
+        <div class="card">
+          <div class="plan-form" id="bt-notes">
+            <div class="form-group">
+              <label class="form-label" for="plan-name-input">Plan Name</label>
+              <input type="text" id="plan-name-input" class="form-input" placeholder="e.g. Push Day A" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Selected Exercises</label>
+              <div id="exercise-picker-list" class="exercise-picker-list">
+                <div style="color:var(--text-dim);font-size:0.82rem;padding:8px 0;">
+                  Use the "＋ Add to Plan" buttons above to select exercises.
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="plan-select">Load Existing Plan</label>
+                <select id="plan-select" class="form-input">
+                  <option value="">— select a plan —</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn btn-primary" id="save-plan-btn">Save Plan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-container -->
+  </main>
+</div><!-- /layout -->
+
+<!-- ── Assign Exercise Modal ─────────────────────────── -->
+<div class="modal-overlay" id="assign-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="assign-modal-title">Assign to Day</span>
+      <button class="modal-close" onclick="document.getElementById('assign-modal').classList.remove('open')">✕</button>
+    </div>
+    <div id="assign-plan-list" class="plans-list">
+      <!-- populated by JS -->
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+      <button class="btn btn-ghost btn-sm" id="clear-day-btn">Clear Day</button>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('assign-modal').classList.remove('open')">Close</button>
+    </div>
+  </div>
 </div>
 
-<!-- ══════════ ASSIGN WORKOUT MODAL ══════════ -->
-<div class="modal-overlay hidden" id="assign-modal">
-    <div class="modal modal-sm">
-        <div class="modal-header">
-            <div class="modal-title" id="assign-modal-title">Assign Workout</div>
-            <button class="modal-close" data-modal-close aria-label="Close">✕</button>
-        </div>
-        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:16px;">Choose a plan to assign to this day, or clear it.</p>
-        <div id="assign-plan-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-            <!-- Populated by JS -->
-        </div>
-        <button class="btn btn-ghost btn-full" id="clear-day-btn">🗑 Clear this day</button>
+<!-- ── Create Plan Modal ──────────────────────────────── -->
+<div class="modal-overlay" id="create-plan-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Create New Plan</span>
+      <button class="modal-close" onclick="document.getElementById('create-plan-modal').classList.remove('open')">✕</button>
     </div>
+    <div class="plan-form">
+      <div class="form-group">
+        <label class="form-label">Plan Name</label>
+        <input type="text" id="new-plan-name" class="form-input" placeholder="e.g. Full Body Monday" />
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('create-plan-modal').classList.remove('open')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="createNewPlan()">Create</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="js/utils.js"></script>
@@ -519,338 +743,282 @@
 <script src="js/app.js"></script>
 <script src="js/workout.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        ThemeManager.init();
-        Auth.requireAuth();
-        App.init();
+(function () {
+  'use strict';
 
-        // ── User info ──
-        var user = Auth.getCurrentUser();
-        var currentBodyType = (user && user.bodyType) || 'mesomorph';
+  /* ── Mobile sidebar toggle ─────────────────────────── */
+  const hamburger = document.getElementById('topbarHamburger');
+  const sidebar   = document.getElementById('sidebar');
+  const overlay   = document.getElementById('sidebarOverlay');
 
-        if (user) {
-            document.getElementById('sidebar-user-name').textContent = user.name;
-            document.getElementById('sidebar-avatar').textContent = user.name.charAt(0).toUpperCase();
-        }
+  function toggleSidebar(open) {
+    sidebar.classList.toggle('open', open);
+    overlay.classList.toggle('active', open);
+    if (hamburger) hamburger.classList.toggle('open', open);
+  }
 
-        // ── State ──
-        var selectedCategory = 'all';
-        var selectedExerciseIds = []; // for create-plan modal
-        var currentAssignDay  = null;
+  if (hamburger) hamburger.addEventListener('click', () => toggleSidebar(!sidebar.classList.contains('open')));
+  if (overlay)   overlay.addEventListener('click', () => toggleSidebar(false));
 
-        // ── Body type cards ──
-        function selectBodyType(type) {
-            currentBodyType = type;
-            document.querySelectorAll('.body-type-card').forEach(function (c) {
-                c.classList.toggle('selected', c.dataset.type === type);
-            });
-            var badge = document.getElementById('topbar-body-type');
-            badge.textContent = Utils.capitalise(type);
+  /* ── Render exercise grid ───────────────────────────── */
+  function difficultyTag(d) {
+    if (d === 'hard') return '<span class="tag tag-hard">Advanced</span>';
+    if (d === 'intermediate') return '<span class="tag tag-intermediate">Intermediate</span>';
+    return '<span class="tag tag-easy">Beginner</span>';
+  }
 
-            var rec = WorkoutManager.BODY_TYPE_RECS[type] || WorkoutManager.BODY_TYPE_RECS.mesomorph;
-            document.getElementById('bt-focus').textContent = 'Focus: ' + rec.focus;
-            document.getElementById('bt-notes').textContent = rec.notes;
+  function renderExerciseGrid(bodyType) {
+    const grid = document.getElementById('exercise-grid');
+    if (!grid || typeof WorkoutManager === 'undefined') return;
 
-            renderExerciseGrid();
-        }
+    let exercises = WorkoutManager.getAllExercises();
 
-        document.querySelectorAll('.body-type-card').forEach(function (card) {
-            card.addEventListener('click', function () {
-                selectBodyType(card.dataset.type);
-            });
-        });
+    if (bodyType && bodyType !== 'all' && bodyType !== 'custom') {
+      const recs = WorkoutManager.BODY_TYPE_RECS && WorkoutManager.BODY_TYPE_RECS[bodyType];
+      if (recs && recs.exercises) {
+        exercises = exercises.filter(ex => recs.exercises.includes(ex.id));
+      }
+    }
 
-        selectBodyType(currentBodyType);
+    if (!exercises.length) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🤷</div><div>No exercises found.</div></div>';
+      return;
+    }
 
-        // ── Category tabs ──
-        document.querySelectorAll('.cat-tab').forEach(function (tab) {
-            tab.addEventListener('click', function () {
-                document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                selectedCategory = tab.dataset.cat;
-                renderExerciseGrid();
-            });
-        });
+    grid.innerHTML = exercises.map(ex => `
+      <div class="exercise-card card-lift" data-exercise-id="${ex.id}">
+        <div class="exercise-card-top">
+          <span class="exercise-icon">${ex.icon || '🏋️'}</span>
+          <span class="exercise-name">${ex.name}</span>
+        </div>
+        <div class="exercise-tags">
+          <span class="tag tag-muscle">${ex.category}</span>
+          ${difficultyTag(ex.difficulty)}
+        </div>
+        <div class="exercise-meta">
+          <span>📦 ${ex.sets} sets</span>
+          <span>🔁 ${ex.reps} reps</span>
+          <span>⏱ ${ex.rest}s rest</span>
+        </div>
+        <button class="btn-add-plan" onclick="addExerciseToPlanBuilder('${ex.id}')">＋ Add to Plan</button>
+      </div>
+    `).join('');
+  }
 
-        // ── Render exercise grid ──
-        function renderExerciseGrid() {
-            var grid = document.getElementById('exercise-grid');
-            var recs = WorkoutManager.BODY_TYPE_RECS[currentBodyType] || WorkoutManager.BODY_TYPE_RECS.mesomorph;
-            var recIds = recs.exercises || [];
+  /* ── Filter tabs ──────────────────────────────────────── */
+  document.getElementById('bt-focus').addEventListener('click', function (e) {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderExerciseGrid(tab.dataset.bt || 'all');
+  });
 
-            var allEx = WorkoutManager.getAllExercises();
+  /* ── Plan Builder ─────────────────────────────────────── */
+  const _pendingExercises = new Set();
 
-            var filtered = allEx.filter(function (ex) {
-                var catMatch = selectedCategory === 'all' || ex.category === selectedCategory;
-                // If not "all" body type, only show recommended or filtered if category tab active
-                return catMatch;
-            });
+  function addExerciseToPlanBuilder(exId) {
+    if (!exId || _pendingExercises.has(exId)) return;
+    _pendingExercises.add(exId);
+    refreshPickerList();
+  }
 
-            if (!filtered.length) {
-                grid.innerHTML = '<div class="empty-state col-12"><div class="empty-state-icon">🔍</div><div class="empty-state-text">No exercises found for this filter.</div></div>';
-                return;
-            }
+  function refreshPickerList() {
+    const container = document.getElementById('exercise-picker-list');
+    if (!container) return;
 
-            grid.innerHTML = filtered.map(function (ex) {
-                var isRec = recIds.some(function (r) { return (r.id || r) === ex.id; });
-                var diffBadge = ex.difficulty === 'hard' ? 'badge-danger' : ex.difficulty === 'intermediate' ? 'badge-warning' : 'badge-success';
-                return '<div class="exercise-card-wrap reveal">' +
-                    '<div class="exercise-card" data-exercise-id="' + ex.id + '">' +
-                        '<div class="exercise-icon">' + (ex.icon || '💪') + '</div>' +
-                        '<div class="exercise-info">' +
-                            '<div class="exercise-name">' + ex.name + (isRec ? ' <span style="font-size:0.65rem;color:var(--accent-warning);">★ Recommended</span>' : '') + '</div>' +
-                            '<div class="exercise-meta">' + ex.sets + ' sets × ' + ex.reps + ' reps · ' + ex.rest + 's rest</div>' +
-                            '<div class="exercise-tags">' +
-                                '<span class="badge badge-primary">' + ex.category + '</span>' +
-                                '<span class="badge ' + diffBadge + '">' + ex.difficulty + '</span>' +
-                                (ex.muscleGroups || []).slice(0, 2).map(function (m) {
-                                    return '<span class="badge badge-muted">' + m + '</span>';
-                                }).join('') +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-                    '<button class="exercise-add-btn" data-ex-id="' + ex.id + '" title="Add to plan" aria-label="Add to plan">+</button>' +
-                '</div>';
-            }).join('');
+    if (!_pendingExercises.size) {
+      container.innerHTML = '<div style="color:var(--text-dim);font-size:0.82rem;padding:8px 0;">Use the "＋ Add to Plan" buttons above to select exercises.</div>';
+      return;
+    }
 
-            // Add-to-plan buttons
-            grid.querySelectorAll('.exercise-add-btn').forEach(function (btn) {
-                btn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    var exId = btn.dataset.exId;
-                    // Quick open modal pre-selected
-                    openCreatePlanModal(exId);
-                });
-            });
-        }
+    container.innerHTML = [..._pendingExercises].map(id => {
+      const ex = WorkoutManager.getExercise(id);
+      const name = ex ? ex.name : id;
+      return `
+        <div class="picker-item">
+          <input type="checkbox" checked id="pick-${id}" value="${id}" onchange="togglePick('${id}',this.checked)">
+          <label class="picker-item-name" for="pick-${id}">${name}</label>
+        </div>`;
+    }).join('');
+  }
 
-        // ── Render saved plans ──
-        function renderPlans() {
-            var container = document.getElementById('plans-container');
-            var plans = WorkoutManager.getWorkoutPlans();
+  window.togglePick = function(id, checked) {
+    if (checked) _pendingExercises.add(id);
+    else _pendingExercises.delete(id);
+  };
 
-            if (!plans.length) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div>' +
-                    '<div class="empty-state-text">No workout plans yet. Create your first plan!</div>' +
-                    '<button class="btn btn-primary mt-8" onclick="document.getElementById(\'open-create-plan-btn\').click()">+ Create Plan</button></div>';
-                return;
-            }
+  window.addExerciseToPlanBuilder = addExerciseToPlanBuilder;
 
-            container.innerHTML = '<div class="grid-auto">' +
-                plans.map(function (plan) {
-                    var dur = plan.exercises.reduce(function (acc, ex) {
-                        return acc + (ex.sets * (ex.rest + 45));
-                    }, 0);
-                    var mins = Math.round(dur / 60);
-                    var schedDays = (plan.schedule || []).map(function (d) {
-                        return d.charAt(0).toUpperCase() + d.slice(1, 3);
-                    }).join(', ');
+  /* ── Save plan ────────────────────────────────────────── */
+  document.getElementById('save-plan-btn').addEventListener('click', function () {
+    const nameInput = document.getElementById('plan-name-input');
+    const name = nameInput ? nameInput.value.trim() : '';
+    if (!name) { alert('Please enter a plan name.'); return; }
+    const exerciseIds = [..._pendingExercises];
+    if (!exerciseIds.length) { alert('Please select at least one exercise.'); return; }
 
-                    return '<div class="plan-card">' +
-                        '<div class="plan-card-header">' +
-                            '<div>' +
-                                '<div class="plan-card-title">' + plan.name + '</div>' +
-                                '<div class="plan-card-meta">' + plan.exercises.length + ' exercises · ~' + mins + ' min' +
-                                    (schedDays ? ' · ' + schedDays : '') + '</div>' +
-                            '</div>' +
-                            '<div class="d-flex gap-4">' +
-                                '<button class="btn btn-primary btn-sm" onclick="startPlan(\'' + plan.id + '\')">▶ Start</button>' +
-                                '<button class="btn btn-ghost btn-icon btn-sm" onclick="deletePlan(\'' + plan.id + '\')" title="Delete" aria-label="Delete plan">🗑</button>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="plan-card-exercises">' +
-                            plan.exercises.slice(0, 6).map(function (ex) {
-                                return '<span class="badge badge-primary">' + ex.name + '</span>';
-                            }).join('') +
-                            (plan.exercises.length > 6 ? '<span class="badge badge-muted">+' + (plan.exercises.length - 6) + ' more</span>' : '') +
-                        '</div>' +
-                    '</div>';
-                }).join('') +
-            '</div>';
-        }
+    const exercises = exerciseIds
+      .map(id => WorkoutManager.getExercise(id))
+      .filter(Boolean);
 
-        window.startPlan = function (planId) {
-            Utils.showToast('Starting plan! Redirecting to sessions…', 'info');
-            setTimeout(function () { window.location.href = 'sessions.html?plan=' + planId; }, 800);
-        };
+    WorkoutManager.createWorkoutPlan({ name, exercises });
+    _pendingExercises.clear();
+    if (nameInput) nameInput.value = '';
+    refreshPickerList();
+    renderPlans();
+    renderPlanSelect();
+    if (typeof Utils !== 'undefined') Utils.showToast('Plan saved! 🎉', 'success');
+  });
 
-        window.deletePlan = function (planId) {
-            WorkoutManager.deleteWorkoutPlan(planId);
-            renderPlans();
-            renderScheduler();
-            Utils.showToast('Plan deleted.', 'success');
-        };
+  /* ── Open create plan modal ──────────────────────────── */
+  document.getElementById('open-create-plan-btn').addEventListener('click', () => {
+    document.getElementById('create-plan-modal').classList.add('open');
+  });
 
-        // ── Weekly Scheduler ──
-        var DAY_KEYS   = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
-        var DAY_LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  window.createNewPlan = function () {
+    const inp = document.getElementById('new-plan-name');
+    const name = inp ? inp.value.trim() : '';
+    if (!name) { alert('Please enter a plan name.'); return; }
+    WorkoutManager.createWorkoutPlan({ name, exercises: [] });
+    if (inp) inp.value = '';
+    document.getElementById('create-plan-modal').classList.remove('open');
+    renderPlans();
+    renderPlanSelect();
+  };
 
-        function renderScheduler() {
-            var sched = WorkoutManager.getWeeklySchedule();
-            var todayIdx = (new Date().getDay() + 6) % 7;
-            var today    = new Date().getDate();
+  /* ── Render saved plans ───────────────────────────────── */
+  function renderPlans() {
+    const container = document.getElementById('plans-container');
+    if (!container) return;
+    const plans = WorkoutManager.getWorkoutPlans();
 
-            var scheduler = document.getElementById('week-scheduler');
-            scheduler.innerHTML = DAY_KEYS.map(function (day, i) {
-                var planId   = sched[day];
-                var plans    = WorkoutManager.getWorkoutPlans();
-                var plan     = plans.find(function (p) { return p.id === planId; });
-                var isToday  = i === todayIdx;
+    if (!plans.length) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div>No saved plans yet. Create one above!</div></div>';
+      return;
+    }
 
-                var dayNum = new Date();
-                dayNum.setDate(today - todayIdx + i);
-                var dn = dayNum.getDate();
+    container.innerHTML = plans.map(plan => `
+      <div class="plan-card">
+        <div>
+          <div class="plan-info-name">${plan.name}</div>
+          <div class="plan-info-meta">${(plan.exercises || []).length} exercise(s)</div>
+        </div>
+        <div class="plan-actions">
+          <button class="btn btn-primary btn-sm" onclick="SessionManager && SessionManager.startSession('${plan.id}');window.location.href='sessions.html'">
+            ▶ Start
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="WorkoutManager.deleteWorkoutPlan('${plan.id}');renderPlans()">
+            🗑
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
 
-                return '<div class="scheduler-day' +
-                    (plan ? ' has-workout' : '') +
-                    (isToday ? ' today-sched' : '') +
-                    '" data-day="' + day + '">' +
-                    '<div class="sched-day-name">' + DAY_LABELS[i] + '</div>' +
-                    '<div class="sched-day-num">' + dn + '</div>' +
-                    (plan
-                        ? '<div class="sched-workout-label">🏋️ ' + plan.name + '</div>'
-                        : '<div class="sched-rest">Rest</div>'
-                    ) +
-                '</div>';
-            }).join('');
+  function renderPlanSelect() {
+    const sel = document.getElementById('plan-select');
+    if (!sel) return;
+    const plans = WorkoutManager.getWorkoutPlans();
+    sel.innerHTML = '<option value="">— select a plan —</option>' +
+      plans.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  }
 
-            // Click to assign
-            scheduler.querySelectorAll('.scheduler-day').forEach(function (dayEl) {
-                dayEl.addEventListener('click', function () {
-                    currentAssignDay = dayEl.dataset.day;
-                    openAssignModal(currentAssignDay);
-                });
-            });
-        }
+  /* ── Weekly Schedule ──────────────────────────────────── */
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-        // ── Assign modal ──
-        function openAssignModal(day) {
-            var modal = document.getElementById('assign-modal');
-            document.getElementById('assign-modal-title').textContent =
-                'Assign Workout — ' + Utils.capitalise(day);
+  function renderSchedule() {
+    const grid = document.getElementById('week-scheduler');
+    if (!grid) return;
+    const schedule = WorkoutManager.getWeeklySchedule() || {};
 
-            var plans = WorkoutManager.getWorkoutPlans();
-            var list  = document.getElementById('assign-plan-list');
+    grid.innerHTML = DAYS.map((day, i) => {
+      const dayExercises = schedule[i] || [];
+      const chips = dayExercises.map(ex =>
+        `<div class="day-exercise-chip" title="${ex.name || ex}">${ex.name || ex}</div>`
+      ).join('');
+      return `
+        <div class="day-col${dayExercises.length ? ' has-exercises' : ''}" data-day="${i}" onclick="openAssignModal(${i})">
+          <div class="day-label">${day}</div>
+          <div class="day-exercises">
+            ${chips || '<div class="day-empty-hint">+ Add</div>'}
+          </div>
+        </div>`;
+    }).join('');
+  }
 
-            if (!plans.length) {
-                list.innerHTML = '<p class="text-sm text-muted">No plans yet. Create one first.</p>';
-            } else {
-                list.innerHTML = plans.map(function (p) {
-                    return '<button class="btn btn-ghost btn-full" style="justify-content:flex-start;gap:8px;" onclick="assignDay(\'' + day + '\',\'' + p.id + '\')">' +
-                        '🏋️ <span>' + p.name + '</span>' +
-                        '<span class="badge badge-muted" style="margin-left:auto;">' + p.exercises.length + ' ex</span>' +
-                    '</button>';
-                }).join('');
-            }
+  /* ── Assign Modal ─────────────────────────────────────── */
+  let _assignDay = null;
 
-            modal.classList.remove('hidden');
-        }
+  window.openAssignModal = function (dayIndex) {
+    _assignDay = dayIndex;
+    const modal = document.getElementById('assign-modal');
+    const title = document.getElementById('assign-modal-title');
+    const list  = document.getElementById('assign-plan-list');
+    if (!modal) return;
 
-        window.assignDay = function (day, planId) {
-            var sched = WorkoutManager.getWeeklySchedule();
-            sched[day] = planId;
-            WorkoutManager.saveWeeklySchedule(sched);
-            renderScheduler();
-            document.getElementById('assign-modal').classList.add('hidden');
-            Utils.showToast('Workout assigned to ' + Utils.capitalise(day) + '!', 'success');
-        };
+    if (title) title.textContent = `Assign Exercises — ${DAYS[dayIndex]}`;
 
-        document.getElementById('clear-day-btn').addEventListener('click', function () {
-            if (!currentAssignDay) return;
-            var sched = WorkoutManager.getWeeklySchedule();
-            sched[currentAssignDay] = null;
-            WorkoutManager.saveWeeklySchedule(sched);
-            renderScheduler();
-            document.getElementById('assign-modal').classList.add('hidden');
-        });
+    const schedule = WorkoutManager.getWeeklySchedule() || {};
+    const assigned = new Set((schedule[dayIndex] || []).map(e => e.id || e));
+    const exercises = WorkoutManager.getAllExercises();
 
-        document.getElementById('clear-schedule-btn').addEventListener('click', function () {
-            var empty = { monday:null,tuesday:null,wednesday:null,thursday:null,friday:null,saturday:null,sunday:null };
-            WorkoutManager.saveWeeklySchedule(empty);
-            renderScheduler();
-            Utils.showToast('Schedule cleared.', 'info');
-        });
+    list.innerHTML = exercises.map(ex => `
+      <div class="picker-item">
+        <input type="checkbox" id="day-ex-${ex.id}" value="${ex.id}"
+          ${assigned.has(ex.id) ? 'checked' : ''}
+          onchange="updateDayExercise(${dayIndex},'${ex.id}',this.checked)">
+        <label class="picker-item-name" for="day-ex-${ex.id}">${ex.icon || ''} ${ex.name}</label>
+      </div>`).join('');
 
-        // ── Create plan modal ──
-        function openCreatePlanModal(preSelectId) {
-            selectedExerciseIds = preSelectId ? [preSelectId] : [];
-            document.getElementById('plan-name-input').value = '';
-            document.querySelectorAll('.plan-day-cb').forEach(function (cb) { cb.checked = false; });
-            renderExercisePicker();
-            document.getElementById('create-plan-modal').classList.remove('hidden');
-        }
+    modal.classList.add('open');
+  };
 
-        function renderExercisePicker() {
-            var allEx = WorkoutManager.getAllExercises();
-            var list  = document.getElementById('exercise-picker-list');
-            list.innerHTML = allEx.map(function (ex) {
-                var isSel = selectedExerciseIds.indexOf(ex.id) !== -1;
-                return '<div class="picker-exercise-row' + (isSel ? ' selected' : '') + '" data-ex-id="' + ex.id + '">' +
-                    '<input type="checkbox" class="picker-check" ' + (isSel ? 'checked' : '') + ' aria-label="' + ex.name + '">' +
-                    '<div>' +
-                        '<div class="picker-ex-name">' + ex.name + '</div>' +
-                        '<div class="picker-ex-cat">' + ex.category + ' · ' + ex.sets + '×' + ex.reps + '</div>' +
-                    '</div>' +
-                '</div>';
-            }).join('');
+  window.updateDayExercise = function (dayIndex, exId, add) {
+    const schedule = WorkoutManager.getWeeklySchedule() || {};
+    if (!schedule[dayIndex]) schedule[dayIndex] = [];
+    if (add) {
+      const ex = WorkoutManager.getExercise(exId);
+      if (ex && !schedule[dayIndex].find(e => (e.id || e) === exId)) {
+        schedule[dayIndex].push(ex);
+      }
+    } else {
+      schedule[dayIndex] = schedule[dayIndex].filter(e => (e.id || e) !== exId);
+    }
+    WorkoutManager.saveWeeklySchedule(schedule);
+    renderSchedule();
+  };
 
-            list.querySelectorAll('.picker-exercise-row').forEach(function (row) {
-                row.addEventListener('click', function () {
-                    var id  = row.dataset.exId;
-                    var cb  = row.querySelector('.picker-check');
-                    var idx = selectedExerciseIds.indexOf(id);
-                    if (idx === -1) {
-                        selectedExerciseIds.push(id);
-                        cb.checked = true;
-                        row.classList.add('selected');
-                    } else {
-                        selectedExerciseIds.splice(idx, 1);
-                        cb.checked = false;
-                        row.classList.remove('selected');
-                    }
-                });
-            });
-        }
+  document.getElementById('clear-day-btn').addEventListener('click', () => {
+    if (_assignDay === null) return;
+    const schedule = WorkoutManager.getWeeklySchedule() || {};
+    schedule[_assignDay] = [];
+    WorkoutManager.saveWeeklySchedule(schedule);
+    renderSchedule();
+    document.getElementById('assign-modal').classList.remove('open');
+  });
 
-        document.getElementById('open-create-plan-btn').addEventListener('click', function () {
-            openCreatePlanModal(null);
-        });
+  document.getElementById('clear-schedule-btn').addEventListener('click', () => {
+    if (!confirm('Clear all exercises from the weekly schedule?')) return;
+    WorkoutManager.saveWeeklySchedule({});
+    renderSchedule();
+  });
 
-        document.getElementById('save-plan-btn').addEventListener('click', function () {
-            var name = document.getElementById('plan-name-input').value.trim();
-            if (!name) {
-                Utils.showToast('Please enter a plan name.', 'warning');
-                return;
-            }
-            if (!selectedExerciseIds.length) {
-                Utils.showToast('Please select at least one exercise.', 'warning');
-                return;
-            }
-            var days = [];
-            document.querySelectorAll('.plan-day-cb:checked').forEach(function (cb) {
-                days.push(cb.value);
-            });
-
-            var plan = WorkoutManager.createWorkoutPlan(name, selectedExerciseIds, days);
-
-            // Auto-assign schedule
-            if (days.length) {
-                var sched = WorkoutManager.getWeeklySchedule();
-                days.forEach(function (d) { sched[d] = plan.id; });
-                WorkoutManager.saveWeeklySchedule(sched);
-            }
-
-            document.getElementById('create-plan-modal').classList.add('hidden');
-            renderPlans();
-            renderScheduler();
-            Utils.showToast('Plan "' + name + '" created!', 'success');
-        });
-
-        // ── Initial render ──
-        renderExerciseGrid();
-        renderPlans();
-        renderScheduler();
+  /* ── Close modals on overlay click ──────────────────── */
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) overlay.classList.remove('open');
     });
+  });
+
+  /* ── Init ──────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    renderExerciseGrid('all');
+    renderSchedule();
+    renderPlans();
+    renderPlanSelect();
+  });
+})();
 </script>
 </body>
 </html>
