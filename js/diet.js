@@ -18,7 +18,7 @@
       id: 'oatmeal_berries', name: 'Oatmeal with Berries & Honey',
       category: 'breakfast', image: '🥣',
       calories: 320, protein: 10, carbs: 58, fats: 6,
-      cost: 3.50, prepTime: 5, cookTime: 10, servings: 1,
+      cost: 80, prepTime: 5, cookTime: 10, servings: 1,
       tags: ['vegan', 'high-carb', 'budget-friendly'],
       ingredients: [
         { item: 'Rolled oats', amount: 80, unit: 'g' },
@@ -38,7 +38,7 @@
       id: 'egg_white_omelette', name: 'Egg White Veggie Omelette',
       category: 'breakfast', image: '🍳',
       calories: 215, protein: 28, carbs: 8, fats: 8,
-      cost: 4.20, prepTime: 5, cookTime: 10, servings: 1,
+      cost: 110, prepTime: 5, cookTime: 10, servings: 1,
       tags: ['high-protein', 'low-carb', 'keto-friendly'],
       ingredients: [
         { item: 'Egg whites', amount: 6, unit: 'large' },
@@ -60,7 +60,7 @@
       id: 'greek_yogurt_parfait', name: 'Greek Yogurt Protein Parfait',
       category: 'breakfast', image: '🥛',
       calories: 370, protein: 30, carbs: 42, fats: 8,
-      cost: 5.00, prepTime: 5, cookTime: 0, servings: 1,
+      cost: 150, prepTime: 5, cookTime: 0, servings: 1,
       tags: ['high-protein', 'quick', 'no-cook'],
       ingredients: [
         { item: 'Non-fat Greek yogurt', amount: 200, unit: 'g' },
@@ -80,7 +80,7 @@
       id: 'avocado_toast_eggs', name: 'Avocado Toast with Poached Eggs',
       category: 'breakfast', image: '🥑',
       calories: 450, protein: 22, carbs: 38, fats: 24,
-      cost: 6.50, prepTime: 10, cookTime: 10, servings: 1,
+      cost: 180, prepTime: 10, cookTime: 10, servings: 1,
       tags: ['healthy-fats', 'popular'],
       ingredients: [
         { item: 'Sourdough bread', amount: 2, unit: 'slices' },
@@ -104,7 +104,7 @@
       id: 'grilled_chicken_salad', name: 'Grilled Chicken & Quinoa Salad',
       category: 'lunch', image: '🥗',
       calories: 480, protein: 46, carbs: 35, fats: 14,
-      cost: 9.00, prepTime: 15, cookTime: 20, servings: 1,
+      cost: 220, prepTime: 15, cookTime: 20, servings: 1,
       tags: ['high-protein', 'meal-prep', 'gluten-free'],
       ingredients: [
         { item: 'Chicken breast', amount: 180, unit: 'g' },
@@ -128,7 +128,7 @@
       id: 'tuna_wrap', name: 'High-Protein Tuna Wrap',
       category: 'lunch', image: '🌯',
       calories: 420, protein: 38, carbs: 40, fats: 12,
-      cost: 5.50, prepTime: 10, cookTime: 0, servings: 1,
+      cost: 190, prepTime: 10, cookTime: 0, servings: 1,
       tags: ['high-protein', 'quick', 'no-cook', 'budget-friendly'],
       ingredients: [
         { item: 'Canned tuna in water', amount: 1, unit: 'can (185g)' },
@@ -151,7 +151,7 @@
       id: 'turkey_meatballs', name: 'Turkey Meatballs with Zucchini Noodles',
       category: 'lunch', image: '🍝',
       calories: 520, protein: 50, carbs: 18, fats: 28,
-      cost: 10.00, prepTime: 20, cookTime: 25, servings: 2,
+      cost: 280, prepTime: 20, cookTime: 25, servings: 2,
       tags: ['high-protein', 'low-carb', 'meal-prep'],
       ingredients: [
         { item: 'Ground turkey', amount: 400, unit: 'g' },
@@ -174,7 +174,7 @@
       id: 'lentil_soup', name: 'High-Protein Red Lentil Soup',
       category: 'lunch', image: '🍲',
       calories: 380, protein: 22, carbs: 56, fats: 8,
-      cost: 4.00, prepTime: 10, cookTime: 30, servings: 2,
+      cost: 90, prepTime: 10, cookTime: 30, servings: 2,
       tags: ['vegan', 'high-protein', 'budget-friendly', 'meal-prep'],
       ingredients: [
         { item: 'Red lentils', amount: 200, unit: 'g' },
@@ -200,7 +200,7 @@
       id: 'salmon_asparagus', name: 'Baked Salmon with Asparagus',
       category: 'dinner', image: '🐟',
       calories: 520, protein: 52, carbs: 12, fats: 28,
-      cost: 14.00, prepTime: 10, cookTime: 20, servings: 1,
+      cost: 380, prepTime: 10, cookTime: 20, servings: 1,
       tags: ['high-protein', 'omega-3', 'keto-friendly', 'gluten-free'],
       ingredients: [
         { item: 'Salmon fillet', amount: 200, unit: 'g' },
@@ -222,7 +222,7 @@
       id: 'chicken_stir_fry', name: 'Chicken & Veggie Stir-Fry with Brown Rice',
       category: 'dinner', image: '🍜',
       calories: 580, protein: 48, carbs: 55, fats: 16,
-      cost: 8.50, prepTime: 15, cookTime: 20, servings: 1,
+      cost: 200, prepTime: 15, cookTime: 20, servings: 1,
       tags: ['high-protein', 'meal-prep', 'balanced'],
       ingredients: [
         { item: 'Chicken breast', amount: 180, unit: 'g' },
@@ -248,7 +248,7 @@
       id: 'beef_sweet_potato', name: 'Lean Beef & Sweet Potato Bowl',
       category: 'dinner', image: '🥩',
       calories: 640, protein: 50, carbs: 60, fats: 18,
-      cost: 12.00, prepTime: 15, cookTime: 30, servings: 1,
+      cost: 320, prepTime: 15, cookTime: 30, servings: 1,
       tags: ['high-protein', 'bulking', 'meal-prep'],
       ingredients: [
         { item: 'Lean ground beef (90/10)', amount: 200, unit: 'g' },
@@ -271,7 +271,7 @@
       id: 'vegetable_curry', name: 'Chickpea & Vegetable Curry',
       category: 'dinner', image: '🍛',
       calories: 480, protein: 20, carbs: 68, fats: 14,
-      cost: 6.00, prepTime: 10, cookTime: 30, servings: 2,
+      cost: 120, prepTime: 10, cookTime: 30, servings: 2,
       tags: ['vegan', 'gluten-free', 'budget-friendly'],
       ingredients: [
         { item: 'Chickpeas (canned)', amount: 400, unit: 'g' },
@@ -297,7 +297,7 @@
       id: 'protein_shake', name: 'Post-Workout Protein Shake',
       category: 'snack', image: '🥤',
       calories: 280, protein: 35, carbs: 26, fats: 4,
-      cost: 3.50, prepTime: 5, cookTime: 0, servings: 1,
+      cost: 120, prepTime: 5, cookTime: 0, servings: 1,
       tags: ['high-protein', 'quick', 'no-cook', 'post-workout'],
       ingredients: [
         { item: 'Whey protein powder', amount: 30, unit: 'g' },
@@ -316,7 +316,7 @@
       id: 'rice_cakes_pb', name: 'Rice Cakes with Peanut Butter & Banana',
       category: 'snack', image: '🍌',
       calories: 240, protein: 8, carbs: 36, fats: 8,
-      cost: 2.50, prepTime: 5, cookTime: 0, servings: 1,
+      cost: 70, prepTime: 5, cookTime: 0, servings: 1,
       tags: ['quick', 'no-cook', 'pre-workout'],
       ingredients: [
         { item: 'Rice cakes', amount: 3, unit: 'cakes' },
@@ -334,7 +334,7 @@
       id: 'hummus_veggies', name: 'Hummus & Veggie Sticks',
       category: 'snack', image: '🥕',
       calories: 190, protein: 8, carbs: 22, fats: 8,
-      cost: 3.00, prepTime: 5, cookTime: 0, servings: 1,
+      cost: 90, prepTime: 5, cookTime: 0, servings: 1,
       tags: ['vegan', 'quick', 'no-cook', 'low-calorie'],
       ingredients: [
         { item: 'Hummus', amount: 100, unit: 'g' },
@@ -353,7 +353,7 @@
       id: 'overnight_oats', name: 'Overnight Oats with Protein',
       category: 'snack', image: '🥄',
       calories: 340, protein: 26, carbs: 44, fats: 7,
-      cost: 3.00, prepTime: 5, cookTime: 0, servings: 1,
+      cost: 85, prepTime: 5, cookTime: 0, servings: 1,
       tags: ['high-protein', 'meal-prep', 'no-cook'],
       ingredients: [
         { item: 'Rolled oats', amount: 60, unit: 'g' },
@@ -374,7 +374,7 @@
       id: 'boiled_eggs_toast', name: 'Hard-Boiled Eggs on Wholegrain Toast',
       category: 'snack', image: '🥚',
       calories: 270, protein: 20, carbs: 24, fats: 10,
-      cost: 2.80, prepTime: 5, cookTime: 12, servings: 1,
+      cost: 75, prepTime: 5, cookTime: 12, servings: 1,
       tags: ['high-protein', 'budget-friendly'],
       ingredients: [
         { item: 'Eggs', amount: 2, unit: 'large' },
@@ -394,7 +394,7 @@
       id: 'trail_mix', name: 'Homemade Protein Trail Mix',
       category: 'snack', image: '🥜',
       calories: 310, protein: 12, carbs: 28, fats: 18,
-      cost: 3.20, prepTime: 5, cookTime: 0, servings: 2,
+      cost: 95, prepTime: 5, cookTime: 0, servings: 2,
       tags: ['vegan', 'no-cook', 'portable'],
       ingredients: [
         { item: 'Almonds', amount: 30, unit: 'g' },
@@ -414,7 +414,7 @@
       id: 'cottage_cheese_bowl', name: 'Cottage Cheese Berry Bowl',
       category: 'snack', image: '🍓',
       calories: 220, protein: 26, carbs: 20, fats: 4,
-      cost: 3.50, prepTime: 3, cookTime: 0, servings: 1,
+      cost: 140, prepTime: 3, cookTime: 0, servings: 1,
       tags: ['high-protein', 'low-fat', 'quick', 'no-cook'],
       ingredients: [
         { item: 'Low-fat cottage cheese', amount: 200, unit: 'g' },
@@ -434,7 +434,7 @@
       id: 'black_bean_burrito', name: 'High-Protein Black Bean Burrito',
       category: 'lunch', image: '🌮',
       calories: 540, protein: 28, carbs: 72, fats: 14,
-      cost: 5.50, prepTime: 10, cookTime: 10, servings: 1,
+      cost: 160, prepTime: 10, cookTime: 10, servings: 1,
       tags: ['vegan', 'high-protein', 'budget-friendly'],
       ingredients: [
         { item: 'Black beans (canned)', amount: 200, unit: 'g' },
@@ -457,7 +457,7 @@
       id: 'tuna_nicoise', name: 'Tuna Niçoise Salad',
       category: 'dinner', image: '🥙',
       calories: 460, protein: 42, carbs: 28, fats: 18,
-      cost: 11.00, prepTime: 15, cookTime: 12, servings: 1,
+      cost: 250, prepTime: 15, cookTime: 12, servings: 1,
       tags: ['high-protein', 'gluten-free', 'omega-3'],
       ingredients: [
         { item: 'Canned tuna in olive oil', amount: 160, unit: 'g' },
@@ -584,7 +584,7 @@
         <div class="meal-card-footer">
           <span class="meal-meta-item">⏱ ${meal.prepTime + meal.cookTime} min</span>
           <span class="meal-meta-item">👤 ${meal.servings} serving${meal.servings > 1 ? 's' : ''}</span>
-          <span class="meal-meta-item">💰 $${meal.cost.toFixed(2)}</span>
+          <span class="meal-meta-item">💰 ₹${meal.cost}</span>
           <button class="btn btn-ghost btn-sm" onclick="this.closest('.meal-card').querySelector('.meal-recipe').classList.toggle('expanded');this.textContent=this.textContent.includes('▼')?'▲ Hide Recipe':'▼ View Recipe'">
             ▼ View Recipe
           </button>

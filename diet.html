@@ -826,8 +826,8 @@
                    '<div class="recipe-step-text">' + step + '</div></div>';
         }).join('');
 
-        /* Convert cost to ₹ (multiply by 83 for approximate INR) */
-        var priceInr = Math.round(meal.cost * 83);
+        /* Cost is already in ₹ (INR) */
+        var priceInr = meal.cost;
 
         return '<div class="meal-card reveal" data-meal-id="' + meal.id + '">' +
             '<div class="meal-card-header">' +
@@ -892,7 +892,7 @@
         document.getElementById('modal-meal-title').textContent    = meal.image + ' ' + meal.name;
         document.getElementById('modal-meal-category').textContent = meal.category.charAt(0).toUpperCase() + meal.category.slice(1);
 
-        var priceInr = Math.round(meal.cost * 83);
+        var priceInr = meal.cost;
 
         document.getElementById('modal-stats-row').innerHTML = [
             { val: meal.calories + ' kcal', label: 'Calories' },
