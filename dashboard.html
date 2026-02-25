@@ -10,62 +10,6 @@
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* ── Activity rings ── */
-        .rings-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 32px;
-            flex-wrap: wrap;
-            padding: 8px 0;
-        }
-        .ring-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .ring-label-row {
-            text-align: center;
-        }
-        .ring-label-name {
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-        .ring-label-sub {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-
-        /* ── Recovery score ── */
-        .recovery-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 6px solid;
-            flex-shrink: 0;
-        }
-        .recovery-score-num {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: 2.2rem;
-            line-height: 1;
-        }
-        .recovery-score-label {
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
-        .recovery-good  { border-color: var(--accent-success); color: var(--accent-success); }
-        .recovery-fair  { border-color: var(--accent-warning); color: var(--accent-warning); }
-        .recovery-poor  { border-color: var(--accent-danger);  color: var(--accent-danger);  }
-
         /* ── Weekly bars ── */
         .weekly-chart {
             display: flex;
@@ -101,60 +45,6 @@
             color: var(--text-muted);
         }
         .bar-day.today-label { color: var(--accent-primary); }
-
-        /* ── Sleep breakdown bars ── */
-        .sleep-bar-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .sleep-bar-label {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            width: 65px;
-            flex-shrink: 0;
-        }
-        .sleep-bar-track {
-            flex: 1;
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-full);
-            overflow: hidden;
-        }
-        .sleep-bar-fill {
-            height: 100%;
-            border-radius: var(--radius-full);
-            animation: progressFill 0.9s ease both;
-        }
-        .sleep-bar-val {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            width: 32px;
-            text-align: right;
-            flex-shrink: 0;
-        }
-
-        /* ── Heart rate zones ── */
-        .hr-zone-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .hr-zone-row:last-child { border-bottom: none; }
-        .hr-zone-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .hr-zone-name { font-size: 0.82rem; font-weight: 600; flex: 1; }
-        .hr-zone-range { font-size: 0.72rem; color: var(--text-muted); }
-        .hr-zone-time { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); }
 
         /* ── Quick actions ── */
         .quick-actions {
@@ -199,7 +89,7 @@
         /* ── Greeting header ── */
         .dashboard-greeting {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
@@ -211,11 +101,92 @@
             margin-bottom: 2px;
         }
         .greeting-date { font-size: 0.85rem; color: var(--text-muted); }
+        .motivational-quote {
+            font-size: 0.82rem;
+            font-style: italic;
+            color: var(--text-muted);
+            margin-top: 6px;
+            max-width: 420px;
+        }
+
+        /* ── Hydration tracker ── */
+        .hydration-glasses {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+        .glass-icon {
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: transform 0.15s, filter 0.15s;
+            filter: grayscale(1) opacity(0.35);
+        }
+        .glass-icon.filled {
+            filter: none;
+        }
+        .glass-icon:hover { transform: scale(1.15); }
+
+        /* ── Streak badge ── */
+        .streak-number {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 3rem;
+            line-height: 1;
+            color: var(--accent-warning);
+        }
+        .streak-fire { font-size: 2.5rem; }
+
+        /* ── Recent activity ── */
+        .activity-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .activity-row:last-child { border-bottom: none; }
+        .activity-dot {
+            width: 36px; height: 36px; border-radius: var(--radius-md);
+            background: rgba(var(--accent-primary-rgb), 0.12);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .activity-name { font-weight: 600; font-size: 0.88rem; }
+        .activity-meta { font-size: 0.75rem; color: var(--text-muted); }
+        .activity-dur { margin-left: auto; font-weight: 700; font-size: 0.82rem; color: var(--accent-primary); flex-shrink: 0; }
+
+        /* ── Monthly stats ── */
+        .monthly-stat-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 0; border-bottom: 1px solid var(--border-color);
+        }
+        .monthly-stat-item:last-child { border-bottom: none; }
+        .monthly-stat-icon {
+            width: 40px; height: 40px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;
+        }
+        .monthly-stat-val { font-family:'Poppins',sans-serif; font-weight:800; font-size:1.4rem; line-height:1; }
+        .monthly-stat-lbl { font-size:0.75rem; color:var(--text-muted); margin-top:1px; }
+
+        /* ── Today's workout ── */
+        .workout-exercise-row {
+            display:flex; align-items:center; gap:10px; padding:8px 0;
+            border-bottom:1px solid var(--border-color);
+        }
+        .workout-exercise-row:last-child { border-bottom:none; }
+        .ex-num {
+            width:24px; height:24px; border-radius:50%;
+            background:rgba(var(--accent-primary-rgb),0.15);
+            color:var(--accent-primary); font-size:0.72rem; font-weight:700;
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
+        }
+        .ex-name { font-weight:600; font-size:0.88rem; flex:1; }
+        .ex-detail { font-size:0.75rem; color:var(--text-muted); }
 
         /* ── Responsive quick actions ── */
         @media (max-width: 600px) {
             .quick-actions { grid-template-columns: repeat(2, 1fr); }
-            .rings-section { gap: 20px; }
         }
     </style>
 </head>
@@ -251,7 +222,7 @@
                 <span class="nav-item-icon">📈</span> Progress
             </a>
             <a class="nav-item" href="sleep.html">
-                <span class="nav-item-icon">😴</span> Sleep
+                <span class="nav-item-icon">🌿</span> Recovery
             </a>
             <a class="nav-item" href="profile.html">
                 <span class="nav-item-icon">👤</span> Profile
@@ -303,191 +274,73 @@
                 <div class="greeting-text">
                     <h2 id="greeting-text">Good Morning, User! 🌅</h2>
                     <div class="greeting-date" id="greeting-date"></div>
+                    <div class="motivational-quote" id="motivational-quote"></div>
                 </div>
                 <div class="d-flex items-center gap-6">
                     <span class="badge badge-success animate-pulse">● Live</span>
                 </div>
             </div>
 
-            <!-- ── Activity Rings ── -->
-            <div class="section">
-                <div class="card reveal stagger-1">
-                    <div class="card-header">
-                        <div class="card-title">🎯 Activity Rings</div>
-                        <span class="badge badge-primary">Today</span>
-                    </div>
-                    <div class="rings-section">
-
-                        <!-- Move Ring -->
-                        <div class="ring-item">
-                            <div class="progress-ring-container">
-                                <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
-                                    <defs>
-                                        <linearGradient id="ringGradientMove" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
-                                            <stop offset="100%" style="stop-color:#ff4757;stop-opacity:1" />
-                                        </linearGradient>
-                                    </defs>
-                                    <circle class="progress-ring-track" cx="55" cy="55" r="45" stroke-width="10"/>
-                                    <circle class="progress-ring-fill" id="ring-move" cx="55" cy="55" r="45"
-                                        stroke="url(#ringGradientMove)" stroke-width="10"
-                                        stroke-dasharray="283" stroke-dashoffset="283"
-                                        style="--ring-target:70;"/>
-                                </svg>
-                                <div class="progress-ring-text">
-                                    <span class="progress-ring-value" id="ring-move-pct">0%</span>
-                                    <span class="progress-ring-label">Move</span>
-                                </div>
-                            </div>
-                            <div class="ring-label-row">
-                                <div class="ring-label-name" style="color:#ff6b35;">🔴 Move</div>
-                                <div class="ring-label-sub"><span data-counter="487">487</span> / 600 kcal</div>
-                            </div>
-                        </div>
-
-                        <!-- Exercise Ring -->
-                        <div class="ring-item">
-                            <div class="progress-ring-container">
-                                <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
-                                    <defs>
-                                        <linearGradient id="ringGradientEx" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#2ed573;stop-opacity:1" />
-                                            <stop offset="100%" style="stop-color:#00b894;stop-opacity:1" />
-                                        </linearGradient>
-                                    </defs>
-                                    <circle class="progress-ring-track" cx="55" cy="55" r="45" stroke-width="10"/>
-                                    <circle class="progress-ring-fill" id="ring-exercise" cx="55" cy="55" r="45"
-                                        stroke="url(#ringGradientEx)" stroke-width="10"
-                                        stroke-dasharray="283" stroke-dashoffset="283"
-                                        style="--ring-target:120;"/>
-                                </svg>
-                                <div class="progress-ring-text">
-                                    <span class="progress-ring-value" id="ring-ex-pct">0%</span>
-                                    <span class="progress-ring-label">Exercise</span>
-                                </div>
-                            </div>
-                            <div class="ring-label-row">
-                                <div class="ring-label-name" style="color:#2ed573;">🟢 Exercise</div>
-                                <div class="ring-label-sub"><span data-counter="36">36</span> / 30 min</div>
-                            </div>
-                        </div>
-
-                        <!-- Stand Ring -->
-                        <div class="ring-item">
-                            <div class="progress-ring-container">
-                                <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
-                                    <defs>
-                                        <linearGradient id="ringGradientStand" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
-                                            <stop offset="100%" style="stop-color:#6c63ff;stop-opacity:1" />
-                                        </linearGradient>
-                                    </defs>
-                                    <circle class="progress-ring-track" cx="55" cy="55" r="45" stroke-width="10"/>
-                                    <circle class="progress-ring-fill" id="ring-stand" cx="55" cy="55" r="45"
-                                        stroke="url(#ringGradientStand)" stroke-width="10"
-                                        stroke-dasharray="283" stroke-dashoffset="283"
-                                        style="--ring-target:180;"/>
-                                </svg>
-                                <div class="progress-ring-text">
-                                    <span class="progress-ring-value" id="ring-stand-pct">0%</span>
-                                    <span class="progress-ring-label">Stand</span>
-                                </div>
-                            </div>
-                            <div class="ring-label-row">
-                                <div class="ring-label-name" style="color:#74b9ff;">🔵 Stand</div>
-                                <div class="ring-label-sub"><span data-counter="9">9</span> / 12 hrs</div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
             <!-- ── Stats Grid ── -->
             <div class="section">
                 <div class="section-header">
-                    <h3 class="section-title">📋 Today's Stats</h3>
+                    <h3 class="section-title">📋 Your Stats</h3>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card reveal stagger-1">
-                        <div class="stat-icon teal">🚶</div>
+                        <div class="stat-icon teal">🔥</div>
                         <div class="stat-info">
-                            <div class="stat-value"><span data-counter="8432">8432</span></div>
-                            <div class="stat-label">Steps Today</div>
-                            <div class="stat-change up">↑ 84% of goal (10,000)</div>
+                            <div class="stat-value" id="stat-streak-val">0</div>
+                            <div class="stat-label">Day Streak</div>
+                            <div class="stat-change" id="stat-streak-sub" style="color:var(--accent-warning);">Keep it going!</div>
                         </div>
                     </div>
                     <div class="stat-card reveal stagger-2">
-                        <div class="stat-icon danger">🔥</div>
+                        <div class="stat-icon" style="background:rgba(var(--accent-secondary-rgb),0.15);">🏋️</div>
                         <div class="stat-info">
-                            <div class="stat-value"><span data-counter="487">487</span></div>
-                            <div class="stat-label">Calories Burned</div>
-                            <div class="stat-change up">↑ 81% of goal (600 kcal)</div>
+                            <div class="stat-value" id="stat-monthly-workouts">0</div>
+                            <div class="stat-label">Workouts This Month</div>
+                            <div class="stat-change" id="stat-monthly-sub" style="color:var(--text-muted);">sessions logged</div>
                         </div>
                     </div>
                     <div class="stat-card reveal stagger-3">
-                        <div class="stat-icon danger">
-                            <span class="animate-heartbeat" style="display:inline-block;">❤️</span>
-                        </div>
+                        <div class="stat-icon" style="background:rgba(255,165,2,0.15);">⚖️</div>
                         <div class="stat-info">
-                            <div class="stat-value"><span data-counter="72">72</span></div>
-                            <div class="stat-label">Heart Rate (bpm)</div>
-                            <div class="stat-change up" style="color:var(--accent-success);">● Resting — Normal</div>
+                            <div class="stat-value" id="stat-bmi-val">—</div>
+                            <div class="stat-label">Current BMI</div>
+                            <div class="stat-change" id="stat-bmi-cat" style="color:var(--text-muted);">Not recorded yet</div>
                         </div>
                     </div>
                     <div class="stat-card reveal stagger-4">
                         <div class="stat-icon teal">💧</div>
                         <div class="stat-info">
-                            <div class="stat-value">1.8<span style="font-size:1rem;font-weight:400;">L</span></div>
-                            <div class="stat-label">Water Intake</div>
-                            <div class="stat-change" style="color:var(--accent-warning);">→ 72% of goal (2.5L)</div>
+                            <div class="stat-value" id="stat-hydration-val">0</div>
+                            <div class="stat-label">Glasses Today</div>
+                            <div class="stat-change" id="stat-hydration-sub" style="color:var(--accent-primary);">Goal: 8 glasses</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ── Recovery + Weekly Chart ── -->
+            <!-- ── Today's Workout + Weekly Chart ── -->
             <div class="grid-2 section" style="align-items:start;">
 
-                <!-- Recovery Score -->
+                <!-- Today's Workout -->
                 <div class="card reveal stagger-1">
                     <div class="card-header">
-                        <div class="card-title">⚡ Recovery Score</div>
-                        <span class="badge badge-success">Good</span>
+                        <div class="card-title">📋 Today's Workout</div>
+                        <a href="workout.html" class="text-accent text-sm" style="font-weight:600;">Edit →</a>
                     </div>
-                    <div class="d-flex items-center gap-12 mb-10">
-                        <div class="recovery-circle recovery-good">
-                            <span class="recovery-score-num" id="recovery-num">78</span>
-                            <span class="recovery-score-label">/100</span>
-                        </div>
-                        <div>
-                            <div style="font-weight:700;font-size:1.1rem;color:var(--accent-success);">Good Recovery</div>
-                            <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">Ready to Train Hard</div>
-                            <div style="margin-top:12px;">
-                                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Strain Score</div>
-                                <div style="font-weight:800;font-size:1.4rem;color:var(--accent-secondary);">14.2</div>
-                            </div>
-                        </div>
+                    <div id="today-workout-content">
+                        <!-- rendered by JS -->
                     </div>
-                    <div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">Recommendations</div>
-                    <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:6px;">
-                        <li style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text-secondary);">
-                            <span style="color:var(--accent-success);">✓</span> Great time for high-intensity training
-                        </li>
-                        <li style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text-secondary);">
-                            <span style="color:var(--accent-primary);">💧</span> Stay hydrated — drink 2.5L today
-                        </li>
-                        <li style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text-secondary);">
-                            <span style="color:var(--accent-warning);">😴</span> Aim for 7–9 hours tonight
-                        </li>
-                    </ul>
                 </div>
 
                 <!-- Weekly Activity Chart -->
                 <div class="card reveal stagger-2">
                     <div class="card-header">
                         <div class="card-title">📅 Weekly Activity</div>
-                        <span class="badge badge-muted">187 min total</span>
+                        <span class="badge badge-muted" id="weekly-total-badge">0 min total</span>
                     </div>
                     <div class="weekly-chart" id="weekly-chart">
                         <!-- Bars rendered by JS -->
@@ -496,91 +349,75 @@
 
             </div>
 
-            <!-- ── Sleep + Heart Rate ── -->
+            <!-- ── Workout Streak + Recent Activity ── -->
             <div class="grid-2 section" style="align-items:start;">
 
-                <!-- Sleep Summary -->
+                <!-- Workout Streak -->
                 <div class="card reveal stagger-1">
                     <div class="card-header">
-                        <div class="card-title">😴 Sleep Summary</div>
-                        <a href="sleep.html" class="text-accent text-sm" style="font-weight:600;">View Details →</a>
+                        <div class="card-title">🔥 Workout Streak</div>
+                        <span class="badge badge-warning" id="streak-badge-label">Active</span>
                     </div>
-                    <div class="d-flex items-center gap-10 mb-12">
-                        <div style="text-align:center;">
-                            <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:2rem;line-height:1;color:var(--accent-secondary);">83</div>
-                            <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;font-weight:600;">SLEEP SCORE</div>
-                        </div>
+                    <div class="d-flex items-center gap-16 mb-10">
+                        <span class="streak-fire">🔥</span>
                         <div>
-                            <div style="font-weight:700;font-size:1.05rem;">7h 23m</div>
-                            <div style="font-size:0.78rem;color:var(--text-muted);">Time in bed</div>
-                        </div>
-                        <div>
-                            <span class="badge badge-success">Good</span>
+                            <div class="streak-number" id="streak-display">0</div>
+                            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">consecutive days</div>
                         </div>
                     </div>
-                    <div class="sleep-bar-row">
-                        <span class="sleep-bar-label">Deep</span>
-                        <div class="sleep-bar-track">
-                            <div class="sleep-bar-fill" style="width:28%;background:#6c63ff;"></div>
-                        </div>
-                        <span class="sleep-bar-val">2h 4m</span>
-                    </div>
-                    <div class="sleep-bar-row">
-                        <span class="sleep-bar-label">Light</span>
-                        <div class="sleep-bar-track">
-                            <div class="sleep-bar-fill" style="width:48%;background:#74b9ff;"></div>
-                        </div>
-                        <span class="sleep-bar-val">3h 33m</span>
-                    </div>
-                    <div class="sleep-bar-row">
-                        <span class="sleep-bar-label">REM</span>
-                        <div class="sleep-bar-track">
-                            <div class="sleep-bar-fill" style="width:18%;background:#00d4aa;"></div>
-                        </div>
-                        <span class="sleep-bar-val">1h 19m</span>
-                    </div>
-                    <div class="sleep-bar-row">
-                        <span class="sleep-bar-label">Awake</span>
-                        <div class="sleep-bar-track">
-                            <div class="sleep-bar-fill" style="width:6%;background:#ff4757;"></div>
-                        </div>
-                        <span class="sleep-bar-val">27m</span>
+                    <div id="streak-message" style="font-size:0.85rem;color:var(--text-secondary);"></div>
+                    <div style="margin-top:14px;">
+                        <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Last 7 Days</div>
+                        <div id="streak-days" style="display:flex;gap:6px;"></div>
                     </div>
                 </div>
 
-                <!-- Heart Rate Zones -->
+                <!-- Recent Activity -->
                 <div class="card reveal stagger-2">
                     <div class="card-header">
-                        <div class="card-title">❤️ Heart Rate Zones</div>
-                        <span class="badge badge-muted">Today</span>
+                        <div class="card-title">⏱️ Recent Activity</div>
+                        <a href="sessions.html" class="text-accent text-sm" style="font-weight:600;">All →</a>
                     </div>
-                    <!-- Current zone indicator bar -->
-                    <div style="height:8px;background:linear-gradient(to right,#a0aec0 0%,#74b9ff 25%,#ffa502 60%,#ff4757 100%);border-radius:4px;margin-bottom:16px;position:relative;">
-                        <div style="position:absolute;left:22%;top:-6px;width:14px;height:20px;background:var(--bg-card);border:3px solid var(--accent-primary);border-radius:4px;"></div>
+                    <div id="recent-activity-list">
+                        <!-- rendered by JS -->
                     </div>
-                    <div class="hr-zone-row">
-                        <div class="hr-zone-dot" style="background:#a0aec0;"></div>
-                        <div class="hr-zone-name">Rest</div>
-                        <div class="hr-zone-range">Below 95 bpm</div>
-                        <div class="hr-zone-time">5h 12m</div>
+                </div>
+
+            </div>
+
+            <!-- ── Hydration Tracker + Monthly Stats ── -->
+            <div class="grid-2 section" style="align-items:start;">
+
+                <!-- Hydration Tracker -->
+                <div class="card reveal stagger-1">
+                    <div class="card-header">
+                        <div class="card-title">💧 Hydration Tracker</div>
+                        <span class="badge badge-primary" id="hydration-badge">0 / 8</span>
                     </div>
-                    <div class="hr-zone-row">
-                        <div class="hr-zone-dot" style="background:#74b9ff;"></div>
-                        <div class="hr-zone-name">Fat Burn</div>
-                        <div class="hr-zone-range">95–133 bpm</div>
-                        <div class="hr-zone-time">38m</div>
+                    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">Tap a glass to log water intake</p>
+                    <div class="hydration-glasses" id="hydration-glasses">
+                        <!-- rendered by JS -->
                     </div>
-                    <div class="hr-zone-row">
-                        <div class="hr-zone-dot" style="background:#ffa502;"></div>
-                        <div class="hr-zone-name">Cardio</div>
-                        <div class="hr-zone-range">133–161 bpm</div>
-                        <div class="hr-zone-time">22m</div>
+                    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+                        <button class="btn btn-primary btn-sm" id="hydration-add-btn">+ Add Glass</button>
+                        <button class="btn btn-ghost btn-sm" id="hydration-reset-btn">Reset</button>
                     </div>
-                    <div class="hr-zone-row">
-                        <div class="hr-zone-dot" style="background:#ff4757;"></div>
-                        <div class="hr-zone-name">Peak</div>
-                        <div class="hr-zone-range">161+ bpm</div>
-                        <div class="hr-zone-time">8m</div>
+                    <div style="margin-top:10px;">
+                        <div style="height:6px;background:var(--bg-secondary);border-radius:var(--radius-full);overflow:hidden;">
+                            <div id="hydration-progress-bar" style="height:100%;background:var(--gradient-primary);border-radius:var(--radius-full);transition:width 0.4s ease;width:0%;"></div>
+                        </div>
+                        <div id="hydration-tip" style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;"></div>
+                    </div>
+                </div>
+
+                <!-- Monthly Stats -->
+                <div class="card reveal stagger-2">
+                    <div class="card-header">
+                        <div class="card-title">📊 Monthly Stats</div>
+                        <span class="badge badge-muted" id="monthly-badge">This Month</span>
+                    </div>
+                    <div id="monthly-stats-list">
+                        <!-- rendered by JS -->
                     </div>
                 </div>
 
@@ -652,74 +489,321 @@
         Auth.requireAuth();
         App.init();
 
-        // ── Populate user info ──
+        var HYDRATION_KEY = 'workinout_hydration_' + new Date().toISOString().slice(0, 10);
+        var SESSIONS_KEY  = 'workinout_sessions';
+        var BMI_KEY       = 'workinout_bmi_history';
+        var SCHEDULE_KEY  = 'workinout_weekly_schedule';
+
+        var QUOTES = [
+            '"The only bad workout is the one that didn\'t happen."',
+            '"Push yourself because no one else is going to do it for you."',
+            '"Success starts with self-discipline."',
+            '"Your body can stand almost anything. It\'s your mind you have to convince."',
+            '"Don\'t limit your challenges. Challenge your limits."',
+            '"Strength does not come from the body. It comes from the will of the soul."',
+            '"Wake up with determination. Go to bed with satisfaction."',
+            '"It never gets easier, you just get better."',
+        ];
+
+        // ── User info ──
         var user = Auth.getCurrentUser();
         if (user) {
             var hour = new Date().getHours();
             var greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
             var emoji    = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
             document.getElementById('greeting-text').textContent = greeting + ', ' + user.name + '! ' + emoji;
-
-            var dateEl = document.getElementById('greeting-date');
-            dateEl.textContent = new Date().toLocaleDateString('en-US', {
+            document.getElementById('greeting-date').textContent = new Date().toLocaleDateString('en-US', {
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
-
             document.getElementById('sidebar-user-name').textContent = user.name;
             document.getElementById('sidebar-avatar').textContent = user.name.charAt(0).toUpperCase();
         }
 
-        // ── Animate activity rings ──
-        var CIRCUMFERENCE = 2 * Math.PI * 45; // ~283
+        // ── Motivational quote ──
+        var dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+        document.getElementById('motivational-quote').textContent = QUOTES[dayOfYear % QUOTES.length];
 
-        function animateRing(circleId, pctElId, targetPct) {
-            var circle = document.getElementById(circleId);
-            var pctEl  = document.getElementById(pctElId);
-            if (!circle) return;
-
-            var offset = CIRCUMFERENCE - (targetPct / 100) * CIRCUMFERENCE;
-            var start  = performance.now();
-            var duration = 1200;
-
-            requestAnimationFrame(function tick(now) {
-                var t = Math.min((now - start) / duration, 1);
-                var eased = 1 - Math.pow(1 - t, 3);
-                var current = eased * targetPct;
-                var currOffset = CIRCUMFERENCE - (current / 100) * CIRCUMFERENCE;
-                circle.style.strokeDashoffset = currOffset;
-                if (pctEl) pctEl.textContent = Math.round(current) + '%';
-                if (t < 1) requestAnimationFrame(tick);
-            });
+        // ── Helper: get sessions ──
+        function getSessions() {
+            try { return JSON.parse(localStorage.getItem(SESSIONS_KEY)) || []; } catch(e) { return []; }
         }
 
-        setTimeout(function () {
-            animateRing('ring-move',     'ring-move-pct',  81);  // 487/600
-            animateRing('ring-exercise', 'ring-ex-pct',   100); // 36/30 (exceeded)
-            animateRing('ring-stand',    'ring-stand-pct', 75);  // 9/12
-        }, 300);
+        // ── Workout streak ──
+        function calcStreak() {
+            var sessions = getSessions();
+            if (!sessions.length) return 0;
+            var dates = sessions.map(function(s) {
+                return (s.date || s.startTime || '').slice(0, 10);
+            }).filter(Boolean);
+            var unique = {};
+            dates.forEach(function(d) { unique[d] = true; });
+            var sorted = Object.keys(unique).sort().reverse();
+            var streak = 0;
+            var today  = new Date();
+            for (var i = 0; i < sorted.length; i++) {
+                var d = new Date(sorted[i] + 'T12:00:00');
+                var diff = Math.round((today - d) / 86400000);
+                if (diff === streak) { streak++; }
+                else if (diff > streak + 1) break;
+            }
+            return streak;
+        }
 
-        // ── Recovery counter ──
-        var recovNum = document.getElementById('recovery-num');
-        Utils.animateCounter(recovNum, 0, 78, 1000);
+        function renderStreak() {
+            var streak = calcStreak();
+            document.getElementById('streak-display').textContent = streak;
+            document.getElementById('stat-streak-val').textContent = streak;
 
-        // ── Weekly chart ──
-        var days   = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        var mins   = [25, 45, 0, 38, 52, 27, 0]; // sample data, 0 = rest
-        var todayI = (new Date().getDay() + 6) % 7; // 0=Mon
-        var maxMin = Math.max.apply(null, mins.filter(Boolean)) || 1;
+            var msg = '';
+            if (streak === 0)       msg = 'Log your first session today to start your streak! 💪';
+            else if (streak === 1)  msg = 'Great start! Come back tomorrow to build your streak.';
+            else if (streak < 7)   msg = 'You\'re on a roll! Keep going! 🔥';
+            else if (streak < 30)  msg = 'Amazing consistency! ' + streak + ' days strong! 🏆';
+            else                   msg = 'Legend! ' + streak + ' day streak! You\'re unstoppable! 🥇';
+            document.getElementById('streak-message').textContent = msg;
+            document.getElementById('stat-streak-sub').textContent = streak > 0 ? streak + ' day' + (streak > 1 ? 's' : '') + ' strong' : 'Start today!';
 
-        var chartEl = document.getElementById('weekly-chart');
-        chartEl.innerHTML = days.map(function (d, i) {
-            var isToday = i === todayI;
-            var pct     = mins[i] ? Math.max((mins[i] / maxMin) * 88, 10) : 6;
-            return '<div class="bar-col">' +
-                '<div class="bar-fill' + (isToday ? ' today-bar' : '') + '" ' +
-                     'style="height:' + pct + '%;animation-delay:' + (i * 0.07) + 's;" ' +
-                     'title="' + (mins[i] || 'Rest') + (mins[i] ? ' min' : '') + '">' +
-                '</div>' +
-                '<div class="bar-day' + (isToday ? ' today-label' : '') + '">' + d + '</div>' +
-            '</div>';
-        }).join('');
+            if (streak === 0) document.getElementById('streak-badge-label').textContent = 'Start Today';
+            else if (streak >= 7) document.getElementById('streak-badge-label').textContent = '🔥 On Fire!';
+
+            // Last 7 days dots
+            var sessions = getSessions();
+            var dateSet  = {};
+            sessions.forEach(function(s) {
+                var d = (s.date || s.startTime || '').slice(0, 10);
+                if (d) dateSet[d] = true;
+            });
+            var dotsEl = document.getElementById('streak-days');
+            var today  = new Date();
+            dotsEl.innerHTML = Array.from({length: 7}, function(_, i) {
+                var d = new Date(today);
+                d.setDate(d.getDate() - (6 - i));
+                var key    = d.toISOString().slice(0, 10);
+                var done   = !!dateSet[key];
+                var isToday = (key === today.toISOString().slice(0, 10));
+                var day    = ['S','M','T','W','T','F','S'][d.getDay()];
+                return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">' +
+                    '<div style="width:28px;height:28px;border-radius:50%;background:' +
+                    (done ? 'var(--accent-primary)' : 'var(--bg-secondary)') +
+                    ';border:2px solid ' + (isToday ? 'var(--accent-primary)' : 'transparent') +
+                    ';display:flex;align-items:center;justify-content:center;font-size:0.7rem;">' +
+                    (done ? '✓' : '') + '</div>' +
+                    '<span style="font-size:0.65rem;color:var(--text-muted);">' + day + '</span>' +
+                '</div>';
+            }).join('');
+        }
+        renderStreak();
+
+        // ── Recent activity ──
+        function renderRecentActivity() {
+            var sessions = getSessions().slice().reverse().slice(0, 5);
+            var el = document.getElementById('recent-activity-list');
+            if (!sessions.length) {
+                el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.88rem;">No sessions logged yet.<br><a href="sessions.html" style="color:var(--accent-primary);">Start your first session →</a></div>';
+                return;
+            }
+            el.innerHTML = sessions.map(function(s) {
+                var name = s.name || s.workoutName || 'Workout Session';
+                var dur  = s.duration ? (Math.floor(s.duration / 60) + ' min') : '—';
+                var date = (s.date || s.startTime || '').slice(0, 10);
+                var friendly = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', {month:'short',day:'numeric'}) : '';
+                return '<div class="activity-row">' +
+                    '<div class="activity-dot">🏋️</div>' +
+                    '<div><div class="activity-name">' + name + '</div>' +
+                    '<div class="activity-meta">' + friendly + '</div></div>' +
+                    '<div class="activity-dur">' + dur + '</div>' +
+                '</div>';
+            }).join('');
+        }
+        renderRecentActivity();
+
+        // ── Hydration tracker ──
+        var HYDRATION_GOAL = 8;
+        function getHydration() {
+            return parseInt(localStorage.getItem(HYDRATION_KEY) || '0', 10);
+        }
+        function saveHydration(n) {
+            localStorage.setItem(HYDRATION_KEY, String(Math.max(0, Math.min(HYDRATION_GOAL + 4, n))));
+        }
+        function renderHydration() {
+            var n    = getHydration();
+            var pct  = Math.min(n / HYDRATION_GOAL * 100, 100);
+            var tips = [
+                'Drink up! Hydration powers your performance.',
+                'Almost there! One more glass to hit your goal.',
+                'Halfway! Keep sipping throughout the day.',
+                'Great job! You\'re well hydrated today! 💧',
+                'Goal reached! Your body thanks you. 🎉',
+            ];
+            document.getElementById('hydration-badge').textContent = n + ' / ' + HYDRATION_GOAL;
+            document.getElementById('stat-hydration-val').textContent = n;
+            document.getElementById('hydration-progress-bar').style.width = pct + '%';
+            var tipIdx = n === 0 ? 0 : n < 4 ? 2 : n < HYDRATION_GOAL ? 1 : n === HYDRATION_GOAL ? 4 : 3;
+            document.getElementById('hydration-tip').textContent = tips[tipIdx];
+
+            var glassesEl = document.getElementById('hydration-glasses');
+            glassesEl.innerHTML = Array.from({length: HYDRATION_GOAL}, function(_, i) {
+                return '<span class="glass-icon' + (i < n ? ' filled' : '') + '" data-idx="' + i + '" title="Glass ' + (i+1) + '">🥛</span>';
+            }).join('');
+
+            glassesEl.querySelectorAll('.glass-icon').forEach(function(g) {
+                g.addEventListener('click', function() {
+                    var idx = parseInt(g.dataset.idx, 10);
+                    var cur = getHydration();
+                    saveHydration(idx < cur ? idx : idx + 1);
+                    renderHydration();
+                });
+            });
+        }
+        renderHydration();
+        document.getElementById('hydration-add-btn').addEventListener('click', function() {
+            saveHydration(getHydration() + 1);
+            renderHydration();
+            if (getHydration() === HYDRATION_GOAL) Utils.showToast('Hydration goal reached! 💧', 'success');
+        });
+        document.getElementById('hydration-reset-btn').addEventListener('click', function() {
+            saveHydration(0);
+            renderHydration();
+        });
+
+        // ── BMI stat ──
+        function renderBMIStat() {
+            try {
+                var bmiHistory = JSON.parse(localStorage.getItem(BMI_KEY)) || [];
+                if (bmiHistory.length) {
+                    var latest = bmiHistory[bmiHistory.length - 1];
+                    var bmi = parseFloat(latest.bmi || latest.value);
+                    if (!isNaN(bmi)) {
+                        document.getElementById('stat-bmi-val').textContent = bmi.toFixed(1);
+                        var cat = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : bmi < 30 ? 'Overweight' : 'Obese';
+                        document.getElementById('stat-bmi-cat').textContent = cat;
+                        document.getElementById('stat-bmi-cat').style.color =
+                            bmi >= 18.5 && bmi < 25 ? 'var(--accent-success)' : 'var(--accent-warning)';
+                    }
+                }
+            } catch(e) {}
+        }
+        renderBMIStat();
+
+        // ── Monthly stats ──
+        function renderMonthlyStats() {
+            var sessions = getSessions();
+            var now  = new Date();
+            var month = now.getMonth();
+            var year  = now.getFullYear();
+            var thisMonth = sessions.filter(function(s) {
+                var d = new Date((s.date || s.startTime || '').slice(0, 10) + 'T12:00:00');
+                return d.getMonth() === month && d.getFullYear() === year;
+            });
+            var total  = sessions.length;
+            var monthN = thisMonth.length;
+
+            document.getElementById('stat-monthly-workouts').textContent = monthN;
+            document.getElementById('stat-monthly-sub').textContent = monthN === 1 ? '1 session logged' : monthN + ' sessions logged';
+
+            var monthName = now.toLocaleDateString('en-US', {month:'long'});
+            document.getElementById('monthly-badge').textContent = monthName;
+
+            var bmiHistory = [];
+            try { bmiHistory = JSON.parse(localStorage.getItem(BMI_KEY)) || []; } catch(e) {}
+            var latestBMI = bmiHistory.length ? (parseFloat((bmiHistory[bmiHistory.length-1].bmi || bmiHistory[bmiHistory.length-1].value)) || 0) : 0;
+
+            document.getElementById('monthly-stats-list').innerHTML = [
+                { icon:'🏋️', color:'rgba(0,212,170,0.12)', val: monthN, lbl: 'Workouts This Month' },
+                { icon:'📋', color:'rgba(108,99,255,0.12)', val: total,  lbl: 'Total Sessions Logged' },
+                { icon:'🔥', color:'rgba(255,107,53,0.12)', val: calcStreak(), lbl: 'Current Streak (days)' },
+                { icon:'⚖️', color:'rgba(255,165,2,0.12)',  val: latestBMI ? latestBMI.toFixed(1) : '—', lbl: 'Latest BMI' },
+            ].map(function(item) {
+                return '<div class="monthly-stat-item">' +
+                    '<div class="monthly-stat-icon" style="background:' + item.color + ';">' + item.icon + '</div>' +
+                    '<div><div class="monthly-stat-val">' + item.val + '</div>' +
+                    '<div class="monthly-stat-lbl">' + item.lbl + '</div></div>' +
+                '</div>';
+            }).join('');
+        }
+        renderMonthlyStats();
+
+        // ── Today's workout from schedule ──
+        function renderTodayWorkout() {
+            var el = document.getElementById('today-workout-content');
+            var dayKeys = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+            var today   = dayKeys[new Date().getDay()];
+            var schedule = {};
+            try { schedule = JSON.parse(localStorage.getItem(SCHEDULE_KEY)) || {}; } catch(e) {}
+
+            var planId = schedule[today];
+            if (!planId) {
+                el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem;">🌴 Rest day — no workout scheduled.<br><a href="workout.html" style="color:var(--accent-primary);font-weight:600;margin-top:8px;display:inline-block;">Plan your week →</a></div>';
+                return;
+            }
+
+            var plans = [];
+            try { plans = JSON.parse(localStorage.getItem('workinout_workout_plans')) || []; } catch(e) {}
+            var plan  = plans.find(function(p) { return p.id === planId || p.id === parseInt(planId); });
+            if (!plan) {
+                el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem;">Workout plan not found.<br><a href="workout.html" style="color:var(--accent-primary);">Manage workouts →</a></div>';
+                return;
+            }
+
+            var exercises = plan.exercises || [];
+            var cap = today.charAt(0).toUpperCase() + today.slice(1);
+            el.innerHTML = '<div style="margin-bottom:10px;">' +
+                '<div style="font-weight:700;font-size:1rem;">' + plan.name + '</div>' +
+                '<div style="font-size:0.75rem;color:var(--text-muted);">' + cap + ' · ' + exercises.length + ' exercises</div>' +
+            '</div>' +
+            (exercises.length ? exercises.slice(0,5).map(function(ex, i) {
+                var detail = '';
+                if (ex.sets && ex.reps) detail = ex.sets + ' × ' + ex.reps;
+                else if (ex.duration)  detail = ex.duration;
+                else if (ex.sets)      detail = ex.sets + ' sets';
+                return '<div class="workout-exercise-row">' +
+                    '<div class="ex-num">' + (i+1) + '</div>' +
+                    '<div class="ex-name">' + (ex.name || ex.exercise || 'Exercise') + '</div>' +
+                    '<div class="ex-detail">' + detail + '</div>' +
+                '</div>';
+            }).join('') + (exercises.length > 5 ? '<div style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:8px;">+' + (exercises.length - 5) + ' more</div>' : '') :
+            '<div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:12px;">No exercises added yet.</div>') +
+            '<a href="workout.html" class="btn btn-primary btn-sm" style="margin-top:14px;display:inline-flex;">Start Workout →</a>';
+        }
+        renderTodayWorkout();
+
+        // ── Weekly chart (from sessions) ──
+        function renderWeeklyChart() {
+            var sessions = getSessions();
+            var days    = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            var today   = new Date();
+            var todayI  = (today.getDay() + 6) % 7; // 0=Mon
+
+            var mins = days.map(function(_, i) {
+                var d = new Date(today);
+                d.setDate(d.getDate() - (todayI - i));
+                var key = d.toISOString().slice(0, 10);
+                var total = 0;
+                sessions.forEach(function(s) {
+                    var sDate = (s.date || s.startTime || '').slice(0, 10);
+                    if (sDate === key && s.duration) total += s.duration;
+                });
+                return Math.round(total / 60);
+            });
+
+            var totalMin = mins.reduce(function(a, b) { return a + b; }, 0);
+            document.getElementById('weekly-total-badge').textContent = totalMin + ' min total';
+
+            var maxMin = Math.max.apply(null, mins.filter(Boolean)) || 1;
+            var chartEl = document.getElementById('weekly-chart');
+            chartEl.innerHTML = days.map(function(d, i) {
+                var isToday = i === todayI;
+                var pct     = mins[i] ? Math.max((mins[i] / maxMin) * 88, 10) : 6;
+                return '<div class="bar-col">' +
+                    '<div class="bar-fill' + (isToday ? ' today-bar' : '') + '" ' +
+                         'style="height:' + pct + '%;animation-delay:' + (i * 0.07) + 's;" ' +
+                         'title="' + (mins[i] || 'Rest') + (mins[i] ? ' min' : '') + '">' +
+                    '</div>' +
+                    '<div class="bar-day' + (isToday ? ' today-label' : '') + '">' + d + '</div>' +
+                '</div>';
+            }).join('');
+        }
+        renderWeeklyChart();
     });
 </script>
 </body>

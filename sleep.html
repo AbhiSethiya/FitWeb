@@ -3,151 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sleep - WorkIn&amp;Out</title>
+    <title>Recovery &amp; Wellness - WorkIn&amp;Out</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/themes.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* ── Sidebar nav-link classes ── */
-        .sidebar-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 16px; border-bottom: 1px solid var(--nav-border); flex-shrink: 0;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 10px;
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.05rem;
-            color: var(--text-primary); text-decoration: none;
-        }
-        .logo span { color: var(--accent-primary); }
-        .sidebar-close {
-            background: none; border: none; cursor: pointer; color: var(--text-muted);
-            font-size: 1rem; padding: 6px 8px; border-radius: var(--radius-sm);
-            line-height: 1; transition: background var(--transition-fast); display: none;
-        }
-        .sidebar-close:hover { background: var(--bg-secondary); }
-        .nav-links {
-            list-style: none; padding: 12px 10px; margin: 0;
-            flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
-        }
-        .nav-links li { margin: 0; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-            border-radius: var(--radius-md); color: var(--text-secondary);
-            font-weight: 500; font-size: 0.9rem; text-decoration: none;
-            transition: all var(--transition-fast); position: relative;
-        }
-        .nav-link:hover { background: rgba(var(--accent-primary-rgb),0.08); color: var(--accent-primary); }
-        .nav-link.active { background: rgba(var(--accent-primary-rgb),0.12); color: var(--accent-primary); font-weight: 600; }
-        .nav-link.active::before {
-            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
-            width: 3px; background: var(--accent-primary); border-radius: 0 3px 3px 0;
-        }
-        .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
-        @media (max-width: 768px) { .sidebar-close { display: flex; align-items: center; justify-content: center; } }
+        .nav-links { list-style:none; padding:12px 10px; margin:0; flex:1; display:flex; flex-direction:column; gap:2px; overflow-y:auto; }
+        .nav-links li { margin:0; }
+        .nav-link { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:var(--radius-md); color:var(--text-secondary); font-weight:500; font-size:0.9rem; text-decoration:none; transition:all var(--transition-fast); position:relative; }
+        .nav-link:hover { background:rgba(var(--accent-primary-rgb),0.08); color:var(--accent-primary); }
+        .nav-link.active { background:rgba(var(--accent-primary-rgb),0.12); color:var(--accent-primary); font-weight:600; }
+        .nav-link.active::before { content:''; position:absolute; left:0; top:20%; bottom:20%; width:3px; background:var(--accent-primary); border-radius:0 3px 3px 0; }
+        .nav-icon { font-size:1.1rem; flex-shrink:0; width:20px; text-align:center; }
+        .sidebar-header { display:flex; align-items:center; justify-content:space-between; padding:20px 16px; border-bottom:1px solid var(--nav-border); flex-shrink:0; }
+        .logo { display:flex; align-items:center; gap:10px; font-family:'Poppins',sans-serif; font-weight:800; font-size:1.05rem; color:var(--text-primary); text-decoration:none; }
+        .logo span { color:var(--accent-primary); }
+        .sidebar-close { background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1rem; padding:6px 8px; border-radius:var(--radius-sm); line-height:1; transition:background var(--transition-fast); display:none; }
+        .sidebar-close:hover { background:var(--bg-secondary); }
+        @media (max-width:768px) { .sidebar-close { display:flex; align-items:center; justify-content:center; } }
+        .topbar-hamburger { background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text-primary); padding:4px 8px; border-radius:var(--radius-sm); display:none; line-height:1; }
+        @media (max-width:768px) { .topbar-hamburger { display:block; } }
 
-        /* ── Topbar hamburger ── */
-        .topbar-hamburger {
-            background: none; border: none; font-size: 1.4rem; cursor: pointer;
-            color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius-sm);
-            display: none; line-height: 1;
-        }
-        @media (max-width: 768px) { .topbar-hamburger { display: block; } }
-
-        /* ── Sleep score circle ── */
-        .sleep-score-circle {
-            width: 140px; height: 140px; border-radius: 50%;
-            border: 8px solid; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .sleep-score-num {
-            font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 3rem; line-height: 1;
-        }
-        .sleep-score-label {
-            font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.06em; margin-top: 2px;
-        }
-        .score-good   { border-color: #2ed573; color: #2ed573; }
-        .score-fair   { border-color: #ffa502; color: #ffa502; }
-        .score-poor   { border-color: #ff4757; color: #ff4757; }
-
-        /* ── Sleep stat pill ── */
-        .sleep-stat-pill {
-            background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 14px 20px;
-            text-align: center; min-width: 120px;
-        }
-        .sleep-stat-val  { font-family:'Poppins',sans-serif; font-weight:800; font-size:1.6rem; color:var(--text-primary); }
-        .sleep-stat-lbl  { font-size:0.75rem; color:var(--text-muted); font-weight:500; margin-top:4px; }
-
-        /* ── Sleep stages bar ── */
-        .stage-bar-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-        .stage-bar-label { width:80px; font-size:0.82rem; font-weight:600; color:var(--text-secondary); flex-shrink:0; }
-        .stage-bar-track { flex:1; height:18px; background:var(--bg-secondary); border-radius:9px; overflow:hidden; }
-        .stage-bar-fill  { height:100%; border-radius:9px; transition:width 0.8s cubic-bezier(.4,0,.2,1); }
-        .stage-bar-time  { width:60px; font-size:0.78rem; color:var(--text-muted); text-align:right; flex-shrink:0; }
-
-        /* ── Star rating ── */
-        .star-rating { display:flex; gap:6px; }
-        .star { font-size:1.6rem; cursor:pointer; transition:transform 0.1s; line-height:1; }
-        .star:hover { transform: scale(1.2); }
-        .star.active { filter: drop-shadow(0 0 4px #ffa502); }
-
-        /* ── Sleep history chart ── */
-        .chart-canvas-wrap { position:relative; width:100%; height:220px; }
-        .chart-canvas-wrap canvas { width:100% !important; height:100% !important; display:block; }
-
-        /* ── Tips list ── */
-        .tip-item {
-            display:flex; align-items:flex-start; gap:12px; padding:14px;
-            border-radius:var(--radius-md); background:var(--bg-secondary); margin-bottom:10px;
-        }
-        .tip-icon { font-size:1.3rem; flex-shrink:0; }
-
-        /* ── Breathing circle ── */
-        .breathing-wrap { display:flex; flex-direction:column; align-items:center; gap:20px; padding:20px 0; }
+        /* Breathing */
+        .breathing-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; padding:16px 0; }
         .breathing-circle {
-            width:120px; height:120px; border-radius:50%;
-            background: var(--gradient-primary);
-            display:flex; align-items:center; justify-content:center;
-            font-weight:700; font-size:0.85rem; color:#fff;
-            transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
-            box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.4);
+            width:130px; height:130px; border-radius:50%;
+            background:var(--gradient-primary);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            font-weight:700; color:#fff; gap:2px;
+            transition:transform 4s ease-in-out, box-shadow 4s ease-in-out;
+            box-shadow:0 0 20px rgba(var(--accent-primary-rgb),0.4);
         }
-        .breathing-circle.inhale {
-            transform: scale(1.6);
-            box-shadow: 0 0 50px rgba(var(--accent-primary-rgb), 0.6);
-        }
-        .breathing-text {
-            font-family:'Poppins',sans-serif; font-weight:700; font-size:1.2rem;
-            color:var(--text-primary); min-height:1.5em; text-align:center;
-        }
+        .breathing-circle.inhale { transform:scale(1.55); box-shadow:0 0 50px rgba(var(--accent-primary-rgb),0.7); }
+        .breathing-circle.hold   { transform:scale(1.55); }
+        .breathing-circle.exhale { transform:scale(1.0);  box-shadow:0 0 20px rgba(var(--accent-primary-rgb),0.3); }
+        .breathing-phase { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; }
+        .breathing-count { font-size:1.8rem; font-weight:900; line-height:1; }
+        .breathing-label-text { font-size:0.82rem; color:var(--text-muted); min-height:1.4em; text-align:center; }
 
-        /* ── Meditation timer ── */
+        /* Technique cards */
+        .technique-card { cursor:pointer; border:2px solid var(--border-color); border-radius:var(--radius-lg); padding:14px; transition:all var(--transition-fast); background:var(--bg-card); }
+        .technique-card:hover  { border-color:var(--accent-primary); transform:translateY(-2px); box-shadow:var(--shadow-md); }
+        .technique-card.active { border-color:var(--accent-primary); background:rgba(var(--accent-primary-rgb),0.06); }
+        .technique-name   { font-weight:700; font-size:0.9rem; margin-bottom:3px; }
+        .technique-rhythm { font-size:0.72rem; color:var(--accent-primary); font-weight:600; font-family:'Poppins',sans-serif; margin-bottom:4px; }
+        .technique-desc   { font-size:0.75rem; color:var(--text-muted); }
+        .technique-grid   { display:grid; grid-template-columns:1fr; gap:10px; }
+
+        /* Meditation */
         .med-duration-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:12px 0; }
-        .med-dur-btn {
-            padding:7px 18px; border-radius:var(--radius-full);
-            border:2px solid var(--border-color); background:var(--bg-card);
-            color:var(--text-secondary); font-size:0.85rem; font-weight:600;
-            cursor:pointer; transition:all var(--transition-fast);
-        }
+        .med-dur-btn { padding:7px 16px; border-radius:var(--radius-full); border:2px solid var(--border-color); background:var(--bg-card); color:var(--text-secondary); font-size:0.85rem; font-weight:600; cursor:pointer; transition:all var(--transition-fast); }
         .med-dur-btn:hover  { border-color:var(--accent-primary); color:var(--accent-primary); }
         .med-dur-btn.active { background:var(--accent-primary); border-color:var(--accent-primary); color:#fff; }
-        .med-timer-display {
-            font-family:'Poppins',sans-serif; font-weight:900; font-size:3rem;
-            color:var(--accent-primary); text-align:center; letter-spacing:0.04em;
-        }
+        .med-timer-display  { font-family:'Poppins',sans-serif; font-weight:900; font-size:3.5rem; color:var(--accent-primary); text-align:center; letter-spacing:0.04em; }
+        .ambient-btn { padding:8px 14px; border-radius:var(--radius-full); border:2px solid var(--border-color); background:var(--bg-secondary); color:var(--text-secondary); font-size:0.82rem; font-weight:600; cursor:pointer; transition:all var(--transition-fast); }
+        .ambient-btn:hover  { border-color:var(--accent-secondary); color:var(--accent-secondary); }
+        .ambient-btn.active { background:rgba(var(--accent-secondary-rgb),0.12); border-color:var(--accent-secondary); color:var(--accent-secondary); }
 
-        @media (max-width:640px) { .form-row { grid-template-columns:1fr; } }
+        /* Stretching */
+        .stretch-card { border:2px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden; transition:all var(--transition-fast); }
+        .stretch-card-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; cursor:pointer; user-select:none; }
+        .stretch-card-header:hover { background:rgba(var(--accent-primary-rgb),0.04); }
+        .stretch-card-body { padding:0 16px; max-height:0; overflow:hidden; transition:max-height 0.35s ease, padding 0.35s ease; }
+        .stretch-card.open .stretch-card-body { max-height:600px; padding:0 16px 16px; }
+        .stretch-card.open .stretch-toggle { transform:rotate(90deg); }
+        .stretch-toggle { transition:transform 0.25s ease; display:inline-block; color:var(--text-muted); }
+        .stretch-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-color); }
+        .stretch-item:last-child { border-bottom:none; }
+        .stretch-num  { width:22px; height:22px; border-radius:50%; background:rgba(var(--accent-primary-rgb),0.12); color:var(--accent-primary); font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+        .stretch-name { font-weight:600; font-size:0.87rem; }
+        .stretch-tip  { font-size:0.75rem; color:var(--text-muted); margin-top:2px; }
+        .stretch-dur  { font-size:0.75rem; color:var(--text-muted); flex-shrink:0; white-space:nowrap; margin-left:auto; padding-left:8px; }
+
+        /* Tips */
+        .tips-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+        .tip-card  { background:var(--bg-secondary); border-radius:var(--radius-lg); padding:16px; display:flex; gap:12px; }
+        .tip-emoji { font-size:1.5rem; flex-shrink:0; margin-top:2px; }
+        .tip-title { font-weight:700; font-size:0.9rem; margin-bottom:4px; }
+        .tip-desc  { font-size:0.8rem; color:var(--text-muted); line-height:1.5; }
+
+        @media (max-width:640px) { .tips-grid { grid-template-columns:1fr; } }
     </style>
 </head>
 <body>
 <div class="app-layout">
 
-    <!-- ══════════ SIDEBAR ══════════ -->
+    <!-- SIDEBAR -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo">🏋️ <span>WorkIn&amp;Out</span></div>
+            <a href="dashboard.html" class="logo">🏋️ <span>WorkIn&amp;Out</span></a>
             <button class="sidebar-close" id="sidebarClose">✕</button>
         </div>
         <ul class="nav-links">
@@ -157,7 +103,7 @@
             <li><a href="diet.html"      class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
             <li><a href="sessions.html"  class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
             <li><a href="progress.html"  class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
-            <li><a href="sleep.html"     class="nav-link active"><span class="nav-icon">😴</span><span>Sleep</span></a></li>
+            <li><a href="sleep.html"     class="nav-link active"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
             <li><a href="profile.html"   class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
         </ul>
         <div class="sidebar-footer">
@@ -168,14 +114,12 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <button class="hamburger" id="hamburger">☰</button>
 
-    <!-- ══════════ MAIN CONTENT ══════════ -->
+    <!-- MAIN -->
     <main class="main-content">
-
-        <!-- Topbar -->
         <div class="topbar">
             <div class="d-flex items-center gap-8">
                 <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
-                <span class="topbar-title">Sleep Analysis</span>
+                <span class="topbar-title">Recovery &amp; Wellness</span>
             </div>
             <div class="topbar-actions">
                 <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
@@ -186,164 +130,93 @@
 
         <div class="page-container">
 
-            <!-- ══ 1. Sleep Score Overview ══ -->
-            <div class="section reveal">
-                <div class="page-header">
-                    <h2 style="font-family:'Poppins',sans-serif;font-weight:800;margin:0">Sleep Analysis</h2>
-                    <p class="page-header-subtitle">Track and improve your sleep quality</p>
-                </div>
-                <div class="card p-12">
-                    <div class="d-flex items-center gap-12 flex-wrap">
-                        <div id="sleep-score-circle" class="sleep-score-circle score-fair">
-                            <span class="sleep-score-num" id="score-num">82</span>
-                            <span class="sleep-score-label" id="score-label">Good</span>
-                        </div>
-                        <div class="d-flex gap-8 flex-wrap flex-1">
-                            <div class="sleep-stat-pill">
-                                <div class="sleep-stat-val" id="stat-in-bed">7h 23m</div>
-                                <div class="sleep-stat-lbl">Time in Bed</div>
-                            </div>
-                            <div class="sleep-stat-pill">
-                                <div class="sleep-stat-val" id="stat-asleep">6h 45m</div>
-                                <div class="sleep-stat-lbl">Time Asleep</div>
-                            </div>
-                            <div class="sleep-stat-pill">
-                                <div class="sleep-stat-val" id="stat-efficiency">91%</div>
-                                <div class="sleep-stat-lbl">Efficiency</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="page-header">
+                <h2 style="font-family:'Poppins',sans-serif;font-weight:800;margin:0">🌿 Recovery &amp; Wellness</h2>
+                <p class="page-header-subtitle">Breathe, meditate, stretch and recharge</p>
             </div>
 
-            <!-- ══ 2. Sleep Stages Chart ══ -->
+            <!-- 1. Breathing Exercises -->
             <div class="section reveal">
                 <div class="section-header">
-                    <h3 class="section-title">💤 Sleep Stages</h3>
+                    <h3 class="section-title">🌬️ Breathing Exercises</h3>
                 </div>
-                <div class="card p-12">
-                    <div id="sleep-stages"></div>
-                    <div class="d-flex gap-8 flex-wrap mt-8">
-                        <span style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--text-muted)"><span style="width:12px;height:12px;border-radius:3px;background:#1a1a4e;display:inline-block"></span>Deep</span>
-                        <span style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--text-muted)"><span style="width:12px;height:12px;border-radius:3px;background:#4a90d9;display:inline-block"></span>Light</span>
-                        <span style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--text-muted)"><span style="width:12px;height:12px;border-radius:3px;background:#7c75ff;display:inline-block"></span>REM</span>
-                        <span style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--text-muted)"><span style="width:12px;height:12px;border-radius:3px;background:#ffb3c1;display:inline-block"></span>Awake</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ 3. Log Sleep ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">📝 Log Sleep</h3>
-                </div>
-                <div class="card p-12">
-                    <form id="sleep-log-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Bedtime</label>
-                                <input type="time" id="bedtime-input" class="form-input" value="22:30">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Wake Time</label>
-                                <input type="time" id="waketime-input" class="form-input" value="06:30">
-                            </div>
+                <div class="card">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px" id="breathing-layout">
+                        <div>
+                            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px">Choose a technique, then press Start</p>
+                            <div class="technique-grid" id="technique-grid"></div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Sleep Quality</label>
-                            <div class="star-rating" id="star-rating">
-                                <span class="star active" data-val="1">★</span>
-                                <span class="star active" data-val="2">★</span>
-                                <span class="star active" data-val="3">★</span>
-                                <span class="star"        data-val="4">★</span>
-                                <span class="star"        data-val="5">★</span>
-                            </div>
-                            <input type="hidden" id="sleep-quality" value="3">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Notes (optional)</label>
-                            <textarea id="sleep-notes" class="form-textarea" rows="2" placeholder="How did you sleep? Any disturbances?"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">😴 Log Sleep</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- ══ 4. Sleep History Chart ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">📊 Sleep History (Last 7 Days)</h3>
-                </div>
-                <div class="card p-12">
-                    <div class="chart-canvas-wrap">
-                        <canvas id="sleep-chart"></canvas>
-                    </div>
-                    <div id="sleep-history-list" style="margin-top:16px"></div>
-                </div>
-            </div>
-
-            <!-- ══ 5. Sleep Tips ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">💡 Sleep Tips</h3>
-                </div>
-                <div class="card p-12">
-                    <div class="tip-item">
-                        <span class="tip-icon">🕐</span>
-                        <div><strong>Maintain a consistent sleep schedule</strong><p style="margin:4px 0 0;font-size:0.85rem;color:var(--text-muted)">Go to bed and wake up at the same time every day, even on weekends.</p></div>
-                    </div>
-                    <div class="tip-item">
-                        <span class="tip-icon">📵</span>
-                        <div><strong>Avoid screens 1 hour before bed</strong><p style="margin:4px 0 0;font-size:0.85rem;color:var(--text-muted)">Blue light from devices suppresses melatonin production and delays sleep onset.</p></div>
-                    </div>
-                    <div class="tip-item">
-                        <span class="tip-icon">🌡️</span>
-                        <div><strong>Keep bedroom cool (65–68°F / 18–20°C)</strong><p style="margin:4px 0 0;font-size:0.85rem;color:var(--text-muted)">A cooler environment helps trigger the natural drop in core body temperature needed for sleep.</p></div>
-                    </div>
-                    <div class="tip-item">
-                        <span class="tip-icon">☕</span>
-                        <div><strong>Avoid caffeine after 2 PM</strong><p style="margin:4px 0 0;font-size:0.85rem;color:var(--text-muted)">Caffeine has a half-life of ~5 hours; afternoon consumption can disrupt sleep quality.</p></div>
-                    </div>
-                    <div class="tip-item" style="margin-bottom:0">
-                        <span class="tip-icon">🏃</span>
-                        <div><strong>Exercise regularly but not close to bedtime</strong><p style="margin:4px 0 0;font-size:0.85rem;color:var(--text-muted)">Regular exercise improves sleep, but intense workouts within 2 hours of bedtime may increase alertness.</p></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ 6. Mindfulness / Pre-Sleep ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🧘 Mindfulness &amp; Pre-Sleep</h3>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" id="mindfulness-grid">
-
-                    <!-- Breathing Exercise -->
-                    <div class="card p-12">
-                        <h4 style="font-family:'Poppins',sans-serif;font-weight:700;margin-bottom:8px">Breathing Exercise</h4>
-                        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px">4-4 box breathing to calm your nervous system</p>
                         <div class="breathing-wrap">
-                            <div class="breathing-circle" id="breathing-circle">Ready</div>
-                            <div class="breathing-text" id="breathing-text">Press Start</div>
-                            <button class="btn btn-primary" id="breathing-btn">▶ Start</button>
+                            <div class="breathing-circle" id="breathing-circle">
+                                <span class="breathing-phase" id="breathing-phase">Ready</span>
+                                <span class="breathing-count" id="breathing-count">—</span>
+                            </div>
+                            <div class="breathing-label-text" id="breathing-label">Select a technique and press Start</div>
+                            <div style="display:flex;gap:10px;align-items:center">
+                                <button class="btn btn-primary" id="breathing-btn">▶ Start</button>
+                                <button class="btn btn-ghost"   id="breathing-reset">Reset</button>
+                            </div>
+                            <div style="font-size:0.78rem;color:var(--text-muted)" id="breathing-cycles"></div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Meditation Timer -->
-                    <div class="card p-12">
-                        <h4 style="font-family:'Poppins',sans-serif;font-weight:700;margin-bottom:8px">Meditation Timer</h4>
-                        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px">Set your session duration and focus</p>
-                        <div class="med-duration-btns">
-                            <button class="med-dur-btn active" data-min="5">5 min</button>
-                            <button class="med-dur-btn" data-min="10">10 min</button>
-                            <button class="med-dur-btn" data-min="15">15 min</button>
-                            <button class="med-dur-btn" data-min="20">20 min</button>
-                        </div>
-                        <div class="med-timer-display" id="med-display">05:00</div>
-                        <div style="text-align:center;margin-top:16px">
-                            <button class="btn btn-primary" id="med-btn">▶ Start</button>
+            <!-- 2. Meditation Timer -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">🧘 Meditation Timer</h3>
+                </div>
+                <div class="card" style="max-width:560px">
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px">Set your session duration and find your calm</p>
+                    <div class="med-duration-btns">
+                        <button class="med-dur-btn active" data-min="5">5 min</button>
+                        <button class="med-dur-btn" data-min="10">10 min</button>
+                        <button class="med-dur-btn" data-min="15">15 min</button>
+                        <button class="med-dur-btn" data-min="20">20 min</button>
+                        <button class="med-dur-btn" data-min="30">30 min</button>
+                    </div>
+                    <div class="med-timer-display" id="med-display">05:00</div>
+                    <div style="margin-top:4px;text-align:center;font-size:0.78rem;color:var(--text-muted)" id="med-status">Ready to begin</div>
+                    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
+                        <button class="btn btn-primary" id="med-btn">▶ Start</button>
+                        <button class="btn btn-ghost"   id="med-reset">⟳ Reset</button>
+                    </div>
+                    <div style="margin-top:20px">
+                        <div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px">🎵 Ambient Sound (visual)</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <button class="ambient-btn active" data-sound="silence">🔇 Silence</button>
+                            <button class="ambient-btn" data-sound="rain">🌧️ Rain</button>
+                            <button class="ambient-btn" data-sound="forest">🌲 Forest</button>
+                            <button class="ambient-btn" data-sound="ocean">🌊 Ocean</button>
+                            <button class="ambient-btn" data-sound="fire">🔥 Campfire</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- 3. Stretching Routines -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">🤸 Stretching Routines</h3>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px" id="stretch-routines"></div>
+            </div>
+
+            <!-- 4. Recovery Tips -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">💡 Sleep &amp; Recovery Tips</h3>
+                </div>
+                <div class="tips-grid">
+                    <div class="tip-card"><span class="tip-emoji">🕐</span><div><div class="tip-title">Consistent Sleep Schedule</div><div class="tip-desc">Go to bed and wake at the same time daily — even on weekends. This anchors your circadian rhythm for deeper, more restorative sleep.</div></div></div>
+                    <div class="tip-card"><span class="tip-emoji">📵</span><div><div class="tip-title">Screen-Free Hour</div><div class="tip-desc">Avoid screens 60 minutes before bed. Blue light suppresses melatonin production and delays sleep onset by up to 2 hours.</div></div></div>
+                    <div class="tip-card"><span class="tip-emoji">🌡️</span><div><div class="tip-title">Cool Your Room</div><div class="tip-desc">Keep your bedroom at 65–68°F (18–20°C). A cooler environment triggers the body's natural drop in core temperature needed for sleep.</div></div></div>
+                    <div class="tip-card"><span class="tip-emoji">☕</span><div><div class="tip-title">Caffeine Cutoff at 2 PM</div><div class="tip-desc">Caffeine has a ~5-hour half-life. An afternoon coffee can still be active in your system at midnight, fragmenting sleep quality.</div></div></div>
+                    <div class="tip-card"><span class="tip-emoji">💧</span><div><div class="tip-title">Stay Well Hydrated</div><div class="tip-desc">Drink at least 8 glasses of water daily. Dehydration impairs muscle recovery, cognitive function, and next-day performance.</div></div></div>
+                    <div class="tip-card"><span class="tip-emoji">🏃</span><div><div class="tip-title">Time Your Exercise</div><div class="tip-desc">Regular exercise dramatically improves sleep quality. Avoid intense workouts within 2–3 hours of bedtime as they raise cortisol.</div></div></div>
+                    <div class="tip-card"><span class="tip-emoji">🧘</span><div><div class="tip-title">Build a Wind-Down Ritual</div><div class="tip-desc">A consistent pre-sleep routine — reading, gentle stretching, or meditation — signals your brain it's time to transition to sleep.</div></div></div>
+                    <div class="tip-card"><span class="tip-emoji">🛏️</span><div><div class="tip-title">Bed is for Sleep Only</div><div class="tip-desc">Avoid working or watching TV in bed. Your brain associates the bed with wakefulness if you use it for other activities.</div></div></div>
                 </div>
             </div>
 
@@ -359,16 +232,14 @@
 (function () {
     'use strict';
 
-    const SLEEP_KEY = 'workinout_sleep_log';
+    // Sidebar toggle
+    var sidebar   = document.getElementById('sidebar');
+    var overlay   = document.getElementById('sidebarOverlay');
+    var closeBtn  = document.getElementById('sidebarClose');
+    var hamburger = document.getElementById('hamburger');
+    var topbarH   = document.getElementById('topbarHamburger');
 
-    // ── Sidebar toggle ─────────────────────────
-    const sidebar  = document.getElementById('sidebar');
-    const overlay  = document.getElementById('sidebarOverlay');
-    const closeBtn = document.getElementById('sidebarClose');
-    const hamburger = document.getElementById('hamburger');
-    const topbarH   = document.getElementById('topbarHamburger');
-
-    function openSidebar()  { sidebar.classList.add('open');  overlay.classList.add('active'); }
+    function openSidebar()  { sidebar.classList.add('open');    overlay.classList.add('active'); }
     function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
 
     if (hamburger) hamburger.addEventListener('click', openSidebar);
@@ -376,384 +247,285 @@
     if (closeBtn)  closeBtn.addEventListener('click', closeSidebar);
     if (overlay)   overlay.addEventListener('click', closeSidebar);
 
-    // ── Auth guard ──────────────────────────────
+    ThemeManager.init();
     if (!Auth.requireAuth()) return;
 
-    // ── Mindfulness grid responsive ─────────────
-    function adjustMindfulnessGrid() {
-        const g = document.getElementById('mindfulness-grid');
-        if (!g) return;
-        g.style.gridTemplateColumns = window.innerWidth < 700 ? '1fr' : '1fr 1fr';
+    // Responsive breathing layout
+    function adjustLayout() {
+        var g = document.getElementById('breathing-layout');
+        if (g) g.style.gridTemplateColumns = window.innerWidth < 700 ? '1fr' : '1fr 1fr';
     }
-    adjustMindfulnessGrid();
-    window.addEventListener('resize', adjustMindfulnessGrid);
+    adjustLayout();
+    window.addEventListener('resize', adjustLayout);
 
-    // ══════════════════════════════════════════
-    //  SLEEP STORAGE
-    // ══════════════════════════════════════════
-    function getSleepLog() {
-        try { return JSON.parse(localStorage.getItem(SLEEP_KEY)) || []; }
-        catch(e) { return []; }
-    }
-    function saveSleepEntry(entry) {
-        const log = getSleepLog();
-        log.push(entry);
-        localStorage.setItem(SLEEP_KEY, JSON.stringify(log));
-    }
+    // ═══════════════════════════════════════════
+    //  BREATHING EXERCISES
+    // ═══════════════════════════════════════════
+    var TECHNIQUES = [
+        {
+            name: 'Box Breathing',
+            rhythm: '4 - 4 - 4 - 4',
+            desc: 'Equal inhale, hold, exhale, hold. Reduces stress and sharpens focus.',
+            phases: [
+                { label:'Inhale', secs:4, cls:'inhale' },
+                { label:'Hold',   secs:4, cls:'hold'   },
+                { label:'Exhale', secs:4, cls:'exhale' },
+                { label:'Hold',   secs:4, cls:'exhale' },
+            ]
+        },
+        {
+            name: '4-7-8 Breathing',
+            rhythm: '4 - 7 - 8',
+            desc: 'Inhale 4s, hold 7s, exhale 8s. Calming — ideal before sleep.',
+            phases: [
+                { label:'Inhale', secs:4, cls:'inhale' },
+                { label:'Hold',   secs:7, cls:'hold'   },
+                { label:'Exhale', secs:8, cls:'exhale' },
+            ]
+        },
+        {
+            name: 'Wim Hof Method',
+            rhythm: '30 × Power Breaths',
+            desc: 'Deep rapid breaths followed by retention. Energising and invigorating.',
+            phases: [
+                { label:'Inhale', secs:2, cls:'inhale' },
+                { label:'Exhale', secs:2, cls:'exhale' },
+            ]
+        },
+    ];
 
-    // ══════════════════════════════════════════
-    //  SCORE DISPLAY (load latest or use demo)
-    // ══════════════════════════════════════════
-    function minutesToHM(mins) {
-        const h = Math.floor(Math.abs(mins) / 60);
-        const m = Math.abs(mins) % 60;
-        return `${h}h ${m.toString().padStart(2,'0')}m`;
-    }
+    var activeTechIdx = 0;
 
-    function bedWakeToMinutes(bedtime, waketime) {
-        const [bh,bm] = bedtime.split(':').map(Number);
-        const [wh,wm] = waketime.split(':').map(Number);
-        let bedMin  = bh * 60 + bm;
-        let wakeMin = wh * 60 + wm;
-        if (wakeMin <= bedMin) wakeMin += 24 * 60;
-        return { inBed: wakeMin - bedMin, asleep: Math.round((wakeMin - bedMin) * 0.91) };
-    }
+    document.getElementById('technique-grid').innerHTML = TECHNIQUES.map(function(t, i) {
+        return '<div class="technique-card' + (i===0?' active':'') + '" data-idx="' + i + '">'
+             + '<div class="technique-name">'   + t.name   + '</div>'
+             + '<div class="technique-rhythm">' + t.rhythm + '</div>'
+             + '<div class="technique-desc">'   + t.desc   + '</div>'
+             + '</div>';
+    }).join('');
 
-    function qualityToScore(quality, durationMins) {
-        const base  = (quality / 5) * 60;
-        const bonus = Math.min(durationMins / 8 / 60, 1) * 40;
-        return Math.min(100, Math.round(base + bonus));
-    }
-
-    function renderScoreCircle(score) {
-        const circle = document.getElementById('sleep-score-circle');
-        const numEl  = document.getElementById('score-num');
-        const lblEl  = document.getElementById('score-label');
-        numEl.textContent = score;
-        circle.className = 'sleep-score-circle ' + (score >= 85 ? 'score-good' : score >= 70 ? 'score-fair' : 'score-poor');
-        lblEl.textContent = score >= 85 ? 'Great Sleep' : score >= 70 ? 'Good Sleep' : 'Poor Sleep';
-    }
-
-    function loadLatestScore() {
-        const log = getSleepLog();
-        if (!log.length) {
-            // Demo data
-            renderScoreCircle(82);
-            document.getElementById('stat-in-bed').textContent = '7h 23m';
-            document.getElementById('stat-asleep').textContent = '6h 45m';
-            document.getElementById('stat-efficiency').textContent = '91%';
-            return;
-        }
-        const latest = log[log.length - 1];
-        const { inBed, asleep } = bedWakeToMinutes(latest.bedtime, latest.waketime);
-        const score = qualityToScore(latest.quality || 3, asleep);
-        renderScoreCircle(score);
-        document.getElementById('stat-in-bed').textContent = minutesToHM(inBed);
-        document.getElementById('stat-asleep').textContent = minutesToHM(asleep);
-        document.getElementById('stat-efficiency').textContent = Math.round((asleep / inBed) * 100) + '%';
-    }
-    loadLatestScore();
-
-    // ══════════════════════════════════════════
-    //  SLEEP STAGES (from latest entry or demo)
-    // ══════════════════════════════════════════
-    function renderSleepStages() {
-        const container = document.getElementById('sleep-stages');
-        if (!container) return;
-
-        const log = getSleepLog();
-        let totalMins = 405; // demo 6h 45m
-        if (log.length) {
-            const latest = log[log.length - 1];
-            const { asleep } = bedWakeToMinutes(latest.bedtime, latest.waketime);
-            totalMins = asleep;
-        }
-
-        // Rough distribution: deep 20%, light 48%, rem 25%, awake 7%
-        const stages = [
-            { name: 'Deep',  mins: Math.round(totalMins * 0.20), color: '#1a1a4e' },
-            { name: 'Light', mins: Math.round(totalMins * 0.48), color: '#4a90d9' },
-            { name: 'REM',   mins: Math.round(totalMins * 0.25), color: '#7c75ff' },
-            { name: 'Awake', mins: Math.round(totalMins * 0.07), color: '#ffb3c1' },
-        ];
-
-        container.innerHTML = stages.map(s => `
-            <div class="stage-bar-row">
-                <div class="stage-bar-label">${s.name}</div>
-                <div class="stage-bar-track">
-                    <div class="stage-bar-fill" style="width:${(s.mins / totalMins * 100).toFixed(1)}%;background:${s.color}"></div>
-                </div>
-                <div class="stage-bar-time">${minutesToHM(s.mins)}</div>
-            </div>`).join('');
-    }
-    renderSleepStages();
-
-    // ══════════════════════════════════════════
-    //  STAR RATING
-    // ══════════════════════════════════════════
-    let selectedStars = 3;
-    const stars = document.querySelectorAll('.star');
-    const qualityInput = document.getElementById('sleep-quality');
-
-    stars.forEach(star => {
-        star.addEventListener('click', () => {
-            selectedStars = parseInt(star.dataset.val);
-            qualityInput.value = selectedStars;
-            stars.forEach((s, i) => {
-                s.classList.toggle('active', i < selectedStars);
-                s.style.color = i < selectedStars ? '#ffa502' : 'var(--text-muted)';
-            });
+    document.querySelectorAll('.technique-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            if (breathingRunning) stopBreathing();
+            activeTechIdx = parseInt(card.dataset.idx);
+            document.querySelectorAll('.technique-card').forEach(function(c) { c.classList.remove('active'); });
+            card.classList.add('active');
+            resetBreathUI();
         });
     });
-    // Init star colours
-    stars.forEach((s, i) => { s.style.color = i < selectedStars ? '#ffa502' : 'var(--text-muted)'; });
 
-    // ══════════════════════════════════════════
-    //  SLEEP LOG FORM
-    // ══════════════════════════════════════════
-    document.getElementById('sleep-log-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const bedtime  = document.getElementById('bedtime-input').value;
-        const waketime = document.getElementById('waketime-input').value;
-        const quality  = parseInt(document.getElementById('sleep-quality').value) || 3;
-        const notes    = document.getElementById('sleep-notes').value.trim();
+    var breathingRunning = false;
+    var breathingTimer   = null;
+    var phaseIdx  = 0;
+    var countdown = 0;
+    var cycles    = 0;
 
-        if (!bedtime || !waketime) {
-            Utils.showToast('Please enter bedtime and wake time', 'error');
-            return;
-        }
+    var circleEl   = document.getElementById('breathing-circle');
+    var phaseEl    = document.getElementById('breathing-phase');
+    var countEl    = document.getElementById('breathing-count');
+    var labelEl    = document.getElementById('breathing-label');
+    var cyclesEl   = document.getElementById('breathing-cycles');
+    var startBtn   = document.getElementById('breathing-btn');
+    var resetBtnEl = document.getElementById('breathing-reset');
 
-        const entry = {
-            id: Date.now().toString(36),
-            date: new Date().toISOString().slice(0, 10),
-            bedtime, waketime, quality, notes,
-        };
-        saveSleepEntry(entry);
-        Utils.showToast('Sleep logged! 😴', 'success');
-        loadLatestScore();
-        renderSleepStages();
-        renderSleepChart();
-        renderSleepHistoryList();
-    });
-
-    // ══════════════════════════════════════════
-    //  SLEEP HISTORY CHART
-    // ══════════════════════════════════════════
-    function renderSleepChart() {
-        const canvas = document.getElementById('sleep-chart');
-        if (!canvas) return;
-
-        const log = getSleepLog();
-        const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-        const today = new Date();
-
-        // Build 7-day slots
-        const slots = Array.from({ length: 7 }, (_, i) => {
-            const d = new Date(today);
-            d.setDate(d.getDate() - (6 - i));
-            const key = d.toISOString().slice(0, 10);
-            const dayLabel = days[d.getDay()];
-            const entry = log.filter(e => e.date === key).pop();
-            let hours = 0;
-            if (entry) {
-                const { asleep } = bedWakeToMinutes(entry.bedtime, entry.waketime);
-                hours = Math.round(asleep / 60 * 10) / 10;
-            }
-            return { label: dayLabel, hours };
-        });
-
-        const ctx = canvas.getContext('2d');
-        const W = canvas.offsetWidth || 600;
-        const H = canvas.offsetHeight || 220;
-        canvas.width  = W;
-        canvas.height = H;
-
-        const maxVal = 10;
-        const padL = 36, padR = 16, padT = 16, padB = 36;
-        const plotW = W - padL - padR;
-        const plotH = H - padT - padB;
-        const barW  = Math.min(48, plotW / slots.length * 0.55);
-        const gap   = plotW / slots.length;
-
-        ctx.clearRect(0, 0, W, H);
-
-        // Grid lines
-        const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || 'rgba(0,0,0,0.08)';
-        ctx.strokeStyle = gridColor;
-        ctx.lineWidth   = 1;
-        [0,2,4,6,8,10].forEach(v => {
-            const y = padT + (1 - v / maxVal) * plotH;
-            ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#718096';
-            ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'right';
-            ctx.fillText(v, padL - 4, y + 4);
-        });
-
-        // Recommended line at 8h
-        ctx.strokeStyle = 'rgba(0,212,170,0.3)'; ctx.lineWidth = 1.5;
-        ctx.setLineDash([4,4]);
-        const recY = padT + (1 - 8 / maxVal) * plotH;
-        ctx.beginPath(); ctx.moveTo(padL, recY); ctx.lineTo(W - padR, recY); ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Bars
-        slots.forEach((s, i) => {
-            const x = padL + i * gap + gap / 2 - barW / 2;
-            const barH = (s.hours / maxVal) * plotH;
-            const y = padT + plotH - barH;
-
-            if (s.hours > 0) {
-                const color = s.hours >= 7 ? '#00d4aa' : s.hours >= 5 ? '#ffa502' : '#ff4757';
-                ctx.fillStyle = color;
-                const r = 4;
-                ctx.beginPath();
-                ctx.moveTo(x + r, y);
-                ctx.lineTo(x + barW - r, y);
-                ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
-                ctx.lineTo(x + barW, y + barH);
-                ctx.lineTo(x, y + barH);
-                ctx.lineTo(x, y + r);
-                ctx.quadraticCurveTo(x, y, x + r, y);
-                ctx.closePath();
-                ctx.fill();
-
-                // Value label
-                ctx.fillStyle = color;
-                ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center';
-                ctx.fillText(s.hours + 'h', x + barW / 2, y - 4);
-            }
-
-            // Day label
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#718096';
-            ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center';
-            ctx.fillText(s.label, x + barW / 2, H - 8);
-        });
+    function resetBreathUI() {
+        circleEl.className = 'breathing-circle';
+        phaseEl.textContent = 'Ready';
+        countEl.textContent = '—';
+        labelEl.textContent = 'Select a technique and press Start';
+        cyclesEl.textContent = '';
+        startBtn.textContent = '▶ Start';
     }
-    renderSleepChart();
 
-    // ══════════════════════════════════════════
-    //  SLEEP HISTORY LIST
-    // ══════════════════════════════════════════
-    function renderSleepHistoryList() {
-        const container = document.getElementById('sleep-history-list');
-        if (!container) return;
-        const log = getSleepLog().slice().reverse().slice(0, 7);
-        if (!log.length) { container.innerHTML = ''; return; }
-
-        const stars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
-        container.innerHTML = `<h4 style="font-size:0.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:0 0 10px">Recent Entries</h4>` +
-            log.map(e => {
-                const { inBed, asleep } = bedWakeToMinutes(e.bedtime, e.waketime);
-                return `<div class="d-flex items-center justify-between p-8 border rounded mb-4" style="flex-wrap:wrap;gap:8px">
-                    <div>
-                        <div style="font-weight:600;font-size:0.9rem">${Utils.formatDate(e.date)}</div>
-                        <div style="font-size:0.78rem;color:var(--text-muted)">${e.bedtime} → ${e.waketime}</div>
-                    </div>
-                    <div class="d-flex gap-8 items-center flex-wrap">
-                        <span class="badge badge-primary">${minutesToHM(asleep)}</span>
-                        <span style="color:#ffa502;font-size:0.9rem">${stars(e.quality || 3)}</span>
-                    </div>
-                </div>`;
-            }).join('');
-    }
-    renderSleepHistoryList();
-
-    // ══════════════════════════════════════════
-    //  BREATHING EXERCISE
-    // ══════════════════════════════════════════
-    let breathingRunning = false;
-    let breathingTimeout = null;
-
-    const breathingCircle = document.getElementById('breathing-circle');
-    const breathingText   = document.getElementById('breathing-text');
-    const breathingBtn    = document.getElementById('breathing-btn');
-
-    function runBreathing() {
+    function runPhase() {
         if (!breathingRunning) return;
+        var t     = TECHNIQUES[activeTechIdx];
+        var phase = t.phases[phaseIdx];
+        countdown = phase.secs;
 
-        // Inhale 4s
-        breathingCircle.textContent = 'Inhale';
-        breathingText.textContent   = 'Inhale...';
-        breathingCircle.classList.add('inhale');
+        circleEl.className = 'breathing-circle ' + phase.cls;
+        phaseEl.textContent = phase.label;
+        countEl.textContent = countdown;
+        labelEl.textContent = phase.label + 'ing…';
 
-        breathingTimeout = setTimeout(() => {
-            if (!breathingRunning) return;
-            // Exhale 4s
-            breathingCircle.textContent = 'Exhale';
-            breathingText.textContent   = 'Exhale...';
-            breathingCircle.classList.remove('inhale');
-
-            breathingTimeout = setTimeout(runBreathing, 4200);
-        }, 4200);
+        breathingTimer = setInterval(function() {
+            countdown--;
+            countEl.textContent = countdown > 0 ? countdown : '';
+            if (countdown <= 0) {
+                clearInterval(breathingTimer);
+                phaseIdx++;
+                if (phaseIdx >= t.phases.length) {
+                    phaseIdx = 0;
+                    cycles++;
+                    cyclesEl.textContent = 'Cycles completed: ' + cycles;
+                }
+                setTimeout(runPhase, 200);
+            }
+        }, 1000);
     }
 
-    breathingBtn.addEventListener('click', () => {
+    function stopBreathing() {
+        breathingRunning = false;
+        clearInterval(breathingTimer);
+        startBtn.textContent = '▶ Start';
+        labelEl.textContent  = 'Paused — press Start to resume';
+    }
+
+    startBtn.addEventListener('click', function() {
         if (!breathingRunning) {
             breathingRunning = true;
-            breathingBtn.textContent = '■ Stop';
-            runBreathing();
+            startBtn.textContent = '■ Stop';
+            runPhase();
         } else {
-            breathingRunning = false;
-            clearTimeout(breathingTimeout);
-            breathingBtn.textContent = '▶ Start';
-            breathingCircle.textContent = 'Ready';
-            breathingCircle.classList.remove('inhale');
-            breathingText.textContent = 'Press Start';
+            stopBreathing();
         }
     });
 
-    // ══════════════════════════════════════════
+    resetBtnEl.addEventListener('click', function() {
+        stopBreathing();
+        phaseIdx = 0; cycles = 0;
+        resetBreathUI();
+    });
+
+    // ═══════════════════════════════════════════
     //  MEDITATION TIMER
-    // ══════════════════════════════════════════
-    let medMinutes   = 5;
-    let medRemaining = 5 * 60;
-    let medInterval  = null;
-    let medRunning   = false;
+    // ═══════════════════════════════════════════
+    var medMin  = 5;
+    var medSecs = 5 * 60;
+    var medInt  = null;
+    var medOn   = false;
 
-    const medDisplay = document.getElementById('med-display');
-    const medBtn     = document.getElementById('med-btn');
+    var medDisplay = document.getElementById('med-display');
+    var medStatus  = document.getElementById('med-status');
+    var medBtn     = document.getElementById('med-btn');
+    var medReset   = document.getElementById('med-reset');
 
-    function formatMedTime(secs) {
-        const m = Math.floor(secs / 60).toString().padStart(2,'0');
-        const s = (secs % 60).toString().padStart(2,'0');
-        return `${m}:${s}`;
-    }
+    function fmt(s) { return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); }
 
-    document.querySelectorAll('.med-dur-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (medRunning) return;
-            document.querySelectorAll('.med-dur-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.med-dur-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (medOn) return;
+            document.querySelectorAll('.med-dur-btn').forEach(function(b) { b.classList.remove('active'); });
             btn.classList.add('active');
-            medMinutes = parseInt(btn.dataset.min);
-            medRemaining = medMinutes * 60;
-            medDisplay.textContent = formatMedTime(medRemaining);
+            medMin  = parseInt(btn.dataset.min);
+            medSecs = medMin * 60;
+            medDisplay.textContent = fmt(medSecs);
+            medStatus.textContent  = 'Ready to begin';
         });
     });
 
-    medBtn.addEventListener('click', () => {
-        if (!medRunning) {
-            medRunning = true;
-            medBtn.textContent = '■ Stop';
-            medInterval = setInterval(() => {
-                medRemaining--;
-                medDisplay.textContent = formatMedTime(medRemaining);
-                if (medRemaining <= 0) {
-                    clearInterval(medInterval);
-                    medRunning = false;
-                    medBtn.textContent = '▶ Start';
-                    medRemaining = medMinutes * 60;
-                    medDisplay.textContent = formatMedTime(medRemaining);
+    medBtn.addEventListener('click', function() {
+        if (!medOn) {
+            medOn  = true;
+            medBtn.textContent   = '⏸ Pause';
+            medStatus.textContent = 'Meditating…';
+            medInt = setInterval(function() {
+                medSecs--;
+                medDisplay.textContent = fmt(medSecs);
+                var pct = Math.round(((medMin*60 - medSecs) / (medMin*60)) * 100);
+                medStatus.textContent = pct + '% complete';
+                if (medSecs <= 0) {
+                    clearInterval(medInt);
+                    medOn = false;
+                    medBtn.textContent    = '▶ Start';
+                    medStatus.textContent = 'Session complete! Well done. 🧘';
+                    medSecs = medMin * 60;
+                    medDisplay.textContent = fmt(medSecs);
                     Utils.showToast('Meditation complete! 🧘 Well done.', 'success');
                 }
             }, 1000);
         } else {
-            clearInterval(medInterval);
-            medRunning = false;
-            medBtn.textContent = '▶ Start';
-            medRemaining = medMinutes * 60;
-            medDisplay.textContent = formatMedTime(medRemaining);
+            clearInterval(medInt);
+            medOn = false;
+            medBtn.textContent    = '▶ Start';
+            medStatus.textContent = 'Paused';
         }
     });
+
+    medReset.addEventListener('click', function() {
+        clearInterval(medInt);
+        medOn  = false;
+        medSecs = medMin * 60;
+        medBtn.textContent     = '▶ Start';
+        medDisplay.textContent = fmt(medSecs);
+        medStatus.textContent  = 'Ready to begin';
+    });
+
+    document.querySelectorAll('.ambient-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.ambient-btn').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+        });
+    });
+
+    // ═══════════════════════════════════════════
+    //  STRETCHING ROUTINES
+    // ═══════════════════════════════════════════
+    var ROUTINES = [
+        {
+            name:'🌅 Morning Stretch', tag:'5–7 min · Full Body',
+            exercises:[
+                { name:'Neck Rolls',            dur:'30 sec each side', tip:'Slow and controlled — no crunching sounds.'   },
+                { name:'Shoulder Circles',       dur:'10 reps each way', tip:'Roll backward then forward fully.'            },
+                { name:'Torso Twist',            dur:'45 sec each side', tip:'Keep hips facing forward as you rotate.'     },
+                { name:'Standing Quad Stretch',  dur:'30 sec each side', tip:'Use a wall for balance if needed.'           },
+                { name:'Forward Fold',           dur:'60 sec',           tip:'Bend knees slightly if hamstrings are tight.' },
+            ]
+        },
+        {
+            name:'🏋️ Pre-Workout', tag:'5 min · Dynamic',
+            exercises:[
+                { name:'Leg Swings',     dur:'10 reps each leg', tip:'Hold a wall and swing front-to-back.'        },
+                { name:'Hip Circles',    dur:'10 reps each way', tip:'Big circles to open the hip joint.'          },
+                { name:'Arm Circles',    dur:'15 reps each way', tip:'Start small, gradually increase range.'      },
+                { name:'Walking Lunges', dur:'10 steps',         tip:'Drive through the front heel on each step.'  },
+                { name:'Inchworms',      dur:'5 reps',           tip:'Walk hands out to push-up position and back.' },
+            ]
+        },
+        {
+            name:'🧊 Post-Workout', tag:'8–10 min · Cool Down',
+            exercises:[
+                { name:'Standing Hamstring Stretch', dur:'60 sec each', tip:'Hinge at hips, keep the back flat.'         },
+                { name:'Pigeon Pose',                dur:'90 sec each', tip:'Use a folded blanket under your hip.'        },
+                { name:"Child's Pose",               dur:'60 sec',      tip:'Breathe into your lower back.'               },
+                { name:'Chest Opener',               dur:'45 sec',      tip:'Clasp hands behind back, lift chest.'        },
+                { name:'Seated Spinal Twist',        dur:'45 sec each', tip:'Sit tall, twist gently on each exhale.'      },
+            ]
+        },
+        {
+            name:'🌙 Bedtime Routine', tag:'10 min · Relaxing',
+            exercises:[
+                { name:'Legs Up the Wall', dur:'3 min',      tip:'Great for circulation and deep relaxation.'           },
+                { name:'Supine Twist',     dur:'60 sec each', tip:'Let gravity do the work, breathe slowly.'             },
+                { name:'Happy Baby Pose',  dur:'60 sec',      tip:'Gently rock side to side to release the spine.'       },
+                { name:'Butterfly Stretch',dur:'90 sec',      tip:"Don't push knees — let them fall naturally."          },
+                { name:'4-7-8 Breathing',  dur:'4 cycles',   tip:'Perfect transition to sleep.'                         },
+            ]
+        },
+    ];
+
+    document.getElementById('stretch-routines').innerHTML = ROUTINES.map(function(r, idx) {
+        return '<div class="stretch-card" id="sc-' + idx + '">'
+             + '<div class="stretch-card-header" onclick="toggleStretch(' + idx + ')">'
+             +   '<div><div style="font-weight:700;font-size:0.95rem">' + r.name + '</div>'
+             +   '<div style="font-size:0.75rem;color:var(--text-muted)">' + r.tag + '</div></div>'
+             +   '<span class="stretch-toggle">&#9658;</span>'
+             + '</div>'
+             + '<div class="stretch-card-body">'
+             + r.exercises.map(function(ex, i) {
+                 return '<div class="stretch-item">'
+                      + '<div class="stretch-num">' + (i+1) + '</div>'
+                      + '<div style="flex:1"><div class="stretch-name">' + ex.name + '</div>'
+                      + '<div class="stretch-tip">' + ex.tip + '</div></div>'
+                      + '<div class="stretch-dur">' + ex.dur + '</div>'
+                      + '</div>';
+               }).join('')
+             + '</div></div>';
+    }).join('');
+
+    window.toggleStretch = function(idx) {
+        document.getElementById('sc-' + idx).classList.toggle('open');
+    };
 
 })();
 </script>
