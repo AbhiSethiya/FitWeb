@@ -1,0 +1,260 @@
+/* =============================================
+   WorkIn&Out - Animation Keyframes
+============================================= */
+
+/* ── Fade ───────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ── Slide ──────────────────────────────────── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-28px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+/* ── Scale ──────────────────────────────────── */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+@keyframes scaleOut {
+  from { opacity: 1; transform: scale(1);    }
+  to   { opacity: 0; transform: scale(0.88); }
+}
+
+/* ── Bounce ─────────────────────────────────── */
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: scale(0.3);   }
+  50%  { opacity: 1; transform: scale(1.06);  }
+  70%  {             transform: scale(0.96);  }
+  100% {             transform: scale(1);     }
+}
+
+@keyframes bounceDown {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0);   }
+  40%                      { transform: translateY(12px); }
+  60%                      { transform: translateY(6px);  }
+}
+
+/* ── Pulse ──────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { transform: scale(1);    opacity: 1;    }
+  50%      { transform: scale(1.06); opacity: 0.82; }
+}
+
+@keyframes pulseShadow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-primary-rgb), 0.4); }
+  50%      { box-shadow: 0 0 0 14px rgba(var(--accent-primary-rgb), 0);  }
+}
+
+/* ── Spin ───────────────────────────────────── */
+@keyframes spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg);   }
+}
+
+/* ── Shimmer (skeleton loading) ─────────────── */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+/* ── Ring / Circle progress ─────────────────── */
+@keyframes ringProgress {
+  from { stroke-dashoffset: var(--ring-full, 283); }
+  to   { stroke-dashoffset: var(--ring-offset, 0); }
+}
+
+@keyframes ringFill {
+  0%   { stroke-dashoffset: 283; }
+  100% { stroke-dashoffset: var(--ring-target, 0); }
+}
+
+/* ── Float ──────────────────────────────────── */
+@keyframes floatUp {
+  0%   { transform: translateY(0px);  }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0px);  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0)   rotate(0deg);   }
+  33%       { transform: translateY(-6px) rotate(1.5deg); }
+  66%       { transform: translateY(3px)  rotate(-1deg);  }
+}
+
+/* ── Heartbeat ──────────────────────────────── */
+@keyframes heartbeat {
+  0%   { transform: scale(1);    }
+  14%  { transform: scale(1.14); }
+  28%  { transform: scale(1);    }
+  42%  { transform: scale(1.10); }
+  70%  { transform: scale(1);    }
+  100% { transform: scale(1);    }
+}
+
+/* ── Glow Pulse ─────────────────────────────── */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px  rgba(var(--accent-primary-rgb), 0.4),
+                0 0 10px rgba(var(--accent-primary-rgb), 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.7),
+                0 0 40px rgba(var(--accent-primary-rgb), 0.35);
+  }
+}
+
+@keyframes glowText {
+  0%, 100% { text-shadow: 0 0 6px  rgba(var(--accent-primary-rgb), 0.5); }
+  50%      { text-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.9),
+                          0 0 40px rgba(var(--accent-primary-rgb), 0.5); }
+}
+
+/* ── Counter / Number roll-up ───────────────── */
+@keyframes counterUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Toast notifications ────────────────────── */
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(110%); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes toastSlideOut {
+  from { opacity: 1; transform: translateX(0);    }
+  to   { opacity: 0; transform: translateX(110%); }
+}
+
+/* ── Modal ──────────────────────────────────── */
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Page transition ────────────────────────── */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Progress bar fill ──────────────────────── */
+@keyframes progressFill {
+  from { width: 0%; }
+}
+
+/* ── Wiggle ─────────────────────────────────── */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg);   }
+  20%       { transform: rotate(-8deg);  }
+  40%       { transform: rotate(8deg);   }
+  60%       { transform: rotate(-5deg);  }
+  80%       { transform: rotate(5deg);   }
+}
+
+/* ── Typewriter cursor ──────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Gradient shift ─────────────────────────── */
+@keyframes gradientShift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* ── Ripple ─────────────────────────────────── */
+@keyframes ripple {
+  from { transform: scale(0); opacity: 0.5; }
+  to   { transform: scale(4); opacity: 0;   }
+}
+
+/* ── Bar chart grow ─────────────────────────── */
+@keyframes barGrow {
+  from { transform: scaleY(0); transform-origin: bottom; }
+  to   { transform: scaleY(1); transform-origin: bottom; }
+}
+
+/* ═══════════════════════════════════════════
+   Animation utility classes
+═══════════════════════════════════════════ */
+
+.animate-fadeIn      { animation: fadeIn      0.4s ease both; }
+.animate-fadeOut     { animation: fadeOut     0.3s ease both; }
+.animate-slideUp     { animation: slideUp     0.45s ease both; }
+.animate-slideDown   { animation: slideDown   0.45s ease both; }
+.animate-slideLeft   { animation: slideLeft   0.45s ease both; }
+.animate-slideRight  { animation: slideRight  0.45s ease both; }
+.animate-scaleIn     { animation: scaleIn     0.35s ease both; }
+.animate-bounceIn    { animation: bounceIn    0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+.animate-pulse       { animation: pulse       2s   ease-in-out infinite; }
+.animate-spin        { animation: spin        1s   linear infinite; }
+.animate-float       { animation: floatUp     3s   ease-in-out infinite; }
+.animate-heartbeat   { animation: heartbeat   1.4s ease-in-out infinite; }
+.animate-glowPulse   { animation: glowPulse   2.5s ease-in-out infinite; }
+.animate-shimmer     { animation: shimmer     1.6s linear infinite; }
+.animate-wiggle      { animation: wiggle      0.6s ease-in-out; }
+.animate-gradientShift { animation: gradientShift 4s ease infinite; }
+
+/* Scroll-triggered: added by JS IntersectionObserver */
+.animate-in {
+  animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Staggered delays for lists */
+.stagger-1  { animation-delay: 0.05s; }
+.stagger-2  { animation-delay: 0.10s; }
+.stagger-3  { animation-delay: 0.15s; }
+.stagger-4  { animation-delay: 0.20s; }
+.stagger-5  { animation-delay: 0.25s; }
+.stagger-6  { animation-delay: 0.30s; }
+.stagger-7  { animation-delay: 0.35s; }
+.stagger-8  { animation-delay: 0.40s; }
+
+/* Initially hidden for scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
