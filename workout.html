@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Planner - WorkIn&amp;Out</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ── Body type selection cards ── */
+        .body-type-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 0;
+        }
+        .body-type-card {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--bg-card);
+        }
+        .body-type-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .body-type-card.selected {
+            border-color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.07);
+            box-shadow: 0 0 0 3px rgba(var(--accent-primary-rgb), 0.12);
+        }
+        .bt-emoji     { font-size: 2.2rem; display: block; margin-bottom: 6px; }
+        .bt-name      { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+        .bt-desc      { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+        .bt-chars     { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 8px; }
+        .bt-char-tag  {
+            font-size: 0.62rem;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: rgba(var(--accent-primary-rgb), 0.1);
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        /* ── Category tabs (scrollable) ── */
+        .category-tabs-scroll {
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .category-tabs-scroll::-webkit-scrollbar { display: none; }
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            white-space: nowrap;
+            min-width: max-content;
+        }
+        .cat-tab {
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .cat-tab:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+        .cat-tab.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(var(--accent-primary-rgb), 0.3);
+        }
+
+        /* ── Exercise grid ── */
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+        }
+
+        /* Extend exercise card with add button */
+        .exercise-card-wrap {
+            position: relative;
+        }
+        .exercise-card-wrap .exercise-card {
+            padding-right: 52px;
+        }
+        .exercise-add-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+        .exercise-add-btn:hover,
+        .exercise-add-btn.added {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #fff;
+        }
+
+        /* ── Plan cards ── */
+        .plan-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            transition: all var(--transition-normal);
+        }
+        .plan-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .plan-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .plan-card-title { font-weight: 700; font-size: 1rem; }
+        .plan-card-meta  { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .plan-card-exercises {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        /* ── Scheduler ── */
+        .scheduler-day {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-height: 100px;
+        }
+        .scheduler-day:hover { border-color: var(--accent-primary); }
+        .scheduler-day.has-workout {
+            border-color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.06);
+        }
+        .scheduler-day.today-sched {
+            border-color: var(--accent-secondary);
+            background: rgba(var(--accent-secondary-rgb), 0.06);
+        }
+        .sched-day-name { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+        .sched-day-num {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--bg-secondary);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem;
+            margin: 4px auto;
+        }
+        .scheduler-day.today-sched .sched-day-num { background: var(--accent-secondary); color: #fff; }
+        .sched-workout-label {
+            font-size: 0.68rem; color: var(--accent-primary); font-weight: 600;
+            line-height: 1.3; margin-top: 4px;
+        }
+        .sched-rest { font-size: 0.68rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 12px; }
+        .empty-state-text { font-size: 0.9rem; }
+
+        /* ── Modal exercise picker ── */
+        .exercise-picker-list {
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 8px;
+        }
+        .picker-exercise-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+        .picker-exercise-row:hover { background: var(--bg-secondary); }
+        .picker-exercise-row.selected { background: rgba(var(--accent-primary-rgb), 0.08); }
+        .picker-check {
+            width: 18px; height: 18px;
+            accent-color: var(--accent-primary);
+            flex-shrink: 0;
+        }
+        .picker-ex-name { font-weight: 600; font-size: 0.875rem; }
+        .picker-ex-cat  { font-size: 0.72rem; color: var(--text-muted); }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .body-type-cards { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .exercise-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="sidebar" id="sidebar">
+        <a class="sidebar-logo" href="dashboard.html">
+            <div class="sidebar-logo-icon">🏋️</div>
+            <div class="sidebar-logo-text">WorkIn<span>&amp;Out</span></div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">Main</span>
+            <a class="nav-item" href="dashboard.html">
+                <span class="nav-item-icon">📊</span> Dashboard
+            </a>
+            <a class="nav-item active" href="workout.html">
+                <span class="nav-item-icon">🏋️</span> Workouts
+            </a>
+            <a class="nav-item" href="bmi.html">
+                <span class="nav-item-icon">⚖️</span> BMI
+            </a>
+            <a class="nav-item" href="diet.html">
+                <span class="nav-item-icon">🥗</span> Diet
+            </a>
+            <a class="nav-item" href="sessions.html">
+                <span class="nav-item-icon">⏱️</span> Sessions
+            </a>
+            <span class="nav-section-label">Tracking</span>
+            <a class="nav-item" href="progress.html">
+                <span class="nav-item-icon">📈</span> Progress
+            </a>
+            <a class="nav-item" href="sleep.html">
+                <span class="nav-item-icon">😴</span> Sleep
+            </a>
+            <a class="nav-item" href="profile.html">
+                <span class="nav-item-icon">👤</span> Profile
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item" data-theme-toggle style="border:none;width:100%;text-align:left;background:none;">
+                <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+                <span>Toggle Theme</span>
+            </button>
+            <button class="nav-item text-danger" onclick="Auth.logout()" style="border:none;width:100%;text-align:left;background:none;">
+                <span class="nav-item-icon">🚪</span> Logout
+            </button>
+            <div class="sidebar-user" onclick="window.location.href='profile.html'">
+                <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+                    <div class="sidebar-user-role">Fitness Member</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══════════ MAIN CONTENT ══════════ -->
+    <main class="main-content">
+
+        <!-- Top bar -->
+        <div class="topbar">
+            <div class="d-flex items-center gap-8">
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <div>
+                    <span class="topbar-title">Workout Planner</span>
+                    <span class="badge badge-secondary" id="topbar-body-type" style="margin-left:10px;">Mesomorph</span>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page body -->
+        <div class="page-container">
+
+            <!-- ── Body Type Section ── -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">🧬 Body Type</h3>
+                    <span class="text-sm text-muted">Select your type to personalise recommendations</span>
+                </div>
+                <div class="body-type-cards" id="body-type-cards">
+                    <div class="body-type-card" data-type="ectomorph">
+                        <span class="bt-emoji">🦴</span>
+                        <div class="bt-name">Ectomorph</div>
+                        <div class="bt-desc">Naturally lean with a fast metabolism and difficulty gaining mass.</div>
+                        <div class="bt-chars">
+                            <span class="bt-char-tag">Lean</span>
+                            <span class="bt-char-tag">Fast Metabolism</span>
+                            <span class="bt-char-tag">Hard Gainer</span>
+                        </div>
+                    </div>
+                    <div class="body-type-card" data-type="mesomorph">
+                        <span class="bt-emoji">💪</span>
+                        <div class="bt-name">Mesomorph</div>
+                        <div class="bt-desc">Athletic build, responds well to training and gains muscle naturally.</div>
+                        <div class="bt-chars">
+                            <span class="bt-char-tag">Athletic</span>
+                            <span class="bt-char-tag">Balanced</span>
+                            <span class="bt-char-tag">Adaptable</span>
+                        </div>
+                    </div>
+                    <div class="body-type-card" data-type="endomorph">
+                        <span class="bt-emoji">🏋️</span>
+                        <div class="bt-name">Endomorph</div>
+                        <div class="bt-desc">Solid frame, gains muscle and fat easily, benefits from cardio.</div>
+                        <div class="bt-chars">
+                            <span class="bt-char-tag">Stocky</span>
+                            <span class="bt-char-tag">Strong</span>
+                            <span class="bt-char-tag">Slow Metabolism</span>
+                        </div>
+                    </div>
+                    <div class="body-type-card" data-type="custom">
+                        <span class="bt-emoji">🎯</span>
+                        <div class="bt-name">Custom</div>
+                        <div class="bt-desc">Build your own program based on personal goals and preferences.</div>
+                        <div class="bt-chars">
+                            <span class="bt-char-tag">All Exercises</span>
+                            <span class="bt-char-tag">Flexible</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Body type recommendation note -->
+                <div class="card mt-10" id="bt-recommendation" style="border-left:4px solid var(--accent-primary);padding:14px 18px;">
+                    <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px;" id="bt-focus">Focus: Athletic performance &amp; aesthetics</div>
+                    <div style="font-size:0.82rem;color:var(--text-muted);" id="bt-notes">Balanced approach — mix compound and isolation work. 2-3 cardio sessions. Maintain slight surplus or maintenance calories.</div>
+                </div>
+            </div>
+
+            <!-- ── Exercise Library ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">📚 Exercise Library</h3>
+                    <button class="btn btn-primary btn-sm" id="open-create-plan-btn">
+                        + Create Plan
+                    </button>
+                </div>
+
+                <!-- Category tabs -->
+                <div class="category-tabs-scroll mb-12">
+                    <div class="category-tabs" id="category-tabs">
+                        <button class="cat-tab active" data-cat="all">All</button>
+                        <button class="cat-tab" data-cat="chest">💪 Chest</button>
+                        <button class="cat-tab" data-cat="back">🔝 Back</button>
+                        <button class="cat-tab" data-cat="shoulders">🤸 Shoulders</button>
+                        <button class="cat-tab" data-cat="arms">💪 Arms</button>
+                        <button class="cat-tab" data-cat="legs">🦵 Legs</button>
+                        <button class="cat-tab" data-cat="core">⬛ Core</button>
+                        <button class="cat-tab" data-cat="cardio">🏃 Cardio</button>
+                    </div>
+                </div>
+
+                <!-- Exercise grid -->
+                <div class="exercise-grid" id="exercise-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- ── My Workout Plans ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">📋 My Workout Plans</h3>
+                </div>
+                <div id="plans-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- ── Weekly Scheduler ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">📅 Weekly Schedule</h3>
+                    <button class="btn btn-ghost btn-sm" id="clear-schedule-btn">Clear All</button>
+                </div>
+                <div class="week-grid" id="week-scheduler">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+        </div><!-- /page-container -->
+    </main>
+</div><!-- /app-layout -->
+
+<!-- ── Bottom Nav (mobile) ── -->
+<nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+        <a class="bottom-nav-item" href="dashboard.html">
+            <span class="nav-icon">📊</span>
+            <span>Home</span>
+        </a>
+        <a class="bottom-nav-item active" href="workout.html">
+            <span class="nav-icon">🏋️</span>
+            <span>Workout</span>
+        </a>
+        <a class="bottom-nav-item" href="diet.html">
+            <span class="nav-icon">🥗</span>
+            <span>Diet</span>
+        </a>
+        <a class="bottom-nav-item" href="progress.html">
+            <span class="nav-icon">📈</span>
+            <span>Progress</span>
+        </a>
+        <a class="bottom-nav-item" href="profile.html">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </div>
+</nav>
+
+<!-- ══════════ CREATE PLAN MODAL ══════════ -->
+<div class="modal-overlay hidden" id="create-plan-modal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title">🏋️ Create Workout Plan</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;">Name your plan and pick exercises</div>
+            </div>
+            <button class="modal-close" data-modal-close aria-label="Close">✕</button>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label required">Plan Name</label>
+            <input type="text" class="form-input" id="plan-name-input" placeholder="e.g. Push Day, Full Body Blast…">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Schedule Days</label>
+            <div class="d-flex flex-wrap gap-6" id="plan-days-picker">
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input plan-day-cb" value="monday"> <span class="form-check-label">Mon</span>
+                </label>
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input plan-day-cb" value="tuesday"> <span class="form-check-label">Tue</span>
+                </label>
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input plan-day-cb" value="wednesday"> <span class="form-check-label">Wed</span>
+                </label>
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input plan-day-cb" value="thursday"> <span class="form-check-label">Thu</span>
+                </label>
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input plan-day-cb" value="friday"> <span class="form-check-label">Fri</span>
+                </label>
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input plan-day-cb" value="saturday"> <span class="form-check-label">Sat</span>
+                </label>
+                <label class="form-check">
+                    <input type="checkbox" class="form-check-input plan-day-cb" value="sunday"> <span class="form-check-label">Sun</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Select Exercises</label>
+            <div class="exercise-picker-list" id="exercise-picker-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-ghost" data-modal-close>Cancel</button>
+            <button class="btn btn-primary" id="save-plan-btn">💾 Save Plan</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ ASSIGN WORKOUT MODAL ══════════ -->
+<div class="modal-overlay hidden" id="assign-modal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <div class="modal-title" id="assign-modal-title">Assign Workout</div>
+            <button class="modal-close" data-modal-close aria-label="Close">✕</button>
+        </div>
+        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:16px;">Choose a plan to assign to this day, or clear it.</p>
+        <div id="assign-plan-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+            <!-- Populated by JS -->
+        </div>
+        <button class="btn btn-ghost btn-full" id="clear-day-btn">🗑 Clear this day</button>
+    </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/workout.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        ThemeManager.init();
+        Auth.requireAuth();
+        App.init();
+
+        // ── User info ──
+        var user = Auth.getCurrentUser();
+        var currentBodyType = (user && user.bodyType) || 'mesomorph';
+
+        if (user) {
+            document.getElementById('sidebar-user-name').textContent = user.name;
+            document.getElementById('sidebar-avatar').textContent = user.name.charAt(0).toUpperCase();
+        }
+
+        // ── State ──
+        var selectedCategory = 'all';
+        var selectedExerciseIds = []; // for create-plan modal
+        var currentAssignDay  = null;
+
+        // ── Body type cards ──
+        function selectBodyType(type) {
+            currentBodyType = type;
+            document.querySelectorAll('.body-type-card').forEach(function (c) {
+                c.classList.toggle('selected', c.dataset.type === type);
+            });
+            var badge = document.getElementById('topbar-body-type');
+            badge.textContent = Utils.capitalise(type);
+
+            var rec = WorkoutManager.BODY_TYPE_RECS[type] || WorkoutManager.BODY_TYPE_RECS.mesomorph;
+            document.getElementById('bt-focus').textContent = 'Focus: ' + rec.focus;
+            document.getElementById('bt-notes').textContent = rec.notes;
+
+            renderExerciseGrid();
+        }
+
+        document.querySelectorAll('.body-type-card').forEach(function (card) {
+            card.addEventListener('click', function () {
+                selectBodyType(card.dataset.type);
+            });
+        });
+
+        selectBodyType(currentBodyType);
+
+        // ── Category tabs ──
+        document.querySelectorAll('.cat-tab').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                selectedCategory = tab.dataset.cat;
+                renderExerciseGrid();
+            });
+        });
+
+        // ── Render exercise grid ──
+        function renderExerciseGrid() {
+            var grid = document.getElementById('exercise-grid');
+            var recs = WorkoutManager.BODY_TYPE_RECS[currentBodyType] || WorkoutManager.BODY_TYPE_RECS.mesomorph;
+            var recIds = recs.exercises || [];
+
+            var allEx = WorkoutManager.getAllExercises();
+
+            var filtered = allEx.filter(function (ex) {
+                var catMatch = selectedCategory === 'all' || ex.category === selectedCategory;
+                // If not "all" body type, only show recommended or filtered if category tab active
+                return catMatch;
+            });
+
+            if (!filtered.length) {
+                grid.innerHTML = '<div class="empty-state col-12"><div class="empty-state-icon">🔍</div><div class="empty-state-text">No exercises found for this filter.</div></div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(function (ex) {
+                var isRec = recIds.some(function (r) { return (r.id || r) === ex.id; });
+                var diffBadge = ex.difficulty === 'hard' ? 'badge-danger' : ex.difficulty === 'intermediate' ? 'badge-warning' : 'badge-success';
+                return '<div class="exercise-card-wrap reveal">' +
+                    '<div class="exercise-card" data-exercise-id="' + ex.id + '">' +
+                        '<div class="exercise-icon">' + (ex.icon || '💪') + '</div>' +
+                        '<div class="exercise-info">' +
+                            '<div class="exercise-name">' + ex.name + (isRec ? ' <span style="font-size:0.65rem;color:var(--accent-warning);">★ Recommended</span>' : '') + '</div>' +
+                            '<div class="exercise-meta">' + ex.sets + ' sets × ' + ex.reps + ' reps · ' + ex.rest + 's rest</div>' +
+                            '<div class="exercise-tags">' +
+                                '<span class="badge badge-primary">' + ex.category + '</span>' +
+                                '<span class="badge ' + diffBadge + '">' + ex.difficulty + '</span>' +
+                                (ex.muscleGroups || []).slice(0, 2).map(function (m) {
+                                    return '<span class="badge badge-muted">' + m + '</span>';
+                                }).join('') +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<button class="exercise-add-btn" data-ex-id="' + ex.id + '" title="Add to plan" aria-label="Add to plan">+</button>' +
+                '</div>';
+            }).join('');
+
+            // Add-to-plan buttons
+            grid.querySelectorAll('.exercise-add-btn').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var exId = btn.dataset.exId;
+                    // Quick open modal pre-selected
+                    openCreatePlanModal(exId);
+                });
+            });
+        }
+
+        // ── Render saved plans ──
+        function renderPlans() {
+            var container = document.getElementById('plans-container');
+            var plans = WorkoutManager.getWorkoutPlans();
+
+            if (!plans.length) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div>' +
+                    '<div class="empty-state-text">No workout plans yet. Create your first plan!</div>' +
+                    '<button class="btn btn-primary mt-8" onclick="document.getElementById(\'open-create-plan-btn\').click()">+ Create Plan</button></div>';
+                return;
+            }
+
+            container.innerHTML = '<div class="grid-auto">' +
+                plans.map(function (plan) {
+                    var dur = plan.exercises.reduce(function (acc, ex) {
+                        return acc + (ex.sets * (ex.rest + 45));
+                    }, 0);
+                    var mins = Math.round(dur / 60);
+                    var schedDays = (plan.schedule || []).map(function (d) {
+                        return d.charAt(0).toUpperCase() + d.slice(1, 3);
+                    }).join(', ');
+
+                    return '<div class="plan-card">' +
+                        '<div class="plan-card-header">' +
+                            '<div>' +
+                                '<div class="plan-card-title">' + plan.name + '</div>' +
+                                '<div class="plan-card-meta">' + plan.exercises.length + ' exercises · ~' + mins + ' min' +
+                                    (schedDays ? ' · ' + schedDays : '') + '</div>' +
+                            '</div>' +
+                            '<div class="d-flex gap-4">' +
+                                '<button class="btn btn-primary btn-sm" onclick="startPlan(\'' + plan.id + '\')">▶ Start</button>' +
+                                '<button class="btn btn-ghost btn-icon btn-sm" onclick="deletePlan(\'' + plan.id + '\')" title="Delete" aria-label="Delete plan">🗑</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="plan-card-exercises">' +
+                            plan.exercises.slice(0, 6).map(function (ex) {
+                                return '<span class="badge badge-primary">' + ex.name + '</span>';
+                            }).join('') +
+                            (plan.exercises.length > 6 ? '<span class="badge badge-muted">+' + (plan.exercises.length - 6) + ' more</span>' : '') +
+                        '</div>' +
+                    '</div>';
+                }).join('') +
+            '</div>';
+        }
+
+        window.startPlan = function (planId) {
+            Utils.showToast('Starting plan! Redirecting to sessions…', 'info');
+            setTimeout(function () { window.location.href = 'sessions.html?plan=' + planId; }, 800);
+        };
+
+        window.deletePlan = function (planId) {
+            WorkoutManager.deleteWorkoutPlan(planId);
+            renderPlans();
+            renderScheduler();
+            Utils.showToast('Plan deleted.', 'success');
+        };
+
+        // ── Weekly Scheduler ──
+        var DAY_KEYS   = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+        var DAY_LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+        function renderScheduler() {
+            var sched = WorkoutManager.getWeeklySchedule();
+            var todayIdx = (new Date().getDay() + 6) % 7;
+            var today    = new Date().getDate();
+
+            var scheduler = document.getElementById('week-scheduler');
+            scheduler.innerHTML = DAY_KEYS.map(function (day, i) {
+                var planId   = sched[day];
+                var plans    = WorkoutManager.getWorkoutPlans();
+                var plan     = plans.find(function (p) { return p.id === planId; });
+                var isToday  = i === todayIdx;
+
+                var dayNum = new Date();
+                dayNum.setDate(today - todayIdx + i);
+                var dn = dayNum.getDate();
+
+                return '<div class="scheduler-day' +
+                    (plan ? ' has-workout' : '') +
+                    (isToday ? ' today-sched' : '') +
+                    '" data-day="' + day + '">' +
+                    '<div class="sched-day-name">' + DAY_LABELS[i] + '</div>' +
+                    '<div class="sched-day-num">' + dn + '</div>' +
+                    (plan
+                        ? '<div class="sched-workout-label">🏋️ ' + plan.name + '</div>'
+                        : '<div class="sched-rest">Rest</div>'
+                    ) +
+                '</div>';
+            }).join('');
+
+            // Click to assign
+            scheduler.querySelectorAll('.scheduler-day').forEach(function (dayEl) {
+                dayEl.addEventListener('click', function () {
+                    currentAssignDay = dayEl.dataset.day;
+                    openAssignModal(currentAssignDay);
+                });
+            });
+        }
+
+        // ── Assign modal ──
+        function openAssignModal(day) {
+            var modal = document.getElementById('assign-modal');
+            document.getElementById('assign-modal-title').textContent =
+                'Assign Workout — ' + Utils.capitalise(day);
+
+            var plans = WorkoutManager.getWorkoutPlans();
+            var list  = document.getElementById('assign-plan-list');
+
+            if (!plans.length) {
+                list.innerHTML = '<p class="text-sm text-muted">No plans yet. Create one first.</p>';
+            } else {
+                list.innerHTML = plans.map(function (p) {
+                    return '<button class="btn btn-ghost btn-full" style="justify-content:flex-start;gap:8px;" onclick="assignDay(\'' + day + '\',\'' + p.id + '\')">' +
+                        '🏋️ <span>' + p.name + '</span>' +
+                        '<span class="badge badge-muted" style="margin-left:auto;">' + p.exercises.length + ' ex</span>' +
+                    '</button>';
+                }).join('');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        window.assignDay = function (day, planId) {
+            var sched = WorkoutManager.getWeeklySchedule();
+            sched[day] = planId;
+            WorkoutManager.saveWeeklySchedule(sched);
+            renderScheduler();
+            document.getElementById('assign-modal').classList.add('hidden');
+            Utils.showToast('Workout assigned to ' + Utils.capitalise(day) + '!', 'success');
+        };
+
+        document.getElementById('clear-day-btn').addEventListener('click', function () {
+            if (!currentAssignDay) return;
+            var sched = WorkoutManager.getWeeklySchedule();
+            sched[currentAssignDay] = null;
+            WorkoutManager.saveWeeklySchedule(sched);
+            renderScheduler();
+            document.getElementById('assign-modal').classList.add('hidden');
+        });
+
+        document.getElementById('clear-schedule-btn').addEventListener('click', function () {
+            var empty = { monday:null,tuesday:null,wednesday:null,thursday:null,friday:null,saturday:null,sunday:null };
+            WorkoutManager.saveWeeklySchedule(empty);
+            renderScheduler();
+            Utils.showToast('Schedule cleared.', 'info');
+        });
+
+        // ── Create plan modal ──
+        function openCreatePlanModal(preSelectId) {
+            selectedExerciseIds = preSelectId ? [preSelectId] : [];
+            document.getElementById('plan-name-input').value = '';
+            document.querySelectorAll('.plan-day-cb').forEach(function (cb) { cb.checked = false; });
+            renderExercisePicker();
+            document.getElementById('create-plan-modal').classList.remove('hidden');
+        }
+
+        function renderExercisePicker() {
+            var allEx = WorkoutManager.getAllExercises();
+            var list  = document.getElementById('exercise-picker-list');
+            list.innerHTML = allEx.map(function (ex) {
+                var isSel = selectedExerciseIds.indexOf(ex.id) !== -1;
+                return '<div class="picker-exercise-row' + (isSel ? ' selected' : '') + '" data-ex-id="' + ex.id + '">' +
+                    '<input type="checkbox" class="picker-check" ' + (isSel ? 'checked' : '') + ' aria-label="' + ex.name + '">' +
+                    '<div>' +
+                        '<div class="picker-ex-name">' + ex.name + '</div>' +
+                        '<div class="picker-ex-cat">' + ex.category + ' · ' + ex.sets + '×' + ex.reps + '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+
+            list.querySelectorAll('.picker-exercise-row').forEach(function (row) {
+                row.addEventListener('click', function () {
+                    var id  = row.dataset.exId;
+                    var cb  = row.querySelector('.picker-check');
+                    var idx = selectedExerciseIds.indexOf(id);
+                    if (idx === -1) {
+                        selectedExerciseIds.push(id);
+                        cb.checked = true;
+                        row.classList.add('selected');
+                    } else {
+                        selectedExerciseIds.splice(idx, 1);
+                        cb.checked = false;
+                        row.classList.remove('selected');
+                    }
+                });
+            });
+        }
+
+        document.getElementById('open-create-plan-btn').addEventListener('click', function () {
+            openCreatePlanModal(null);
+        });
+
+        document.getElementById('save-plan-btn').addEventListener('click', function () {
+            var name = document.getElementById('plan-name-input').value.trim();
+            if (!name) {
+                Utils.showToast('Please enter a plan name.', 'warning');
+                return;
+            }
+            if (!selectedExerciseIds.length) {
+                Utils.showToast('Please select at least one exercise.', 'warning');
+                return;
+            }
+            var days = [];
+            document.querySelectorAll('.plan-day-cb:checked').forEach(function (cb) {
+                days.push(cb.value);
+            });
+
+            var plan = WorkoutManager.createWorkoutPlan(name, selectedExerciseIds, days);
+
+            // Auto-assign schedule
+            if (days.length) {
+                var sched = WorkoutManager.getWeeklySchedule();
+                days.forEach(function (d) { sched[d] = plan.id; });
+                WorkoutManager.saveWeeklySchedule(sched);
+            }
+
+            document.getElementById('create-plan-modal').classList.add('hidden');
+            renderPlans();
+            renderScheduler();
+            Utils.showToast('Plan "' + name + '" created!', 'success');
+        });
+
+        // ── Initial render ──
+        renderExerciseGrid();
+        renderPlans();
+        renderScheduler();
+    });
+</script>
+</body>
+</html>
