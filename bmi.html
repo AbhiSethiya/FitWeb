@@ -1,317 +1,239 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BMI Calculator - WorkIn&amp;Out</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/themes.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* ── Sidebar nav-link classes ── */
+        /* ── Base overrides ── */
+        body { font-family: 'Inter', sans-serif; background: #0d0d0d; color: #e5e7eb; }
+        h1,h2,h3,h4,.section-title,.page-heading { font-family: 'Space Grotesk', sans-serif; }
+
+        /* ── Sidebar ── */
         .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 16px;
-            border-bottom: 1px solid var(--nav-border);
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
         }
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: 1.05rem;
-            color: var(--text-primary);
-            text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.05rem;
+            color: var(--text-primary); text-decoration: none;
         }
-        .logo span { color: var(--accent-primary); }
+        .logo span { color: #22c55e; }
         .sidebar-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 1rem;
-            padding: 6px 8px;
-            border-radius: var(--radius-sm);
-            line-height: 1;
-            transition: background var(--transition-fast);
-            display: none;
+            background: none; border: none; cursor: pointer; color: var(--text-muted);
+            font-size: 1rem; padding: 6px 8px; border-radius: var(--radius-sm);
+            line-height: 1; transition: background var(--transition-fast); display: none;
         }
-        .sidebar-close:hover { background: var(--bg-secondary); }
+        .sidebar-close:hover { background: rgba(255,255,255,0.06); }
         .nav-links {
-            list-style: none;
-            padding: 12px 10px;
-            margin: 0;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            overflow-y: auto;
+            list-style: none; padding: 12px 10px; margin: 0;
+            flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
         }
         .nav-links li { margin: 0; }
         .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 11px 14px;
-            border-radius: var(--radius-md);
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all var(--transition-fast);
-            position: relative;
+            display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+            border-radius: 10px; color: var(--text-secondary); font-weight: 500;
+            font-size: 0.9rem; text-decoration: none; transition: all 0.15s ease; position: relative;
         }
-        .nav-link:hover {
-            background: rgba(var(--accent-primary-rgb), 0.08);
-            color: var(--accent-primary);
-        }
-        .nav-link.active {
-            background: rgba(var(--accent-primary-rgb), 0.12);
-            color: var(--accent-primary);
-            font-weight: 600;
-        }
+        .nav-link:hover { background: rgba(34,197,94,0.08); color: #22c55e; }
+        .nav-link.active { background: rgba(34,197,94,0.12); color: #22c55e; font-weight: 600; }
         .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 20%; bottom: 20%;
-            width: 3px;
-            background: var(--accent-primary);
-            border-radius: 0 3px 3px 0;
+            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
+            width: 3px; background: #22c55e; border-radius: 0 3px 3px 0;
         }
         .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
+        @media (max-width: 768px) { .sidebar-close { display: flex; align-items: center; justify-content: center; } }
 
-        @media (max-width: 768px) {
-            .sidebar-close { display: flex; align-items: center; justify-content: center; }
+        /* ── Page heading ── */
+        .page-heading {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem; font-weight: 700; color: #f9fafb;
+            letter-spacing: -0.02em; margin: 0 0 4px;
         }
+        .page-subheading { font-size: 0.9rem; color: #6b7280; }
 
-        /* ── BMI Page Styles ── */
-        .bmi-sliders-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+        /* ── Topbar hamburger ── */
+        .topbar-hamburger {
+            background: none; border: none; font-size: 1.4rem; cursor: pointer;
+            color: var(--text-primary); padding: 4px 8px; border-radius: 8px;
+            display: none; line-height: 1;
         }
+        @media (max-width: 768px) { .topbar-hamburger { display: block; } }
+
+        /* ── Unit toggle ── */
+        .unit-toggle-wrap { display: flex; align-items: center; gap: 6px; }
+        .unit-btn {
+            padding: 7px 16px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,0.12);
+            background: transparent; color: #9ca3af; font-weight: 600; font-size: 0.8rem;
+            cursor: pointer; transition: all 0.15s ease; font-family: 'Inter', sans-serif;
+        }
+        .unit-btn.active { background: #22c55e; color: #000; border-color: #22c55e; font-weight: 700; }
+        .unit-btn:hover:not(.active) { border-color: #22c55e; color: #22c55e; }
+
+        /* ── Sliders grid ── */
+        .bmi-sliders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 640px) { .bmi-sliders-grid { grid-template-columns: 1fr; } }
 
-        .slider-group { display: flex; flex-direction: column; gap: 12px; }
-        .slider-label {
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
+        /* ── Slider card ── */
+        .slider-card {
+            background: #1a1a1a; border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .slider-value-box {
-            background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
-            padding: 16px 20px;
-            text-align: center;
-            box-shadow: var(--shadow-glow);
+        .slider-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+
+        .slider-label {
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.8rem;
+            color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .slider-value-row {
+            display: flex; align-items: baseline; gap: 6px;
         }
         .slider-big-num {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: 3rem;
-            color: #fff;
-            line-height: 1;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 3.5rem;
+            line-height: 1; color: #f9fafb;
         }
-        .slider-unit-label {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.75);
-            font-weight: 600;
-            margin-top: 2px;
-        }
-        .slider-track-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .slider-track-wrap span {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            white-space: nowrap;
-            min-width: 36px;
-        }
-        .slider-track-wrap span:last-child { text-align: right; }
+        .slider-unit-label { font-size: 1rem; font-weight: 600; color: #6b7280; }
 
-        /* Custom range slider — gradient track */
+        /* Custom range slider */
         input[type="range"].bmi-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            flex: 1;
-            height: 6px;
-            border-radius: var(--radius-full);
-            background: var(--bg-secondary);
-            outline: none;
-            cursor: pointer;
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 4px; border-radius: 999px;
+            background: rgba(255,255,255,0.1); outline: none; cursor: pointer;
         }
         input[type="range"].bmi-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(var(--accent-primary-rgb), 0.45);
-            border: 3px solid #fff;
+            -webkit-appearance: none; appearance: none;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: #22c55e; cursor: pointer;
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.25);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         input[type="range"].bmi-slider::-moz-range-thumb {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(var(--accent-primary-rgb), 0.45);
-            border: 3px solid #fff;
+            width: 20px; height: 20px; border-radius: 50%; border: none;
+            background: #22c55e; cursor: pointer; box-shadow: 0 0 0 3px rgba(34,197,94,0.25);
         }
         input[type="range"].bmi-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-            box-shadow: 0 4px 14px rgba(var(--accent-primary-rgb), 0.6);
+            transform: scale(1.2); box-shadow: 0 0 0 5px rgba(34,197,94,0.3);
+        }
+        .slider-range-labels {
+            display: flex; justify-content: space-between;
+            font-size: 0.72rem; color: #4b5563; font-weight: 500; margin-top: -8px;
         }
 
-        /* Unit toggle */
-        .unit-toggle-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* ── Result card ── */
+        .result-card {
+            background: #1a1a1a; border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 32px 24px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .unit-btn {
-            padding: 8px 18px;
-            border-radius: var(--radius-full);
-            border: 2px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        .unit-btn.active {
-            background: var(--gradient-primary);
-            color: #fff;
-            border-color: var(--accent-primary);
-            box-shadow: var(--shadow-glow);
-        }
+        .result-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
 
-        /* BMI Result Display */
-        .bmi-result-card {
-            text-align: center;
-            padding: 32px 24px;
-        }
         .bmi-big-number {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 900;
-            font-size: 5rem;
-            line-height: 1;
-            transition: color 0.4s ease;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 5rem;
+            line-height: 1; transition: color 0.4s ease; text-align: center; margin-bottom: 8px;
         }
         .bmi-category-badge {
-            display: inline-block;
-            padding: 6px 20px;
-            border-radius: var(--radius-full);
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-top: 8px;
+            display: inline-block; padding: 5px 18px; border-radius: 999px;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.88rem;
             transition: background 0.4s ease, color 0.4s ease;
         }
+        .bmi-result-center { text-align: center; margin-bottom: 24px; }
         .bmi-desc-text {
-            margin-top: 12px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
+            text-align: center; font-size: 0.88rem; color: #6b7280; line-height: 1.6;
+            margin-top: 8px; max-width: 420px; margin-left: auto; margin-right: auto;
         }
 
-        /* Gauge */
-        .gauge-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 16px 0 8px;
+        /* ── BMI Scale Bar ── */
+        .bmi-scale-wrap { margin: 16px 0 8px; }
+        .bmi-scale-bar-outer {
+            position: relative; height: 14px; border-radius: 999px; overflow: visible;
+            background: linear-gradient(to right, #3b82f6 0%, #3b82f6 28%, #22c55e 28%, #22c55e 50%, #f59e0b 50%, #f59e0b 66.5%, #ef4444 66.5%, #ef4444 100%);
         }
-        #bmi-gauge-svg {
-            width: 100%;
-            max-width: 280px;
+        .bmi-scale-marker {
+            position: absolute; top: 50%; transform: translate(-50%, -50%);
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #fff; border: 3px solid #0d0d0d;
+            box-shadow: 0 0 0 3px #22c55e, 0 4px 12px rgba(0,0,0,0.5);
+            transition: left 0.6s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease;
+            z-index: 2;
         }
+        .bmi-scale-labels {
+            display: flex; justify-content: space-between; margin-top: 8px;
+        }
+        .bmi-scale-label { font-size: 0.68rem; color: #6b7280; font-weight: 500; text-align: center; }
+        .bmi-scale-legend {
+            display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 14px;
+        }
+        .bmi-legend-item {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.72rem; color: #9ca3af; font-weight: 500;
+        }
+        .bmi-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-        /* Gauge legend */
-        .gauge-legend {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 8px;
-        }
-        .gauge-legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-        .gauge-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
+        /* ── Gauge holder (SVG from bmi.js) ── */
+        .gauge-wrap { display: flex; flex-direction: column; align-items: center; margin: 8px 0; }
+        #bmi-gauge-svg { width: 100%; max-width: 260px; }
 
-        /* Ideal weight */
-        .ideal-weight-display {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            flex-wrap: wrap;
+        /* ── Ideal weight ── */
+        .ideal-weight-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 20px; flex-wrap: wrap; padding: 8px 0;
         }
+        .ideal-range-box { text-align: center; }
         .ideal-range-val {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent-success);
+            font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 800; color: #22c55e;
         }
+        .ideal-range-sub { font-size: 0.72rem; color: #6b7280; font-weight: 600; margin-top: 2px; }
+        .ideal-arrow { font-size: 1.5rem; color: #374151; }
+        .ideal-summary-text { font-size: 0.9rem; color: #9ca3af; text-align: center; }
 
-        /* History chart */
-        .bmi-chart-canvas {
-            width: 100%;
-            height: 200px;
-            display: block;
-        }
+        /* ── History chart ── */
+        .bmi-chart-canvas { width: 100%; height: 200px; display: block; }
 
-        /* Save btn area */
-        .save-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 8px 0;
+        /* ── History section card ── */
+        .history-card {
+            background: #1a1a1a; border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        .history-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
 
-        /* Topbar hamburger inline */
-        .topbar-hamburger {
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            color: var(--text-primary);
-            padding: 4px 8px;
-            border-radius: var(--radius-sm);
-            display: none;
-            line-height: 1;
+        /* ── Generic card override ── */
+        .card {
+            background: #1a1a1a !important;
+            border: 1px solid rgba(255,255,255,0.06) !important;
+            border-radius: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        @media (max-width: 768px) {
-            .topbar-hamburger { display: block; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+
+        /* ── Save section ── */
+        .save-section { display: flex; justify-content: center; padding: 4px 0; }
+        .btn-save {
+            background: #22c55e; color: #000; border: none; border-radius: 999px;
+            padding: 14px 40px; font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700; font-size: 1rem; cursor: pointer;
+            transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+        }
+        .btn-save:hover { background: #16a34a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34,197,94,0.4); }
+        .btn-save:active { transform: translateY(0); }
+
+        /* section spacing */
+        .section { margin-bottom: 24px; }
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+        }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem; font-weight: 700; color: #f9fafb; margin: 0;
         }
     </style>
 </head>
@@ -326,16 +248,16 @@
         </div>
         <ul class="nav-links">
             <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
-            <li><a href="workout.html" class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
-            <li><a href="bmi.html" class="nav-link active"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
-            <li><a href="diet.html" class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
-            <li><a href="sessions.html" class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
-            <li><a href="progress.html" class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
-            <li><a href="sleep.html" class="nav-link"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
-            <li><a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
+            <li><a href="workout.html"   class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
+            <li><a href="bmi.html"       class="nav-link active"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
+            <li><a href="diet.html"      class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
+            <li><a href="sessions.html"  class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
+            <li><a href="progress.html"  class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
+            <li><a href="sleep.html"     class="nav-link"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
+            <li><a href="profile.html"   class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
         </ul>
         <div class="sidebar-footer">
-            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">🌙 Dark Mode</button>
+            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">☀️ Light Mode</button>
             <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
         </div>
     </nav>
@@ -350,147 +272,158 @@
             <div class="d-flex items-center gap-8">
                 <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
                 <div>
-                    <span class="topbar-title">BMI Calculator</span>
+                    <div class="page-heading">BMI Calculator</div>
+                    <div class="page-subheading">Track your Body Mass Index over time</div>
                 </div>
             </div>
             <div class="topbar-actions">
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
+                <div class="unit-toggle-wrap">
+                    <button class="unit-btn active" id="btn-metric"   onclick="setUnit('metric')">Metric</button>
+                    <button class="unit-btn"        id="btn-imperial" onclick="setUnit('imperial')">Imperial</button>
+                </div>
             </div>
         </div>
+
+        <!-- Hidden select read by bmi.js -->
+        <select id="unit-select" style="display:none">
+            <option value="metric" selected>metric</option>
+            <option value="imperial">imperial</option>
+        </select>
 
         <!-- Page body -->
         <div class="page-container">
 
-            <!-- ── Input Section ── -->
+            <!-- ── Sliders ── -->
             <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">⚖️ BMI Calculator</h3>
-                    <div class="unit-toggle-wrap">
-                        <button class="unit-btn active" id="btn-metric" onclick="setUnit('metric')">Metric (cm/kg)</button>
-                        <button class="unit-btn" id="btn-imperial" onclick="setUnit('imperial')">Imperial (in/lbs)</button>
-                    </div>
-                </div>
-
-                <!-- Hidden select read by bmi.js -->
-                <select id="unit-select" style="display:none">
-                    <option value="metric" selected>metric</option>
-                    <option value="imperial">imperial</option>
-                </select>
-
                 <div class="bmi-sliders-grid">
-                    <!-- Height slider -->
-                    <div class="card">
+
+                    <!-- Height -->
+                    <div class="slider-card">
                         <div class="slider-label">📏 Height</div>
-                        <div class="slider-value-box">
+                        <div class="slider-value-row">
                             <div class="slider-big-num" id="height-display">170</div>
                             <div class="slider-unit-label" id="height-unit-label">cm</div>
                         </div>
-                        <div class="slider-group">
-                            <div class="slider-track-wrap">
+                        <div style="display:flex;flex-direction:column;gap:6px">
+                            <input type="range" class="bmi-slider" id="height-input"
+                                   min="100" max="250" value="170" step="1"
+                                   oninput="onSliderInput('height')">
+                            <div class="slider-range-labels">
                                 <span id="height-min-label">100 cm</span>
-                                <input type="range" class="bmi-slider" id="height-input"
-                                    min="100" max="250" value="170" step="1"
-                                    oninput="onSliderInput('height')">
                                 <span id="height-max-label">250 cm</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Weight slider -->
-                    <div class="card">
+                    <!-- Weight -->
+                    <div class="slider-card">
                         <div class="slider-label">🏋️ Weight</div>
-                        <div class="slider-value-box" style="background:linear-gradient(135deg,#6c63ff,#a855f7)">
+                        <div class="slider-value-row">
                             <div class="slider-big-num" id="weight-display">70</div>
                             <div class="slider-unit-label" id="weight-unit-label">kg</div>
                         </div>
-                        <div class="slider-group">
-                            <div class="slider-track-wrap">
+                        <div style="display:flex;flex-direction:column;gap:6px">
+                            <input type="range" class="bmi-slider" id="weight-input"
+                                   min="30" max="200" value="70" step="1"
+                                   oninput="onSliderInput('weight')">
+                            <div class="slider-range-labels">
                                 <span id="weight-min-label">30 kg</span>
-                                <input type="range" class="bmi-slider" id="weight-input"
-                                    min="30" max="200" value="70" step="1"
-                                    oninput="onSliderInput('weight')">
                                 <span id="weight-max-label">200 kg</span>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
-            <!-- ── BMI Result + Gauge ── -->
+            <!-- ── Result + Scale ── -->
+            <div class="section reveal">
+                <div class="result-card">
+                    <div class="bmi-result-center">
+                        <div class="bmi-big-number" id="bmi-gauge-number" style="color:#22c55e">—</div>
+                        <div class="bmi-category-badge" id="bmi-gauge-category"
+                             style="background:rgba(34,197,94,0.12);color:#22c55e">
+                            Enter values above
+                        </div>
+                        <div class="bmi-desc-text" id="bmi-description">Adjust the sliders to calculate your BMI.</div>
+                    </div>
+
+                    <!-- Scale bar -->
+                    <div class="bmi-scale-wrap">
+                        <div style="position:relative">
+                            <div class="bmi-scale-bar-outer" id="bmi-scale-bar">
+                                <div class="bmi-scale-marker" id="bmi-scale-marker" style="left:0%"></div>
+                            </div>
+                        </div>
+                        <div class="bmi-scale-labels">
+                            <span class="bmi-scale-label" style="color:#3b82f6">Underweight<br>&lt;18.5</span>
+                            <span class="bmi-scale-label" style="color:#22c55e">Normal<br>18.5–24.9</span>
+                            <span class="bmi-scale-label" style="color:#f59e0b">Overweight<br>25–29.9</span>
+                            <span class="bmi-scale-label" style="color:#ef4444">Obese<br>≥30</span>
+                        </div>
+                        <div class="bmi-scale-legend">
+                            <div class="bmi-legend-item"><div class="bmi-legend-dot" style="background:#3b82f6"></div>Underweight &lt;18.5</div>
+                            <div class="bmi-legend-item"><div class="bmi-legend-dot" style="background:#22c55e"></div>Normal 18.5–24.9</div>
+                            <div class="bmi-legend-item"><div class="bmi-legend-dot" style="background:#f59e0b"></div>Overweight 25–29.9</div>
+                            <div class="bmi-legend-item"><div class="bmi-legend-dot" style="background:#ef4444"></div>Obese ≥30</div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden gauge holder required by bmi.js -->
+                    <div class="gauge-wrap" style="display:none">
+                        <div id="gauge-holder"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Ideal Weight ── -->
             <div class="section reveal">
                 <div class="section-header">
-                    <h3 class="section-title">📊 Your Result</h3>
+                    <h3 class="section-title">🎯 Ideal Weight Range</h3>
+                    <span style="font-size:0.8rem;color:#6b7280">Based on BMI 18.5–24.9 for your height</span>
                 </div>
-                <div class="card bmi-result-card">
-                    <div class="bmi-big-number" id="bmi-gauge-number" style="color:var(--accent-primary)">—</div>
-                    <div class="bmi-category-badge" id="bmi-gauge-category"
-                        style="background:rgba(var(--accent-primary-rgb),0.12);color:var(--accent-primary)">
-                        Enter values above
-                    </div>
-                    <div class="gauge-wrap">
-                        <div id="gauge-holder"></div>
-                        <div class="gauge-legend">
-                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#74b9ff"></div>Underweight &lt;18.5</div>
-                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#00d4aa"></div>Normal 18.5–24.9</div>
-                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#ffa502"></div>Overweight 25–29.9</div>
-                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#ff4757"></div>Obese ≥30</div>
-                        </div>
-                    </div>
-                    <div class="bmi-desc-text" id="bmi-description">Adjust the sliders above to calculate your BMI.</div>
-                </div>
-            </div>
-
-            <!-- ── Ideal Weight Range ── -->
-            <div class="section reveal">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">🎯 Ideal Weight Range</div>
-                        <div class="card-subtitle">Based on BMI 18.5 – 24.9 for your height</div>
-                    </div>
-                    <div class="ideal-weight-display" id="ideal-weight-display">
-                        <div style="text-align:center">
-                            <div class="text-muted text-sm font-semibold">Min</div>
+                <div class="card" style="padding:28px 24px">
+                    <div class="ideal-weight-row" id="ideal-weight-display">
+                        <div class="ideal-range-box">
+                            <div style="font-size:0.72rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">MIN</div>
                             <div class="ideal-range-val" id="ideal-min">—</div>
-                            <div class="text-muted text-xs" id="ideal-unit-label">kg</div>
+                            <div class="ideal-range-sub" id="ideal-unit-label">kg</div>
                         </div>
-                        <div style="font-size:2rem;color:var(--text-muted)">→</div>
-                        <div style="text-align:center">
-                            <div class="text-muted text-sm font-semibold">Max</div>
+                        <div class="ideal-arrow">→</div>
+                        <div class="ideal-range-box">
+                            <div style="font-size:0.72rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">MAX</div>
                             <div class="ideal-range-val" id="ideal-max">—</div>
-                            <div class="text-muted text-xs" id="ideal-unit-label2">kg</div>
+                            <div class="ideal-range-sub" id="ideal-unit-label2">kg</div>
                         </div>
-                        <div style="text-align:center;margin-left:12px">
-                            <div class="text-sm text-muted">Your ideal weight range is</div>
-                            <div class="font-bold" id="ideal-summary">— to — kg</div>
+                        <div style="width:1px;height:48px;background:rgba(255,255,255,0.08)"></div>
+                        <div class="ideal-range-box">
+                            <div style="font-size:0.8rem;color:#9ca3af;margin-bottom:4px">Your ideal range</div>
+                            <div class="ideal-summary-text font-bold" id="ideal-summary" style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:#f9fafb">— to — kg</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ── Save Reading ── -->
+            <!-- ── Save ── -->
             <div class="section reveal">
                 <div class="save-section">
-                    <button class="btn btn-primary" id="save-bmi-btn">💾 Save Reading</button>
+                    <button class="btn-save" id="save-bmi-btn">💾 Save Reading</button>
                 </div>
             </div>
 
-            <!-- ── BMI History Chart ── -->
+            <!-- ── History Chart ── -->
             <div class="section reveal">
                 <div class="section-header">
                     <h3 class="section-title">📈 BMI History</h3>
                 </div>
-                <div class="card">
+                <div class="card" style="padding:20px">
                     <canvas class="bmi-chart-canvas" id="bmi-chart"></canvas>
                 </div>
             </div>
 
-            <!-- ── History Table ── -->
-            <div class="section reveal">
-                <div id="bmi-history">
-                    <!-- Populated by bmi.js -->
-                </div>
+            <!-- ── History List ── -->
+            <div class="section reveal" id="bmi-history">
+                <!-- Populated by bmi.js -->
             </div>
 
         </div><!-- /page-container -->
@@ -504,22 +437,20 @@
 <script src="js/app.js"></script>
 <script src="js/bmi.js"></script>
 <script>
-    /* ── Sidebar mobile close ── */
+    /* ── Sidebar mobile ── */
     (function () {
         function closeSidebar() {
             document.querySelector('.sidebar').classList.remove('open');
             document.querySelector('.sidebar-overlay').classList.remove('active');
-            document.querySelector('.hamburger').classList.remove('open');
+            var h = document.querySelector('.hamburger');
+            if (h) h.classList.remove('open');
             document.body.style.overflow = '';
         }
         document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
         document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
         document.querySelectorAll('.nav-link').forEach(function (link) {
-            link.addEventListener('click', function () {
-                if (window.innerWidth <= 768) closeSidebar();
-            });
+            link.addEventListener('click', function () { if (window.innerWidth <= 768) closeSidebar(); });
         });
-        /* Topbar hamburger also opens sidebar */
         var topbarHam = document.getElementById('topbarHamburger');
         if (topbarHam) {
             topbarHam.addEventListener('click', function () {
@@ -528,6 +459,31 @@
             });
         }
     })();
+
+    /* ── Scale bar update ── */
+    function updateScaleMarker(bmi) {
+        var marker = document.getElementById('bmi-scale-marker');
+        if (!marker) return;
+        if (!bmi) { marker.style.left = '0%'; return; }
+        /* BMI 10→40 maps to 0%→100% */
+        var pct = Math.min(100, Math.max(0, ((bmi - 10) / 30) * 100));
+        marker.style.left = pct + '%';
+        /* Color the marker ring by category */
+        var color = bmi < 18.5 ? '#3b82f6' : bmi < 25 ? '#22c55e' : bmi < 30 ? '#f59e0b' : '#ef4444';
+        marker.style.boxShadow = '0 0 0 3px ' + color + ', 0 4px 12px rgba(0,0,0,0.5)';
+    }
+
+    /* Monkey-patch bmi.js renderBMIGauge to also update scale bar */
+    document.addEventListener('DOMContentLoaded', function () {
+        var _origGauge = window.BMICalculator && BMICalculator.renderBMIGauge;
+        if (_origGauge) {
+            var origFn = _origGauge.bind(BMICalculator);
+            BMICalculator.renderBMIGauge = function (bmi) {
+                origFn(bmi);
+                updateScaleMarker(bmi);
+            };
+        }
+    });
 
     /* ── Slider helpers ── */
     var _currentUnit = 'metric';
@@ -540,83 +496,61 @@
 
     function setUnit(unit) {
         if (_currentUnit === unit) return;
-
         var hInput = document.getElementById('height-input');
         var wInput = document.getElementById('weight-input');
         var hVal   = parseFloat(hInput.value);
         var wVal   = parseFloat(wInput.value);
 
         if (unit === 'imperial') {
-            /* cm → inches */
             var hIn = Math.round(hVal / 2.54);
-            hInput.min   = '55';
-            hInput.max   = '95';
+            hInput.min = '55'; hInput.max = '95';
             hInput.value = Math.min(Math.max(hIn, 55), 95);
-            document.getElementById('height-display').textContent = hInput.value;
+            document.getElementById('height-display').textContent    = hInput.value;
             document.getElementById('height-unit-label').textContent = 'in';
             document.getElementById('height-min-label').textContent  = '55 in';
             document.getElementById('height-max-label').textContent  = '95 in';
-
-            /* kg → lbs */
             var wLbs = Math.round(wVal * 2.20462);
-            wInput.min   = '66';
-            wInput.max   = '440';
+            wInput.min = '66'; wInput.max = '440';
             wInput.value = Math.min(Math.max(wLbs, 66), 440);
-            document.getElementById('weight-display').textContent = wInput.value;
+            document.getElementById('weight-display').textContent    = wInput.value;
             document.getElementById('weight-unit-label').textContent = 'lbs';
             document.getElementById('weight-min-label').textContent  = '66 lbs';
             document.getElementById('weight-max-label').textContent  = '440 lbs';
-
             document.getElementById('ideal-unit-label').textContent  = 'lbs';
             document.getElementById('ideal-unit-label2').textContent = 'lbs';
         } else {
-            /* inches → cm */
             var hCm = Math.round(hVal * 2.54);
-            hInput.min   = '100';
-            hInput.max   = '250';
+            hInput.min = '100'; hInput.max = '250';
             hInput.value = Math.min(Math.max(hCm, 100), 250);
-            document.getElementById('height-display').textContent = hInput.value;
+            document.getElementById('height-display').textContent    = hInput.value;
             document.getElementById('height-unit-label').textContent = 'cm';
             document.getElementById('height-min-label').textContent  = '100 cm';
             document.getElementById('height-max-label').textContent  = '250 cm';
-
-            /* lbs → kg */
             var wKg = Math.round(wVal / 2.20462);
-            wInput.min   = '30';
-            wInput.max   = '200';
+            wInput.min = '30'; wInput.max = '200';
             wInput.value = Math.min(Math.max(wKg, 30), 200);
-            document.getElementById('weight-display').textContent = wInput.value;
+            document.getElementById('weight-display').textContent    = wInput.value;
             document.getElementById('weight-unit-label').textContent = 'kg';
             document.getElementById('weight-min-label').textContent  = '30 kg';
             document.getElementById('weight-max-label').textContent  = '200 kg';
-
             document.getElementById('ideal-unit-label').textContent  = 'kg';
             document.getElementById('ideal-unit-label2').textContent = 'kg';
         }
-
         _currentUnit = unit;
         var sel = document.getElementById('unit-select');
         sel.value = unit;
         sel.dispatchEvent(new Event('input'));
-
         document.getElementById('btn-metric').classList.toggle('active', unit === 'metric');
         document.getElementById('btn-imperial').classList.toggle('active', unit === 'imperial');
-
         updateIdealWeight();
     }
 
     function updateIdealWeight() {
         var hVal = parseFloat(document.getElementById('height-input').value);
         if (!hVal) return;
-        var hM;
-        if (_currentUnit === 'imperial') {
-            hM = hVal * 0.0254;
-        } else {
-            hM = hVal / 100;
-        }
+        var hM = _currentUnit === 'imperial' ? hVal * 0.0254 : hVal / 100;
         var idealMinKg = Math.round(18.5 * hM * hM * 10) / 10;
         var idealMaxKg = Math.round(24.9 * hM * hM * 10) / 10;
-
         var minDisp, maxDisp, unitStr;
         if (_currentUnit === 'imperial') {
             minDisp = (idealMinKg * 2.20462).toFixed(1);
@@ -627,32 +561,31 @@
             maxDisp = idealMaxKg.toFixed(1);
             unitStr = 'kg';
         }
-
         document.getElementById('ideal-min').textContent     = minDisp;
         document.getElementById('ideal-max').textContent     = maxDisp;
-        document.getElementById('ideal-summary').textContent =
-            minDisp + ' to ' + maxDisp + ' ' + unitStr;
+        document.getElementById('ideal-summary').textContent = minDisp + ' to ' + maxDisp + ' ' + unitStr;
     }
 
-    /* ── Theme button label sync ── */
+    /* ── Theme sync ── */
     function syncThemeBtn() {
         var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         var btn = document.getElementById('themeToggle');
         if (btn) btn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
     }
-    var _origToggle = ThemeManager.toggle;
-    ThemeManager.toggle = function () { _origToggle(); syncThemeBtn(); };
+    var _origToggle = window.ThemeManager && ThemeManager.toggle;
+    if (_origToggle) {
+        ThemeManager.toggle = function () { _origToggle(); syncThemeBtn(); };
+    }
 
-    /* ── DOMContentLoaded init ── */
+    /* ── Init ── */
     document.addEventListener('DOMContentLoaded', function () {
         ThemeManager.init();
         Auth.requireAuth();
         App.init();
         BMICalculator.init();
-
         syncThemeBtn();
 
-        /* Pre-populate sliders from user profile */
+        /* Pre-populate from profile */
         var user = Auth.getCurrentUser && Auth.getCurrentUser();
         if (user) {
             var h = parseFloat(user.height);
@@ -665,10 +598,8 @@
                 document.getElementById('weight-input').value = w;
                 document.getElementById('weight-display').textContent = w;
             }
-            /* Trigger bmi.js recalculation */
             document.getElementById('height-input').dispatchEvent(new Event('input'));
         }
-
         updateIdealWeight();
         BMICalculator.renderBMIHistoryChart('bmi-chart');
     });
