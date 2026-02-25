@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress - WorkIn&amp;Out</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ── Sidebar nav-link classes ── */
+        .sidebar-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 16px; border-bottom: 1px solid var(--nav-border); flex-shrink: 0;
+        }
+        .logo {
+            display: flex; align-items: center; gap: 10px;
+            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.05rem;
+            color: var(--text-primary); text-decoration: none;
+        }
+        .logo span { color: var(--accent-primary); }
+        .sidebar-close {
+            background: none; border: none; cursor: pointer; color: var(--text-muted);
+            font-size: 1rem; padding: 6px 8px; border-radius: var(--radius-sm);
+            line-height: 1; transition: background var(--transition-fast); display: none;
+        }
+        .sidebar-close:hover { background: var(--bg-secondary); }
+        .nav-links {
+            list-style: none; padding: 12px 10px; margin: 0;
+            flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
+        }
+        .nav-links li { margin: 0; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+            border-radius: var(--radius-md); color: var(--text-secondary);
+            font-weight: 500; font-size: 0.9rem; text-decoration: none;
+            transition: all var(--transition-fast); position: relative;
+        }
+        .nav-link:hover { background: rgba(var(--accent-primary-rgb),0.08); color: var(--accent-primary); }
+        .nav-link.active { background: rgba(var(--accent-primary-rgb),0.12); color: var(--accent-primary); font-weight: 600; }
+        .nav-link.active::before {
+            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
+            width: 3px; background: var(--accent-primary); border-radius: 0 3px 3px 0;
+        }
+        .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
+        @media (max-width: 768px) { .sidebar-close { display: flex; align-items: center; justify-content: center; } }
+
+        /* ── Topbar hamburger ── */
+        .topbar-hamburger {
+            background: none; border: none; font-size: 1.4rem; cursor: pointer;
+            color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius-sm);
+            display: none; line-height: 1;
+        }
+        @media (max-width: 768px) { .topbar-hamburger { display: block; } }
+
+        /* ── Streak badge ── */
+        .streak-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg,#ff6b35,#ffa502);
+            color: #fff; padding: 6px 16px; border-radius: var(--radius-full);
+            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1rem;
+        }
+
+        /* ── Summary stats ── */
+        .summary-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px; margin-top: 20px;
+        }
+        .summary-stat {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg); padding: 20px; text-align: center;
+            box-shadow: var(--shadow-sm); transition: box-shadow var(--transition-fast);
+        }
+        .summary-stat:hover { box-shadow: var(--shadow-md); }
+        .summary-stat-value {
+            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 2rem;
+            color: var(--accent-primary); line-height: 1;
+        }
+        .summary-stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
+
+        /* ── Weight current display ── */
+        .weight-current {
+            display: flex; align-items: baseline; gap: 8px;
+        }
+        .weight-current-val {
+            font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 3.5rem;
+            color: var(--accent-primary); line-height: 1;
+        }
+        .weight-current-unit { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+        .weight-change {
+            display: inline-block; padding: 4px 12px; border-radius: var(--radius-full);
+            font-weight: 700; font-size: 0.85rem; margin-top: 6px;
+        }
+        .weight-change.up   { background: rgba(255,71,87,0.12);  color: var(--accent-danger);  }
+        .weight-change.down { background: rgba(46,213,115,0.12);  color: var(--accent-success); }
+        .weight-change.same { background: var(--bg-secondary); color: var(--text-muted); }
+
+        /* ── Chart canvas ── */
+        .chart-canvas-wrap { position: relative; width: 100%; height: 260px; margin-top: 16px; }
+        .chart-canvas-wrap canvas { width: 100% !important; height: 100% !important; display: block; }
+
+        /* ── Measurements grid ── */
+        .meas-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;
+        }
+
+        /* ── HR Zone cards ── */
+        .zone-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
+        }
+        .zone-card {
+            border-radius: var(--radius-lg); padding: 20px; color: #fff; text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .zone-card-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1rem; }
+        .zone-card-range { font-size: 0.78rem; opacity: 0.85; margin-top: 4px; }
+        .zone-card-desc  { font-size: 0.75rem; opacity: 0.75; margin-top: 8px; font-style: italic; }
+        .zone-bpm { font-size: 0.82rem; margin-top: 8px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); padding: 4px 8px; }
+
+        /* ── Achievements ── */
+        .achievements-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px;
+        }
+        .achievement-badge {
+            background: var(--bg-card); border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg); padding: 20px 12px; text-align: center;
+            transition: all var(--transition-fast); cursor: default;
+        }
+        .achievement-badge.unlocked {
+            border-color: var(--accent-primary); background: rgba(var(--accent-primary-rgb),0.06);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        .achievement-badge.locked { opacity: 0.4; filter: grayscale(1); }
+        .achievement-badge-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 8px; }
+        .achievement-badge-name { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); }
+        .achievement-badge-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* ── PR table ── */
+        .pr-grid { display: grid; gap: 10px; }
+
+        /* ── Photo upload ── */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .photo-slot {
+            border: 2px dashed var(--border-color); border-radius: var(--radius-lg);
+            min-height: 200px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
+            background: var(--bg-secondary); cursor: pointer;
+            transition: border-color var(--transition-fast);
+            position: relative; overflow: hidden;
+        }
+        .photo-slot:hover { border-color: var(--accent-primary); }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; border-radius: calc(var(--radius-lg) - 2px); }
+        .photo-slot-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; z-index: 1; }
+        .photo-slot-icon  { font-size: 2rem; z-index: 1; }
+        .photo-date { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; z-index: 1; }
+
+        @media (max-width: 640px) {
+            .photo-grid { grid-template-columns: 1fr; }
+            .form-row    { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🏋️ <span>WorkIn&amp;Out</span></div>
+            <button class="sidebar-close" id="sidebarClose">✕</button>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
+            <li><a href="workout.html"   class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
+            <li><a href="bmi.html"       class="nav-link"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
+            <li><a href="diet.html"      class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
+            <li><a href="sessions.html"  class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
+            <li><a href="progress.html"  class="nav-link active"><span class="nav-icon">📈</span><span>Progress</span></a></li>
+            <li><a href="sleep.html"     class="nav-link"><span class="nav-icon">😴</span><span>Sleep</span></a></li>
+            <li><a href="profile.html"   class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">🌙 Dark Mode</button>
+            <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
+        </div>
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <button class="hamburger" id="hamburger">☰</button>
+
+    <!-- ══════════ MAIN CONTENT ══════════ -->
+    <main class="main-content">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="d-flex items-center gap-8">
+                <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
+                <span class="topbar-title">Progress Tracking</span>
+            </div>
+            <div class="topbar-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="page-container">
+
+            <!-- ══ 1. Progress Overview Header ══ -->
+            <div class="section reveal">
+                <div class="page-header d-flex items-center justify-between flex-wrap gap-8">
+                    <div>
+                        <h2 style="font-family:'Poppins',sans-serif;font-weight:800;margin:0">Progress Tracking</h2>
+                        <p class="page-header-subtitle">Monitor your fitness journey over time</p>
+                    </div>
+                    <div class="streak-badge">
+                        🔥 <span id="workout-streak">0</span> Day Streak
+                    </div>
+                </div>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="total-workouts">0</div>
+                        <div class="summary-stat-label">Total Workouts</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="total-volume">0</div>
+                        <div class="summary-stat-label">Total Volume (kg)</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="avg-duration">0</div>
+                        <div class="summary-stat-label">Avg Session (min)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ 2. Weight Tracker ══ -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">⚖️ Weight Tracker</h3>
+                </div>
+                <div class="card p-12">
+                    <div class="d-flex items-start justify-between flex-wrap gap-12 mb-12">
+                        <div>
+                            <div class="weight-current">
+                                <span class="weight-current-val" id="current-weight">--</span>
+                                <span class="weight-current-unit">kg</span>
+                            </div>
+                            <span class="weight-change same" id="weight-change">No data yet</span>
+                        </div>
+                        <form id="weight-form" class="d-flex items-end gap-8 flex-wrap">
+                            <div class="form-group" style="margin-bottom:0">
+                                <label class="form-label">Date</label>
+                                <input type="date" id="weight-date-input" name="date" class="form-input" style="width:160px">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0">
+                                <label class="form-label">Weight (kg)</label>
+                                <input type="number" id="weight-log-input" name="weight" class="form-input" placeholder="e.g. 72.5" step="0.1" min="10" max="300" style="width:130px">
+                            </div>
+                            <button type="submit" class="btn btn-primary">+ Log</button>
+                        </form>
+                    </div>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="weight-chart"></canvas>
+                    </div>
+                    <div style="margin-top:20px">
+                        <h4 style="font-size:0.9rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Recent Entries</h4>
+                        <div id="weight-history"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ 3. Body Measurements ══ -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">📏 Body Measurements</h3>
+                </div>
+                <div class="card p-12">
+                    <form id="measurements-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Chest (cm)</label>
+                                <input type="number" name="chest" class="form-input" placeholder="e.g. 100" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Waist (cm)</label>
+                                <input type="number" name="waist" class="form-input" placeholder="e.g. 80" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Hips (cm)</label>
+                                <input type="number" name="hips" class="form-input" placeholder="e.g. 95" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bicep L (cm)</label>
+                                <input type="number" name="bicep" class="form-input" placeholder="e.g. 35" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bicep R (cm)</label>
+                                <input type="number" name="bicepR" class="form-input" placeholder="e.g. 35" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Thigh L (cm)</label>
+                                <input type="number" name="thigh" class="form-input" placeholder="e.g. 55" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Thigh R (cm)</label>
+                                <input type="number" name="thighR" class="form-input" placeholder="e.g. 55" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Calf L (cm)</label>
+                                <input type="number" name="calf" class="form-input" placeholder="e.g. 38" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Calf R (cm)</label>
+                                <input type="number" name="calfR" class="form-input" placeholder="e.g. 38" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date</label>
+                                <input type="date" name="date" class="form-input">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-8">Save Measurements</button>
+                    </form>
+                    <div class="chart-canvas-wrap mt-12">
+                        <canvas id="measurements-chart"></canvas>
+                    </div>
+                    <div id="measurements-history" style="margin-top:16px"></div>
+                </div>
+            </div>
+
+            <!-- ══ 4. Personal Records ══ -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">🏆 Personal Records</h3>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start" class="pr-layout">
+                    <div class="card p-12">
+                        <div id="pr-list"></div>
+                    </div>
+                    <div class="card p-12">
+                        <h4 style="font-family:'Poppins',sans-serif;font-weight:700;margin-bottom:16px">Add / Update PR</h4>
+                        <form id="pr-form">
+                            <div class="form-group">
+                                <label class="form-label">Exercise</label>
+                                <input type="text" id="pr-exercise" class="form-input" placeholder="e.g. Bench Press">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Value</label>
+                                    <input type="number" id="pr-value" class="form-input" placeholder="e.g. 100" step="0.5">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Unit</label>
+                                    <select id="pr-unit" class="form-select">
+                                        <option value="kg">kg</option>
+                                        <option value="lbs">lbs</option>
+                                        <option value="reps">reps</option>
+                                        <option value="min">min</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">🏆 Save PR</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ 5. Before / After Photos ══ -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">📸 Before &amp; After Photos</h3>
+                </div>
+                <div class="card p-12">
+                    <div class="photo-grid">
+                        <div>
+                            <p class="form-label mb-4">Before Photo</p>
+                            <div class="photo-slot" id="before-slot" onclick="document.getElementById('before-upload').click()">
+                                <span class="photo-slot-icon">📷</span>
+                                <span class="photo-slot-label">Click to upload</span>
+                                <span class="photo-date" id="before-date"></span>
+                            </div>
+                            <input type="file" id="before-upload" accept="image/*" style="display:none">
+                        </div>
+                        <div>
+                            <p class="form-label mb-4">After Photo</p>
+                            <div class="photo-slot" id="after-slot" onclick="document.getElementById('after-upload').click()">
+                                <span class="photo-slot-icon">📷</span>
+                                <span class="photo-slot-label">Click to upload</span>
+                                <span class="photo-date" id="after-date"></span>
+                            </div>
+                            <input type="file" id="after-upload" accept="image/*" style="display:none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ 6. Heart Rate Zones ══ -->
+            <div class="section reveal">
+                <div class="section-header d-flex items-center justify-between flex-wrap gap-8">
+                    <h3 class="section-title">❤️ Heart Rate Zones</h3>
+                    <span style="font-size:0.82rem;color:var(--text-muted)">Formula: Max HR = 220 − age</span>
+                </div>
+                <div class="zone-grid" id="hr-zones-grid"></div>
+            </div>
+
+            <!-- ══ 7. Achievements & Badges ══ -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">🏅 Achievements &amp; Badges</h3>
+                </div>
+                <div class="achievements-grid" id="achievements-grid"></div>
+            </div>
+
+        </div><!-- /page-container -->
+    </main>
+</div><!-- /app-layout -->
+
+<script src="js/utils.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/session.js"></script>
+<script src="js/progress.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    // ── Sidebar toggle ─────────────────────────
+    const sidebar  = document.getElementById('sidebar');
+    const overlay  = document.getElementById('sidebarOverlay');
+    const closeBtn = document.getElementById('sidebarClose');
+    const hamburger = document.getElementById('hamburger');
+    const topbarH   = document.getElementById('topbarHamburger');
+
+    function openSidebar()  { sidebar.classList.add('open');  overlay.classList.add('active'); }
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+
+    if (hamburger) hamburger.addEventListener('click', openSidebar);
+    if (topbarH)   topbarH.addEventListener('click', openSidebar);
+    if (closeBtn)  closeBtn.addEventListener('click', closeSidebar);
+    if (overlay)   overlay.addEventListener('click', closeSidebar);
+
+    // ── Auth guard ──────────────────────────────
+    if (!Auth.requireAuth()) return;
+
+    // ── Load user data ──────────────────────────
+    const user = Auth.getCurrentUser();
+
+    // ── Init ProgressManager ───────────────────
+    ProgressManager.init();
+
+    // ── Summary stats ──────────────────────────
+    function loadSummary() {
+        const sessions = (window.SessionManager ? SessionManager.getSessions() : []);
+        document.getElementById('total-workouts').textContent = sessions.length;
+
+        const totalVol = sessions.reduce((sum, s) => {
+            const vol = (s.exercises || []).reduce((ev, ex) => {
+                return ev + (ex.sets || []).filter(st => st.done).reduce((sv, st) => sv + ((st.weight || 0) * (st.reps || 0)), 0);
+            }, 0);
+            return sum + vol;
+        }, 0);
+        document.getElementById('total-volume').textContent = Utils.formatNumber(Math.round(totalVol));
+
+        const durations = sessions.map(s => {
+            if (!s.startTime || !s.endTime) return 0;
+            return (new Date(s.endTime) - new Date(s.startTime)) / 60000;
+        }).filter(d => d > 0);
+        const avg = durations.length ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length) : 0;
+        document.getElementById('avg-duration').textContent = avg;
+    }
+    loadSummary();
+
+    // ── Weight change display ───────────────────
+    function updateWeightDisplay() {
+        const history = ProgressManager.getWeightHistory();
+        const cwEl    = document.getElementById('current-weight');
+        const chEl    = document.getElementById('weight-change');
+        if (!history.length) return;
+
+        const latest = history[history.length - 1];
+        cwEl.textContent = latest.weight;
+
+        if (history.length > 1) {
+            const diff = latest.weight - history[0].weight;
+            const sign = diff > 0 ? '+' : '';
+            chEl.textContent = `${sign}${diff.toFixed(1)} kg from start`;
+            chEl.className = 'weight-change ' + (diff > 0 ? 'up' : diff < 0 ? 'down' : 'same');
+        } else {
+            chEl.textContent = 'First entry';
+        }
+    }
+    updateWeightDisplay();
+
+    // Patch weight form to also update display
+    const weightForm = document.getElementById('weight-form');
+    if (weightForm) {
+        weightForm.addEventListener('submit', () => setTimeout(updateWeightDisplay, 50));
+    }
+
+    // ── Measurements history ────────────────────
+    function renderMeasurementsHistory() {
+        const container = document.getElementById('measurements-history');
+        if (!container) return;
+        const history = ProgressManager.getMeasurements().slice().reverse().slice(0, 5);
+        if (!history.length) { container.innerHTML = ''; return; }
+
+        const fields = ['chest','waist','hips','bicep','bicepR','thigh','thighR','calf','calfR'];
+        container.innerHTML = `<h4 style="font-size:0.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 10px">Recent Entries</h4>` +
+            history.map(e => `
+                <div class="d-flex items-center justify-between p-8 border rounded mb-4" style="flex-wrap:wrap;gap:8px">
+                    <span class="text-sm text-muted" style="font-weight:600">${Utils.formatDate(e.date)}</span>
+                    <div class="d-flex gap-6 flex-wrap">
+                        ${fields.filter(f => e[f]).map(f => `<span class="badge badge-muted">${f}: ${e[f]}cm</span>`).join('')}
+                    </div>
+                </div>`).join('');
+    }
+    renderMeasurementsHistory();
+
+    const measForm = document.getElementById('measurements-form');
+    if (measForm) {
+        measForm.addEventListener('submit', () => setTimeout(renderMeasurementsHistory, 50));
+    }
+
+    // ── Photos ─────────────────────────────────
+    function initPhotoUpload(inputId, slotId, storageKey, dateElId) {
+        const input = document.getElementById(inputId);
+        const slot  = document.getElementById(slotId);
+        const dateEl = document.getElementById(dateElId);
+
+        // Load existing
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+            const data = JSON.parse(saved);
+            const img = document.createElement('img');
+            img.src = data.src;
+            slot.innerHTML = '';
+            slot.appendChild(img);
+            if (dateEl) dateEl.textContent = data.date;
+        }
+
+        if (!input) return;
+        input.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                const src = ev.target.result;
+                const date = new Date().toLocaleDateString();
+                localStorage.setItem(storageKey, JSON.stringify({ src, date }));
+                const img = document.createElement('img');
+                img.src = src;
+                slot.innerHTML = '';
+                slot.appendChild(img);
+                if (dateEl) dateEl.textContent = date;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    initPhotoUpload('before-upload', 'before-slot', 'workinout_photo_before', 'before-date');
+    initPhotoUpload('after-upload',  'after-slot',  'workinout_photo_after',  'after-date');
+
+    // ── Heart Rate Zones ───────────────────────
+    function renderHRZones() {
+        const age    = user ? (user.age || 30) : 30;
+        const maxHR  = 220 - age;
+        const zones  = [
+            { name: 'Zone 1 — Rest',     pct: '< 50%',   low: 0,         high: Math.round(maxHR * 0.50), color: '#718096', desc: 'Recovery & warm-up' },
+            { name: 'Zone 2 — Fat Burn', pct: '50–60%',  low: Math.round(maxHR * 0.50), high: Math.round(maxHR * 0.60), color: '#4a90d9', desc: 'Aerobic base building' },
+            { name: 'Zone 3 — Cardio',   pct: '60–80%',  low: Math.round(maxHR * 0.60), high: Math.round(maxHR * 0.80), color: '#ff8c00', desc: 'Endurance & fitness' },
+            { name: 'Zone 4 — Peak',     pct: '> 80%',   low: Math.round(maxHR * 0.80), high: maxHR,                    color: '#ff4757', desc: 'High intensity / VO₂ max' },
+        ];
+        const grid = document.getElementById('hr-zones-grid');
+        if (!grid) return;
+        grid.innerHTML = zones.map(z => `
+            <div class="zone-card" style="background:${z.color}">
+                <div class="zone-card-name">${z.name}</div>
+                <div class="zone-card-range">${z.pct} max HR</div>
+                <div class="zone-bpm">${z.low}–${z.high} bpm</div>
+                <div class="zone-card-desc">${z.desc}</div>
+            </div>`).join('');
+    }
+    renderHRZones();
+
+    // ── Achievements ───────────────────────────
+    function renderAchievements() {
+        const sessions = (window.SessionManager ? SessionManager.getSessions() : []);
+        const streak   = ProgressManager.getWorkoutStreak();
+        const prs      = ProgressManager.getPersonalRecords();
+        const weight   = ProgressManager.getWeightHistory();
+
+        const weightLost = weight.length > 1
+            ? weight[0].weight - weight[weight.length - 1].weight
+            : 0;
+
+        const badges = [
+            { icon: '🏅', name: 'First Workout',     desc: 'Complete your first session',     unlocked: sessions.length >= 1 },
+            { icon: '🔥', name: '7-Day Streak',       desc: '7 consecutive workout days',       unlocked: streak >= 7 },
+            { icon: '💪', name: '30-Day Streak',      desc: '30 consecutive workout days',      unlocked: streak >= 30 },
+            { icon: '👑', name: '100 Workouts',       desc: 'Log 100 total workout sessions',   unlocked: sessions.length >= 100 },
+            { icon: '🏆', name: 'PR Breaker',         desc: 'Set your first personal record',   unlocked: prs.length >= 1 },
+            { icon: '⭐', name: '5kg Lost',           desc: 'Lose 5kg from starting weight',    unlocked: weightLost >= 5 },
+            { icon: '🎯', name: 'Consistency King',   desc: 'Log 20+ sessions in a month',      unlocked: sessions.length >= 20 },
+        ];
+
+        const grid = document.getElementById('achievements-grid');
+        if (!grid) return;
+        grid.innerHTML = badges.map(b => `
+            <div class="achievement-badge ${b.unlocked ? 'unlocked' : 'locked'}">
+                <div class="achievement-badge-icon">${b.icon}</div>
+                <div class="achievement-badge-name">${b.name}</div>
+                <div class="achievement-badge-desc">${b.desc}</div>
+                ${b.unlocked ? '<div style="font-size:0.68rem;color:var(--accent-primary);font-weight:700;margin-top:6px">✓ Unlocked</div>' : ''}
+            </div>`).join('');
+    }
+    renderAchievements();
+
+    // ── PR layout responsive ───────────────────
+    function adjustPRLayout() {
+        const layout = document.querySelector('.pr-layout');
+        if (!layout) return;
+        if (window.innerWidth < 900) layout.style.gridTemplateColumns = '1fr';
+        else layout.style.gridTemplateColumns = '1fr 340px';
+    }
+    adjustPRLayout();
+    window.addEventListener('resize', adjustPRLayout);
+
+    // ── Set today's date as default ─────────────
+    const today = new Date().toISOString().slice(0, 10);
+    const weightDateInput = document.getElementById('weight-date-input');
+    const measDateInput   = document.querySelector('#measurements-form input[name="date"]');
+    if (weightDateInput && !weightDateInput.value) weightDateInput.value = today;
+    if (measDateInput   && !measDateInput.value)   measDateInput.value   = today;
+
+})();
+</script>
+</body>
+</html>
