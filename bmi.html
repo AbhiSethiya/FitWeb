@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator - WorkIn&amp;Out</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ── Sidebar nav-link classes ── */
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--nav-border);
+            flex-shrink: 0;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent-primary); }
+        .sidebar-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1rem;
+            padding: 6px 8px;
+            border-radius: var(--radius-sm);
+            line-height: 1;
+            transition: background var(--transition-fast);
+            display: none;
+        }
+        .sidebar-close:hover { background: var(--bg-secondary); }
+        .nav-links {
+            list-style: none;
+            padding: 12px 10px;
+            margin: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow-y: auto;
+        }
+        .nav-links li { margin: 0; }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+        .nav-link:hover {
+            background: rgba(var(--accent-primary-rgb), 0.08);
+            color: var(--accent-primary);
+        }
+        .nav-link.active {
+            background: rgba(var(--accent-primary-rgb), 0.12);
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 20%; bottom: 20%;
+            width: 3px;
+            background: var(--accent-primary);
+            border-radius: 0 3px 3px 0;
+        }
+        .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
+
+        @media (max-width: 768px) {
+            .sidebar-close { display: flex; align-items: center; justify-content: center; }
+        }
+
+        /* ── BMI Page Styles ── */
+        .bmi-sliders-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 640px) { .bmi-sliders-grid { grid-template-columns: 1fr; } }
+
+        .slider-group { display: flex; flex-direction: column; gap: 12px; }
+        .slider-label {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .slider-value-box {
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-glow);
+        }
+        .slider-big-num {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 3rem;
+            color: #fff;
+            line-height: 1;
+        }
+        .slider-unit-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.75);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .slider-track-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .slider-track-wrap span {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+            min-width: 36px;
+        }
+        .slider-track-wrap span:last-child { text-align: right; }
+
+        /* Custom range slider — gradient track */
+        input[type="range"].bmi-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 1;
+            height: 6px;
+            border-radius: var(--radius-full);
+            background: var(--bg-secondary);
+            outline: none;
+            cursor: pointer;
+        }
+        input[type="range"].bmi-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(var(--accent-primary-rgb), 0.45);
+            border: 3px solid #fff;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        input[type="range"].bmi-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(var(--accent-primary-rgb), 0.45);
+            border: 3px solid #fff;
+        }
+        input[type="range"].bmi-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 14px rgba(var(--accent-primary-rgb), 0.6);
+        }
+
+        /* Unit toggle */
+        .unit-toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .unit-btn {
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .unit-btn.active {
+            background: var(--gradient-primary);
+            color: #fff;
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* BMI Result Display */
+        .bmi-result-card {
+            text-align: center;
+            padding: 32px 24px;
+        }
+        .bmi-big-number {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 5rem;
+            line-height: 1;
+            transition: color 0.4s ease;
+        }
+        .bmi-category-badge {
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        .bmi-desc-text {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Gauge */
+        .gauge-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 16px 0 8px;
+        }
+        #bmi-gauge-svg {
+            width: 100%;
+            max-width: 280px;
+        }
+
+        /* Gauge legend */
+        .gauge-legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .gauge-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .gauge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Ideal weight */
+        .ideal-weight-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .ideal-range-val {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-success);
+        }
+
+        /* History chart */
+        .bmi-chart-canvas {
+            width: 100%;
+            height: 200px;
+            display: block;
+        }
+
+        /* Save btn area */
+        .save-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        /* Topbar hamburger inline */
+        .topbar-hamburger {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            display: none;
+            line-height: 1;
+        }
+        @media (max-width: 768px) {
+            .topbar-hamburger { display: block; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🏋️ <span>WorkIn&amp;Out</span></div>
+            <button class="sidebar-close" id="sidebarClose">✕</button>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
+            <li><a href="workout.html" class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
+            <li><a href="bmi.html" class="nav-link active"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
+            <li><a href="diet.html" class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
+            <li><a href="sessions.html" class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
+            <li><a href="progress.html" class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
+            <li><a href="sleep.html" class="nav-link"><span class="nav-icon">😴</span><span>Sleep</span></a></li>
+            <li><a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">🌙 Dark Mode</button>
+            <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
+        </div>
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <button class="hamburger" id="hamburger">☰</button>
+
+    <!-- ══════════ MAIN CONTENT ══════════ -->
+    <main class="main-content">
+
+        <!-- Top bar -->
+        <div class="topbar">
+            <div class="d-flex items-center gap-8">
+                <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
+                <div>
+                    <span class="topbar-title">BMI Calculator</span>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page body -->
+        <div class="page-container">
+
+            <!-- ── Input Section ── -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">⚖️ BMI Calculator</h3>
+                    <div class="unit-toggle-wrap">
+                        <button class="unit-btn active" id="btn-metric" onclick="setUnit('metric')">Metric (cm/kg)</button>
+                        <button class="unit-btn" id="btn-imperial" onclick="setUnit('imperial')">Imperial (in/lbs)</button>
+                    </div>
+                </div>
+
+                <!-- Hidden select read by bmi.js -->
+                <select id="unit-select" style="display:none">
+                    <option value="metric" selected>metric</option>
+                    <option value="imperial">imperial</option>
+                </select>
+
+                <div class="bmi-sliders-grid">
+                    <!-- Height slider -->
+                    <div class="card">
+                        <div class="slider-label">📏 Height</div>
+                        <div class="slider-value-box">
+                            <div class="slider-big-num" id="height-display">170</div>
+                            <div class="slider-unit-label" id="height-unit-label">cm</div>
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-track-wrap">
+                                <span id="height-min-label">100 cm</span>
+                                <input type="range" class="bmi-slider" id="height-input"
+                                    min="100" max="250" value="170" step="1"
+                                    oninput="onSliderInput('height')">
+                                <span id="height-max-label">250 cm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weight slider -->
+                    <div class="card">
+                        <div class="slider-label">🏋️ Weight</div>
+                        <div class="slider-value-box" style="background:linear-gradient(135deg,#6c63ff,#a855f7)">
+                            <div class="slider-big-num" id="weight-display">70</div>
+                            <div class="slider-unit-label" id="weight-unit-label">kg</div>
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-track-wrap">
+                                <span id="weight-min-label">30 kg</span>
+                                <input type="range" class="bmi-slider" id="weight-input"
+                                    min="30" max="200" value="70" step="1"
+                                    oninput="onSliderInput('weight')">
+                                <span id="weight-max-label">200 kg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── BMI Result + Gauge ── -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">📊 Your Result</h3>
+                </div>
+                <div class="card bmi-result-card">
+                    <div class="bmi-big-number" id="bmi-gauge-number" style="color:var(--accent-primary)">—</div>
+                    <div class="bmi-category-badge" id="bmi-gauge-category"
+                        style="background:rgba(var(--accent-primary-rgb),0.12);color:var(--accent-primary)">
+                        Enter values above
+                    </div>
+                    <div class="gauge-wrap">
+                        <div id="gauge-holder"></div>
+                        <div class="gauge-legend">
+                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#74b9ff"></div>Underweight &lt;18.5</div>
+                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#00d4aa"></div>Normal 18.5–24.9</div>
+                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#ffa502"></div>Overweight 25–29.9</div>
+                            <div class="gauge-legend-item"><div class="gauge-dot" style="background:#ff4757"></div>Obese ≥30</div>
+                        </div>
+                    </div>
+                    <div class="bmi-desc-text" id="bmi-description">Adjust the sliders above to calculate your BMI.</div>
+                </div>
+            </div>
+
+            <!-- ── Ideal Weight Range ── -->
+            <div class="section reveal">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🎯 Ideal Weight Range</div>
+                        <div class="card-subtitle">Based on BMI 18.5 – 24.9 for your height</div>
+                    </div>
+                    <div class="ideal-weight-display" id="ideal-weight-display">
+                        <div style="text-align:center">
+                            <div class="text-muted text-sm font-semibold">Min</div>
+                            <div class="ideal-range-val" id="ideal-min">—</div>
+                            <div class="text-muted text-xs" id="ideal-unit-label">kg</div>
+                        </div>
+                        <div style="font-size:2rem;color:var(--text-muted)">→</div>
+                        <div style="text-align:center">
+                            <div class="text-muted text-sm font-semibold">Max</div>
+                            <div class="ideal-range-val" id="ideal-max">—</div>
+                            <div class="text-muted text-xs" id="ideal-unit-label2">kg</div>
+                        </div>
+                        <div style="text-align:center;margin-left:12px">
+                            <div class="text-sm text-muted">Your ideal weight range is</div>
+                            <div class="font-bold" id="ideal-summary">— to — kg</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Save Reading ── -->
+            <div class="section reveal">
+                <div class="save-section">
+                    <button class="btn btn-primary" id="save-bmi-btn">💾 Save Reading</button>
+                </div>
+            </div>
+
+            <!-- ── BMI History Chart ── -->
+            <div class="section reveal">
+                <div class="section-header">
+                    <h3 class="section-title">📈 BMI History</h3>
+                </div>
+                <div class="card">
+                    <canvas class="bmi-chart-canvas" id="bmi-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- ── History Table ── -->
+            <div class="section reveal">
+                <div id="bmi-history">
+                    <!-- Populated by bmi.js -->
+                </div>
+            </div>
+
+        </div><!-- /page-container -->
+    </main>
+</div><!-- /app-layout -->
+
+<!-- Scripts -->
+<script src="js/utils.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/bmi.js"></script>
+<script>
+    /* ── Sidebar mobile close ── */
+    (function () {
+        function closeSidebar() {
+            document.querySelector('.sidebar').classList.remove('open');
+            document.querySelector('.sidebar-overlay').classList.remove('active');
+            document.querySelector('.hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+        document.querySelectorAll('.nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth <= 768) closeSidebar();
+            });
+        });
+        /* Topbar hamburger also opens sidebar */
+        var topbarHam = document.getElementById('topbarHamburger');
+        if (topbarHam) {
+            topbarHam.addEventListener('click', function () {
+                document.querySelector('.sidebar').classList.toggle('open');
+                document.querySelector('.sidebar-overlay').classList.toggle('active');
+            });
+        }
+    })();
+
+    /* ── Slider helpers ── */
+    var _currentUnit = 'metric';
+
+    function onSliderInput(which) {
+        var val = document.getElementById(which + '-input').value;
+        document.getElementById(which + '-display').textContent = val;
+        updateIdealWeight();
+    }
+
+    function setUnit(unit) {
+        if (_currentUnit === unit) return;
+
+        var hInput = document.getElementById('height-input');
+        var wInput = document.getElementById('weight-input');
+        var hVal   = parseFloat(hInput.value);
+        var wVal   = parseFloat(wInput.value);
+
+        if (unit === 'imperial') {
+            /* cm → inches */
+            var hIn = Math.round(hVal / 2.54);
+            hInput.min   = '55';
+            hInput.max   = '95';
+            hInput.value = Math.min(Math.max(hIn, 55), 95);
+            document.getElementById('height-display').textContent = hInput.value;
+            document.getElementById('height-unit-label').textContent = 'in';
+            document.getElementById('height-min-label').textContent  = '55 in';
+            document.getElementById('height-max-label').textContent  = '95 in';
+
+            /* kg → lbs */
+            var wLbs = Math.round(wVal * 2.20462);
+            wInput.min   = '66';
+            wInput.max   = '440';
+            wInput.value = Math.min(Math.max(wLbs, 66), 440);
+            document.getElementById('weight-display').textContent = wInput.value;
+            document.getElementById('weight-unit-label').textContent = 'lbs';
+            document.getElementById('weight-min-label').textContent  = '66 lbs';
+            document.getElementById('weight-max-label').textContent  = '440 lbs';
+
+            document.getElementById('ideal-unit-label').textContent  = 'lbs';
+            document.getElementById('ideal-unit-label2').textContent = 'lbs';
+        } else {
+            /* inches → cm */
+            var hCm = Math.round(hVal * 2.54);
+            hInput.min   = '100';
+            hInput.max   = '250';
+            hInput.value = Math.min(Math.max(hCm, 100), 250);
+            document.getElementById('height-display').textContent = hInput.value;
+            document.getElementById('height-unit-label').textContent = 'cm';
+            document.getElementById('height-min-label').textContent  = '100 cm';
+            document.getElementById('height-max-label').textContent  = '250 cm';
+
+            /* lbs → kg */
+            var wKg = Math.round(wVal / 2.20462);
+            wInput.min   = '30';
+            wInput.max   = '200';
+            wInput.value = Math.min(Math.max(wKg, 30), 200);
+            document.getElementById('weight-display').textContent = wInput.value;
+            document.getElementById('weight-unit-label').textContent = 'kg';
+            document.getElementById('weight-min-label').textContent  = '30 kg';
+            document.getElementById('weight-max-label').textContent  = '200 kg';
+
+            document.getElementById('ideal-unit-label').textContent  = 'kg';
+            document.getElementById('ideal-unit-label2').textContent = 'kg';
+        }
+
+        _currentUnit = unit;
+        var sel = document.getElementById('unit-select');
+        sel.value = unit;
+        sel.dispatchEvent(new Event('input'));
+
+        document.getElementById('btn-metric').classList.toggle('active', unit === 'metric');
+        document.getElementById('btn-imperial').classList.toggle('active', unit === 'imperial');
+
+        updateIdealWeight();
+    }
+
+    function updateIdealWeight() {
+        var hVal = parseFloat(document.getElementById('height-input').value);
+        if (!hVal) return;
+        var hM;
+        if (_currentUnit === 'imperial') {
+            hM = hVal * 0.0254;
+        } else {
+            hM = hVal / 100;
+        }
+        var idealMinKg = Math.round(18.5 * hM * hM * 10) / 10;
+        var idealMaxKg = Math.round(24.9 * hM * hM * 10) / 10;
+
+        var minDisp, maxDisp, unitStr;
+        if (_currentUnit === 'imperial') {
+            minDisp = (idealMinKg * 2.20462).toFixed(1);
+            maxDisp = (idealMaxKg * 2.20462).toFixed(1);
+            unitStr = 'lbs';
+        } else {
+            minDisp = idealMinKg.toFixed(1);
+            maxDisp = idealMaxKg.toFixed(1);
+            unitStr = 'kg';
+        }
+
+        document.getElementById('ideal-min').textContent     = minDisp;
+        document.getElementById('ideal-max').textContent     = maxDisp;
+        document.getElementById('ideal-summary').textContent =
+            minDisp + ' to ' + maxDisp + ' ' + unitStr;
+    }
+
+    /* ── Theme button label sync ── */
+    function syncThemeBtn() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        var btn = document.getElementById('themeToggle');
+        if (btn) btn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+    var _origToggle = ThemeManager.toggle;
+    ThemeManager.toggle = function () { _origToggle(); syncThemeBtn(); };
+
+    /* ── DOMContentLoaded init ── */
+    document.addEventListener('DOMContentLoaded', function () {
+        ThemeManager.init();
+        Auth.requireAuth();
+        App.init();
+        BMICalculator.init();
+
+        syncThemeBtn();
+
+        /* Pre-populate sliders from user profile */
+        var user = Auth.getCurrentUser && Auth.getCurrentUser();
+        if (user) {
+            var h = parseFloat(user.height);
+            var w = parseFloat(user.weight);
+            if (h && h >= 100 && h <= 250) {
+                document.getElementById('height-input').value = h;
+                document.getElementById('height-display').textContent = h;
+            }
+            if (w && w >= 30 && w <= 200) {
+                document.getElementById('weight-input').value = w;
+                document.getElementById('weight-display').textContent = w;
+            }
+            /* Trigger bmi.js recalculation */
+            document.getElementById('height-input').dispatchEvent(new Event('input'));
+        }
+
+        updateIdealWeight();
+        BMICalculator.renderBMIHistoryChart('bmi-chart');
+    });
+</script>
+</body>
+</html>

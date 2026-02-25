@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - WorkIn&amp;Out</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Auth page floating shapes */
+        .auth-bg-shapes {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .auth-shape {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.06;
+            animation: float 6s ease-in-out infinite;
+            user-select: none;
+        }
+        .auth-shape:nth-child(1)  { top: 8%;  left: 5%;  animation-delay: 0s;    font-size: 2.5rem; }
+        .auth-shape:nth-child(2)  { top: 15%; right: 8%; animation-delay: 1s;    font-size: 1.8rem; }
+        .auth-shape:nth-child(3)  { top: 35%; left: 3%;  animation-delay: 2s;    font-size: 3rem;   }
+        .auth-shape:nth-child(4)  { top: 55%; right: 4%; animation-delay: 0.5s;  font-size: 2.2rem; }
+        .auth-shape:nth-child(5)  { top: 72%; left: 8%;  animation-delay: 1.5s;  font-size: 1.6rem; }
+        .auth-shape:nth-child(6)  { top: 85%; right: 10%;animation-delay: 2.5s;  font-size: 2.8rem; }
+        .auth-shape:nth-child(7)  { top: 45%; left: 45%; animation-delay: 3s;    font-size: 2rem;   }
+        .auth-shape:nth-child(8)  { top: 22%; left: 30%; animation-delay: 0.8s;  font-size: 1.4rem; }
+
+        /* Tab indicator */
+        .auth-tabs {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 4px;
+            margin-bottom: 28px;
+            position: relative;
+        }
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            background: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: calc(var(--radius-lg) - 3px);
+            transition: all var(--transition-normal);
+            position: relative;
+            z-index: 1;
+        }
+        .auth-tab-btn.active {
+            color: var(--accent-primary);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Slide forms */
+        .auth-forms-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .auth-form-panel {
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .auth-form-panel.hidden {
+            display: none;
+        }
+
+        /* Body type selection */
+        .body-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .body-type-option {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 12px 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all var(--transition-fast);
+            background: var(--bg-secondary);
+        }
+        .body-type-option:hover {
+            border-color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.04);
+        }
+        .body-type-option.selected {
+            border-color: var(--accent-primary);
+            background: rgba(var(--accent-primary-rgb), 0.1);
+        }
+        .body-type-option input[type="radio"] { display: none; }
+        .body-type-emoji { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+        .body-type-name  { font-weight: 700; font-size: 0.82rem; color: var(--text-primary); }
+        .body-type-desc  { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; line-height: 1.3; }
+
+        /* Error banner */
+        .auth-error {
+            background: rgba(var(--accent-danger-rgb), 0.1);
+            border: 1px solid rgba(var(--accent-danger-rgb), 0.3);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 0.85rem;
+            color: var(--accent-danger);
+            margin-bottom: 16px;
+            animation: slideDown 0.3s ease;
+        }
+        .auth-error.hidden { display: none; }
+
+        .tagline {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            letter-spacing: 0.04em;
+        }
+
+        /* Scrollable signup form */
+        #signup-form {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .guest-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            margin: 20px 0 16px;
+        }
+        .guest-divider::before,
+        .guest-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .theme-toggle-top {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background shapes -->
+    <div class="auth-bg-shapes">
+        <span class="auth-shape">🏋️</span>
+        <span class="auth-shape">💪</span>
+        <span class="auth-shape">🔥</span>
+        <span class="auth-shape">🥗</span>
+        <span class="auth-shape">🏃</span>
+        <span class="auth-shape">❤️</span>
+        <span class="auth-shape">⚡</span>
+        <span class="auth-shape">🎯</span>
+    </div>
+
+    <!-- Theme toggle -->
+    <button class="theme-toggle theme-toggle-top" data-theme-toggle aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+    </button>
+
+    <div class="auth-page">
+        <div class="auth-card animate-scaleIn">
+
+            <!-- Logo -->
+            <div class="auth-logo">
+                <div class="auth-logo-icon">🏋️</div>
+                <div>
+                    <div class="auth-logo-name">WorkIn<span>&amp;Out</span></div>
+                    <div class="tagline" style="margin: 0; font-size: 0.72rem;">Track. Train. Transform.</div>
+                </div>
+            </div>
+
+            <!-- Tab switcher -->
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
+                <button class="auth-tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+            </div>
+
+            <!-- Error banner (shared) -->
+            <div class="auth-error hidden" id="auth-error-msg"></div>
+
+            <!-- ── LOGIN FORM ── -->
+            <div class="auth-form-panel" id="panel-login">
+                <form id="login-form" novalidate>
+                    <div class="form-group">
+                        <label class="form-label required">Email</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">✉️</span>
+                            <input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" class="form-input" id="login-password" placeholder="Your password" autocomplete="current-password">
+                            <button type="button" class="btn-icon" id="toggle-login-pass" style="position:absolute;right:6px;background:none;border:none;cursor:pointer;font-size:1rem;" aria-label="Toggle password">👁️</button>
+                        </div>
+                    </div>
+                    <div class="d-flex items-center justify-between mb-8">
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember-me">
+                            <span class="form-check-label">Remember me</span>
+                        </label>
+                        <a href="#" class="text-sm text-accent" style="font-weight:500;">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn">
+                        Login
+                    </button>
+                </form>
+
+                <div class="guest-divider">or</div>
+
+                <button class="btn btn-ghost btn-full" id="guest-btn" onclick="loginAsGuest()">
+                    🎮 &nbsp;Try as Guest
+                </button>
+
+                <p class="text-center text-sm text-muted mt-8">
+                    Don't have an account?
+                    <a href="#" onclick="switchTab('signup')" class="text-accent" style="font-weight:600;">Sign up free</a>
+                </p>
+            </div>
+
+            <!-- ── SIGNUP FORM ── -->
+            <div class="auth-form-panel hidden" id="panel-signup">
+                <form id="signup-form" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Full Name</label>
+                            <input type="text" class="form-input" id="su-name" placeholder="Alex Johnson" autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Email</label>
+                            <input type="email" class="form-input" id="su-email" placeholder="you@example.com" autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" class="form-input" id="su-password" placeholder="Min 6 characters" autocomplete="new-password">
+                                <button type="button" style="position:absolute;right:6px;background:none;border:none;cursor:pointer;font-size:1rem;" id="toggle-su-pass" aria-label="Toggle password">👁️</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Confirm Password</label>
+                            <input type="password" class="form-input" id="su-confirm" placeholder="Repeat password" autocomplete="new-password">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Age</label>
+                            <input type="number" class="form-input" id="su-age" placeholder="25" min="10" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Gender</label>
+                            <select class="form-select" id="su-gender">
+                                <option value="">Select…</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Height (cm)</label>
+                            <input type="number" class="form-input" id="su-height" placeholder="175" min="50">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Weight (kg)</label>
+                            <input type="number" class="form-input" id="su-weight" placeholder="70" min="10">
+                        </div>
+                    </div>
+
+                    <!-- Body type selection -->
+                    <div class="form-group">
+                        <label class="form-label">Body Type</label>
+                        <div class="body-type-grid">
+                            <label class="body-type-option selected" data-type="ectomorph">
+                                <input type="radio" name="body-type" value="ectomorph" checked>
+                                <span class="body-type-emoji">🦴</span>
+                                <div class="body-type-name">Ectomorph</div>
+                                <div class="body-type-desc">Lean &amp; long, fast metabolism</div>
+                            </label>
+                            <label class="body-type-option" data-type="mesomorph">
+                                <input type="radio" name="body-type" value="mesomorph">
+                                <span class="body-type-emoji">💪</span>
+                                <div class="body-type-name">Mesomorph</div>
+                                <div class="body-type-desc">Athletic, gains muscle easily</div>
+                            </label>
+                            <label class="body-type-option" data-type="endomorph">
+                                <input type="radio" name="body-type" value="endomorph">
+                                <span class="body-type-emoji">🏋️</span>
+                                <div class="body-type-name">Endomorph</div>
+                                <div class="body-type-desc">Solid, higher body fat tendency</div>
+                            </label>
+                            <label class="body-type-option" data-type="custom">
+                                <input type="radio" name="body-type" value="custom">
+                                <span class="body-type-emoji">🎯</span>
+                                <div class="body-type-name">Custom</div>
+                                <div class="body-type-desc">Build your own program</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full btn-lg mt-8" id="signup-btn">
+                        Create Account
+                    </button>
+                </form>
+
+                <p class="text-center text-sm text-muted mt-8">
+                    Already have an account?
+                    <a href="#" onclick="switchTab('login')" class="text-accent" style="font-weight:600;">Log in</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            ThemeManager.init();
+
+            // Redirect if already logged in
+            if (Auth.isLoggedIn()) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // --- Tab switching ---
+            window.switchTab = function (tab) {
+                const isLogin = tab === 'login';
+                document.getElementById('tab-login').classList.toggle('active', isLogin);
+                document.getElementById('tab-signup').classList.toggle('active', !isLogin);
+                document.getElementById('panel-login').classList.toggle('hidden', !isLogin);
+                document.getElementById('panel-signup').classList.toggle('hidden', isLogin);
+                hideError();
+            };
+
+            // --- Error helpers ---
+            function showError(msg) {
+                const el = document.getElementById('auth-error-msg');
+                el.textContent = msg;
+                el.classList.remove('hidden');
+            }
+            function hideError() {
+                document.getElementById('auth-error-msg').classList.add('hidden');
+            }
+
+            // --- Password toggles ---
+            document.getElementById('toggle-login-pass').addEventListener('click', function () {
+                const inp = document.getElementById('login-password');
+                inp.type = inp.type === 'password' ? 'text' : 'password';
+            });
+            document.getElementById('toggle-su-pass').addEventListener('click', function () {
+                const inp = document.getElementById('su-password');
+                inp.type = inp.type === 'password' ? 'text' : 'password';
+            });
+
+            // --- Body type card selection ---
+            document.querySelectorAll('.body-type-option').forEach(function (opt) {
+                opt.addEventListener('click', function () {
+                    document.querySelectorAll('.body-type-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                });
+            });
+
+            // --- LOGIN ---
+            document.getElementById('login-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                hideError();
+                const email    = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+                const btn      = document.getElementById('login-btn');
+
+                btn.classList.add('loading');
+                btn.disabled = true;
+
+                setTimeout(function () {
+                    const result = Auth.login(email, password);
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+
+                    if (result.success) {
+                        Utils.showToast('Welcome back, ' + result.user.name + '!', 'success', 2000);
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 400);
+                    } else {
+                        showError(result.errors.join(' '));
+                    }
+                }, 400);
+            });
+
+            // --- SIGN UP ---
+            document.getElementById('signup-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                hideError();
+
+                const password = document.getElementById('su-password').value;
+                const confirm  = document.getElementById('su-confirm').value;
+                if (password !== confirm) {
+                    showError('Passwords do not match.');
+                    return;
+                }
+
+                const selectedType = document.querySelector('input[name="body-type"]:checked');
+                const btn = document.getElementById('signup-btn');
+                btn.classList.add('loading');
+                btn.disabled = true;
+
+                const userData = {
+                    name:     document.getElementById('su-name').value.trim(),
+                    email:    document.getElementById('su-email').value.trim(),
+                    password: password,
+                    age:      parseInt(document.getElementById('su-age').value, 10),
+                    gender:   document.getElementById('su-gender').value,
+                    height:   parseFloat(document.getElementById('su-height').value),
+                    weight:   parseFloat(document.getElementById('su-weight').value),
+                    bodyType: selectedType ? selectedType.value : 'mesomorph',
+                };
+
+                setTimeout(function () {
+                    const result = Auth.register(userData);
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+
+                    if (result.success) {
+                        Utils.showToast('Account created! Welcome, ' + result.user.name + '!', 'success', 2000);
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 400);
+                    } else {
+                        showError(result.errors.join(' '));
+                    }
+                }, 400);
+            });
+
+            // --- GUEST ---
+            window.loginAsGuest = function () {
+                hideError();
+                const guestEmail = 'guest_' + Date.now() + '@demo.com';
+                const result = Auth.register({
+                    name:     'Guest User',
+                    email:    guestEmail,
+                    password: 'guest123',
+                    age:      25,
+                    gender:   'other',
+                    height:   170,
+                    weight:   70,
+                    bodyType: 'mesomorph',
+                });
+                if (result.success) {
+                    Utils.showToast('Welcome, Guest! Explore the app freely.', 'info', 2000);
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 400);
+                } else {
+                    showError(result.errors.join(' '));
+                }
+            };
+        });
+    </script>
+</body>
+</html>

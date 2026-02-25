@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - WorkIn&amp;Out</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ── Activity rings ── */
+        .rings-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            padding: 8px 0;
+        }
+        .ring-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .ring-label-row {
+            text-align: center;
+        }
+        .ring-label-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .ring-label-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Recovery score ── */
+        .recovery-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 6px solid;
+            flex-shrink: 0;
+        }
+        .recovery-score-num {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            line-height: 1;
+        }
+        .recovery-score-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .recovery-good  { border-color: var(--accent-success); color: var(--accent-success); }
+        .recovery-fair  { border-color: var(--accent-warning); color: var(--accent-warning); }
+        .recovery-poor  { border-color: var(--accent-danger);  color: var(--accent-danger);  }
+
+        /* ── Weekly bars ── */
+        .weekly-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 100px;
+            padding: 0 4px;
+        }
+        .bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .bar-fill {
+            width: 100%;
+            border-radius: 6px 6px 0 0;
+            background: rgba(var(--accent-primary-rgb), 0.35);
+            transition: height 0.8s cubic-bezier(0.22,1,0.36,1);
+            animation: barGrow 0.8s ease both;
+            min-height: 6px;
+        }
+        .bar-fill.today-bar {
+            background: var(--gradient-primary);
+            box-shadow: 0 0 10px rgba(var(--accent-primary-rgb), 0.4);
+        }
+        .bar-day {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .bar-day.today-label { color: var(--accent-primary); }
+
+        /* ── Sleep breakdown bars ── */
+        .sleep-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .sleep-bar-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 65px;
+            flex-shrink: 0;
+        }
+        .sleep-bar-track {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        .sleep-bar-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+            animation: progressFill 0.9s ease both;
+        }
+        .sleep-bar-val {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            width: 32px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* ── Heart rate zones ── */
+        .hr-zone-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .hr-zone-row:last-child { border-bottom: none; }
+        .hr-zone-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .hr-zone-name { font-size: 0.82rem; font-weight: 600; flex: 1; }
+        .hr-zone-range { font-size: 0.72rem; color: var(--text-muted); }
+        .hr-zone-time { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); }
+
+        /* ── Quick actions ── */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 8px;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+        }
+        .quick-action-btn:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .quick-action-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        .quick-action-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* ── Greeting header ── */
+        .dashboard-greeting {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .greeting-text h2 {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+        .greeting-date { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ── Responsive quick actions ── */
+        @media (max-width: 600px) {
+            .quick-actions { grid-template-columns: repeat(2, 1fr); }
+            .rings-section { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="sidebar" id="sidebar">
+        <a class="sidebar-logo" href="dashboard.html">
+            <div class="sidebar-logo-icon">🏋️</div>
+            <div class="sidebar-logo-text">WorkIn<span>&amp;Out</span></div>
+        </a>
+
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">Main</span>
+            <a class="nav-item active" href="dashboard.html">
+                <span class="nav-item-icon">📊</span> Dashboard
+            </a>
+            <a class="nav-item" href="workout.html">
+                <span class="nav-item-icon">🏋️</span> Workouts
+            </a>
+            <a class="nav-item" href="bmi.html">
+                <span class="nav-item-icon">⚖️</span> BMI
+            </a>
+            <a class="nav-item" href="diet.html">
+                <span class="nav-item-icon">🥗</span> Diet
+            </a>
+            <a class="nav-item" href="sessions.html">
+                <span class="nav-item-icon">⏱️</span> Sessions
+            </a>
+            <span class="nav-section-label">Tracking</span>
+            <a class="nav-item" href="progress.html">
+                <span class="nav-item-icon">📈</span> Progress
+            </a>
+            <a class="nav-item" href="sleep.html">
+                <span class="nav-item-icon">😴</span> Sleep
+            </a>
+            <a class="nav-item" href="profile.html">
+                <span class="nav-item-icon">👤</span> Profile
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item" data-theme-toggle style="border:none;width:100%;text-align:left;background:none;">
+                <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+                <span>Toggle Theme</span>
+            </button>
+            <button class="nav-item text-danger" onclick="Auth.logout()" style="border:none;width:100%;text-align:left;background:none;">
+                <span class="nav-item-icon">🚪</span> Logout
+            </button>
+            <div class="sidebar-user" onclick="window.location.href='profile.html'">
+                <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+                    <div class="sidebar-user-role">Fitness Member</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══════════ MAIN CONTENT ══════════ -->
+    <main class="main-content">
+
+        <!-- Top bar -->
+        <div class="topbar">
+            <div class="d-flex items-center gap-8">
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <span class="topbar-title">Dashboard</span>
+            </div>
+            <div class="topbar-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="btn btn-ghost btn-icon" aria-label="Notifications" style="font-size:1.2rem;">🔔</button>
+            </div>
+        </div>
+
+        <!-- Page body -->
+        <div class="page-container">
+
+            <!-- Greeting -->
+            <div class="dashboard-greeting">
+                <div class="greeting-text">
+                    <h2 id="greeting-text">Good Morning, User! 🌅</h2>
+                    <div class="greeting-date" id="greeting-date"></div>
+                </div>
+                <div class="d-flex items-center gap-6">
+                    <span class="badge badge-success animate-pulse">● Live</span>
+                </div>
+            </div>
+
+            <!-- ── Activity Rings ── -->
+            <div class="section">
+                <div class="card reveal stagger-1">
+                    <div class="card-header">
+                        <div class="card-title">🎯 Activity Rings</div>
+                        <span class="badge badge-primary">Today</span>
+                    </div>
+                    <div class="rings-section">
+
+                        <!-- Move Ring -->
+                        <div class="ring-item">
+                            <div class="progress-ring-container">
+                                <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
+                                    <defs>
+                                        <linearGradient id="ringGradientMove" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#ff4757;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="progress-ring-track" cx="55" cy="55" r="45" stroke-width="10"/>
+                                    <circle class="progress-ring-fill" id="ring-move" cx="55" cy="55" r="45"
+                                        stroke="url(#ringGradientMove)" stroke-width="10"
+                                        stroke-dasharray="283" stroke-dashoffset="283"
+                                        style="--ring-target:70;"/>
+                                </svg>
+                                <div class="progress-ring-text">
+                                    <span class="progress-ring-value" id="ring-move-pct">0%</span>
+                                    <span class="progress-ring-label">Move</span>
+                                </div>
+                            </div>
+                            <div class="ring-label-row">
+                                <div class="ring-label-name" style="color:#ff6b35;">🔴 Move</div>
+                                <div class="ring-label-sub"><span data-counter="487">487</span> / 600 kcal</div>
+                            </div>
+                        </div>
+
+                        <!-- Exercise Ring -->
+                        <div class="ring-item">
+                            <div class="progress-ring-container">
+                                <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
+                                    <defs>
+                                        <linearGradient id="ringGradientEx" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#2ed573;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#00b894;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="progress-ring-track" cx="55" cy="55" r="45" stroke-width="10"/>
+                                    <circle class="progress-ring-fill" id="ring-exercise" cx="55" cy="55" r="45"
+                                        stroke="url(#ringGradientEx)" stroke-width="10"
+                                        stroke-dasharray="283" stroke-dashoffset="283"
+                                        style="--ring-target:120;"/>
+                                </svg>
+                                <div class="progress-ring-text">
+                                    <span class="progress-ring-value" id="ring-ex-pct">0%</span>
+                                    <span class="progress-ring-label">Exercise</span>
+                                </div>
+                            </div>
+                            <div class="ring-label-row">
+                                <div class="ring-label-name" style="color:#2ed573;">🟢 Exercise</div>
+                                <div class="ring-label-sub"><span data-counter="36">36</span> / 30 min</div>
+                            </div>
+                        </div>
+
+                        <!-- Stand Ring -->
+                        <div class="ring-item">
+                            <div class="progress-ring-container">
+                                <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
+                                    <defs>
+                                        <linearGradient id="ringGradientStand" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#6c63ff;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="progress-ring-track" cx="55" cy="55" r="45" stroke-width="10"/>
+                                    <circle class="progress-ring-fill" id="ring-stand" cx="55" cy="55" r="45"
+                                        stroke="url(#ringGradientStand)" stroke-width="10"
+                                        stroke-dasharray="283" stroke-dashoffset="283"
+                                        style="--ring-target:180;"/>
+                                </svg>
+                                <div class="progress-ring-text">
+                                    <span class="progress-ring-value" id="ring-stand-pct">0%</span>
+                                    <span class="progress-ring-label">Stand</span>
+                                </div>
+                            </div>
+                            <div class="ring-label-row">
+                                <div class="ring-label-name" style="color:#74b9ff;">🔵 Stand</div>
+                                <div class="ring-label-sub"><span data-counter="9">9</span> / 12 hrs</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Stats Grid ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">📋 Today's Stats</h3>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card reveal stagger-1">
+                        <div class="stat-icon teal">🚶</div>
+                        <div class="stat-info">
+                            <div class="stat-value"><span data-counter="8432">8432</span></div>
+                            <div class="stat-label">Steps Today</div>
+                            <div class="stat-change up">↑ 84% of goal (10,000)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card reveal stagger-2">
+                        <div class="stat-icon danger">🔥</div>
+                        <div class="stat-info">
+                            <div class="stat-value"><span data-counter="487">487</span></div>
+                            <div class="stat-label">Calories Burned</div>
+                            <div class="stat-change up">↑ 81% of goal (600 kcal)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card reveal stagger-3">
+                        <div class="stat-icon danger">
+                            <span class="animate-heartbeat" style="display:inline-block;">❤️</span>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value"><span data-counter="72">72</span></div>
+                            <div class="stat-label">Heart Rate (bpm)</div>
+                            <div class="stat-change up" style="color:var(--accent-success);">● Resting — Normal</div>
+                        </div>
+                    </div>
+                    <div class="stat-card reveal stagger-4">
+                        <div class="stat-icon teal">💧</div>
+                        <div class="stat-info">
+                            <div class="stat-value">1.8<span style="font-size:1rem;font-weight:400;">L</span></div>
+                            <div class="stat-label">Water Intake</div>
+                            <div class="stat-change" style="color:var(--accent-warning);">→ 72% of goal (2.5L)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Recovery + Weekly Chart ── -->
+            <div class="grid-2 section" style="align-items:start;">
+
+                <!-- Recovery Score -->
+                <div class="card reveal stagger-1">
+                    <div class="card-header">
+                        <div class="card-title">⚡ Recovery Score</div>
+                        <span class="badge badge-success">Good</span>
+                    </div>
+                    <div class="d-flex items-center gap-12 mb-10">
+                        <div class="recovery-circle recovery-good">
+                            <span class="recovery-score-num" id="recovery-num">78</span>
+                            <span class="recovery-score-label">/100</span>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:1.1rem;color:var(--accent-success);">Good Recovery</div>
+                            <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">Ready to Train Hard</div>
+                            <div style="margin-top:12px;">
+                                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Strain Score</div>
+                                <div style="font-weight:800;font-size:1.4rem;color:var(--accent-secondary);">14.2</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">Recommendations</div>
+                    <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:6px;">
+                        <li style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text-secondary);">
+                            <span style="color:var(--accent-success);">✓</span> Great time for high-intensity training
+                        </li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text-secondary);">
+                            <span style="color:var(--accent-primary);">💧</span> Stay hydrated — drink 2.5L today
+                        </li>
+                        <li style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text-secondary);">
+                            <span style="color:var(--accent-warning);">😴</span> Aim for 7–9 hours tonight
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Weekly Activity Chart -->
+                <div class="card reveal stagger-2">
+                    <div class="card-header">
+                        <div class="card-title">📅 Weekly Activity</div>
+                        <span class="badge badge-muted">187 min total</span>
+                    </div>
+                    <div class="weekly-chart" id="weekly-chart">
+                        <!-- Bars rendered by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── Sleep + Heart Rate ── -->
+            <div class="grid-2 section" style="align-items:start;">
+
+                <!-- Sleep Summary -->
+                <div class="card reveal stagger-1">
+                    <div class="card-header">
+                        <div class="card-title">😴 Sleep Summary</div>
+                        <a href="sleep.html" class="text-accent text-sm" style="font-weight:600;">View Details →</a>
+                    </div>
+                    <div class="d-flex items-center gap-10 mb-12">
+                        <div style="text-align:center;">
+                            <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:2rem;line-height:1;color:var(--accent-secondary);">83</div>
+                            <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;font-weight:600;">SLEEP SCORE</div>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:1.05rem;">7h 23m</div>
+                            <div style="font-size:0.78rem;color:var(--text-muted);">Time in bed</div>
+                        </div>
+                        <div>
+                            <span class="badge badge-success">Good</span>
+                        </div>
+                    </div>
+                    <div class="sleep-bar-row">
+                        <span class="sleep-bar-label">Deep</span>
+                        <div class="sleep-bar-track">
+                            <div class="sleep-bar-fill" style="width:28%;background:#6c63ff;"></div>
+                        </div>
+                        <span class="sleep-bar-val">2h 4m</span>
+                    </div>
+                    <div class="sleep-bar-row">
+                        <span class="sleep-bar-label">Light</span>
+                        <div class="sleep-bar-track">
+                            <div class="sleep-bar-fill" style="width:48%;background:#74b9ff;"></div>
+                        </div>
+                        <span class="sleep-bar-val">3h 33m</span>
+                    </div>
+                    <div class="sleep-bar-row">
+                        <span class="sleep-bar-label">REM</span>
+                        <div class="sleep-bar-track">
+                            <div class="sleep-bar-fill" style="width:18%;background:#00d4aa;"></div>
+                        </div>
+                        <span class="sleep-bar-val">1h 19m</span>
+                    </div>
+                    <div class="sleep-bar-row">
+                        <span class="sleep-bar-label">Awake</span>
+                        <div class="sleep-bar-track">
+                            <div class="sleep-bar-fill" style="width:6%;background:#ff4757;"></div>
+                        </div>
+                        <span class="sleep-bar-val">27m</span>
+                    </div>
+                </div>
+
+                <!-- Heart Rate Zones -->
+                <div class="card reveal stagger-2">
+                    <div class="card-header">
+                        <div class="card-title">❤️ Heart Rate Zones</div>
+                        <span class="badge badge-muted">Today</span>
+                    </div>
+                    <!-- Current zone indicator bar -->
+                    <div style="height:8px;background:linear-gradient(to right,#a0aec0 0%,#74b9ff 25%,#ffa502 60%,#ff4757 100%);border-radius:4px;margin-bottom:16px;position:relative;">
+                        <div style="position:absolute;left:22%;top:-6px;width:14px;height:20px;background:var(--bg-card);border:3px solid var(--accent-primary);border-radius:4px;"></div>
+                    </div>
+                    <div class="hr-zone-row">
+                        <div class="hr-zone-dot" style="background:#a0aec0;"></div>
+                        <div class="hr-zone-name">Rest</div>
+                        <div class="hr-zone-range">Below 95 bpm</div>
+                        <div class="hr-zone-time">5h 12m</div>
+                    </div>
+                    <div class="hr-zone-row">
+                        <div class="hr-zone-dot" style="background:#74b9ff;"></div>
+                        <div class="hr-zone-name">Fat Burn</div>
+                        <div class="hr-zone-range">95–133 bpm</div>
+                        <div class="hr-zone-time">38m</div>
+                    </div>
+                    <div class="hr-zone-row">
+                        <div class="hr-zone-dot" style="background:#ffa502;"></div>
+                        <div class="hr-zone-name">Cardio</div>
+                        <div class="hr-zone-range">133–161 bpm</div>
+                        <div class="hr-zone-time">22m</div>
+                    </div>
+                    <div class="hr-zone-row">
+                        <div class="hr-zone-dot" style="background:#ff4757;"></div>
+                        <div class="hr-zone-name">Peak</div>
+                        <div class="hr-zone-range">161+ bpm</div>
+                        <div class="hr-zone-time">8m</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── Quick Actions ── -->
+            <div class="section">
+                <div class="section-header">
+                    <h3 class="section-title">⚡ Quick Actions</h3>
+                </div>
+                <div class="quick-actions">
+                    <a class="quick-action-btn" href="workout.html">
+                        <div class="quick-action-icon" style="background:rgba(var(--accent-primary-rgb),0.12);">🏋️</div>
+                        <div class="quick-action-label">Start Workout</div>
+                    </a>
+                    <a class="quick-action-btn" href="diet.html">
+                        <div class="quick-action-icon" style="background:rgba(255,165,2,0.12);">🥗</div>
+                        <div class="quick-action-label">Log Meal</div>
+                    </a>
+                    <a class="quick-action-btn" href="progress.html">
+                        <div class="quick-action-icon" style="background:rgba(var(--accent-secondary-rgb),0.12);">⚖️</div>
+                        <div class="quick-action-label">Add Weight</div>
+                    </a>
+                    <a class="quick-action-btn" href="sessions.html">
+                        <div class="quick-action-icon" style="background:rgba(var(--accent-danger-rgb),0.12);">⏱️</div>
+                        <div class="quick-action-label">Start Timer</div>
+                    </a>
+                </div>
+            </div>
+
+        </div><!-- /page-container -->
+    </main>
+
+</div><!-- /app-layout -->
+
+<!-- ── Bottom Nav (mobile) ── -->
+<nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+        <a class="bottom-nav-item active" href="dashboard.html">
+            <span class="nav-icon">📊</span>
+            <span>Home</span>
+        </a>
+        <a class="bottom-nav-item" href="workout.html">
+            <span class="nav-icon">🏋️</span>
+            <span>Workout</span>
+        </a>
+        <a class="bottom-nav-item" href="diet.html">
+            <span class="nav-icon">🥗</span>
+            <span>Diet</span>
+        </a>
+        <a class="bottom-nav-item" href="progress.html">
+            <span class="nav-icon">📈</span>
+            <span>Progress</span>
+        </a>
+        <a class="bottom-nav-item" href="profile.html">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </div>
+</nav>
+
+<script src="js/utils.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        ThemeManager.init();
+        Auth.requireAuth();
+        App.init();
+
+        // ── Populate user info ──
+        var user = Auth.getCurrentUser();
+        if (user) {
+            var hour = new Date().getHours();
+            var greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+            var emoji    = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
+            document.getElementById('greeting-text').textContent = greeting + ', ' + user.name + '! ' + emoji;
+
+            var dateEl = document.getElementById('greeting-date');
+            dateEl.textContent = new Date().toLocaleDateString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            document.getElementById('sidebar-user-name').textContent = user.name;
+            document.getElementById('sidebar-avatar').textContent = user.name.charAt(0).toUpperCase();
+        }
+
+        // ── Animate activity rings ──
+        var CIRCUMFERENCE = 2 * Math.PI * 45; // ~283
+
+        function animateRing(circleId, pctElId, targetPct) {
+            var circle = document.getElementById(circleId);
+            var pctEl  = document.getElementById(pctElId);
+            if (!circle) return;
+
+            var offset = CIRCUMFERENCE - (targetPct / 100) * CIRCUMFERENCE;
+            var start  = performance.now();
+            var duration = 1200;
+
+            requestAnimationFrame(function tick(now) {
+                var t = Math.min((now - start) / duration, 1);
+                var eased = 1 - Math.pow(1 - t, 3);
+                var current = eased * targetPct;
+                var currOffset = CIRCUMFERENCE - (current / 100) * CIRCUMFERENCE;
+                circle.style.strokeDashoffset = currOffset;
+                if (pctEl) pctEl.textContent = Math.round(current) + '%';
+                if (t < 1) requestAnimationFrame(tick);
+            });
+        }
+
+        setTimeout(function () {
+            animateRing('ring-move',     'ring-move-pct',  81);  // 487/600
+            animateRing('ring-exercise', 'ring-ex-pct',   100); // 36/30 (exceeded)
+            animateRing('ring-stand',    'ring-stand-pct', 75);  // 9/12
+        }, 300);
+
+        // ── Recovery counter ──
+        var recovNum = document.getElementById('recovery-num');
+        Utils.animateCounter(recovNum, 0, 78, 1000);
+
+        // ── Weekly chart ──
+        var days   = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        var mins   = [25, 45, 0, 38, 52, 27, 0]; // sample data, 0 = rest
+        var todayI = (new Date().getDay() + 6) % 7; // 0=Mon
+        var maxMin = Math.max.apply(null, mins.filter(Boolean)) || 1;
+
+        var chartEl = document.getElementById('weekly-chart');
+        chartEl.innerHTML = days.map(function (d, i) {
+            var isToday = i === todayI;
+            var pct     = mins[i] ? Math.max((mins[i] / maxMin) * 88, 10) : 6;
+            return '<div class="bar-col">' +
+                '<div class="bar-fill' + (isToday ? ' today-bar' : '') + '" ' +
+                     'style="height:' + pct + '%;animation-delay:' + (i * 0.07) + 's;" ' +
+                     'title="' + (mins[i] || 'Rest') + (mins[i] ? ' min' : '') + '">' +
+                '</div>' +
+                '<div class="bar-day' + (isToday ? ' today-label' : '') + '">' + d + '</div>' +
+            '</div>';
+        }).join('');
+    });
+</script>
+</body>
+</html>
