@@ -463,7 +463,7 @@
         if (!exercise || !value) return Utils.showToast('Fill in all fields', 'error');
         const result = savePersonalRecord(exercise, value, unit);
         if (result.saved) {
-          Utils.showToast(`New PR saved! ${value} ${unit} 🏆`, 'success');
+          Utils.showToast(`New PR saved! ${value} ${unit}`, 'success');
           renderPersonalRecords();
           prForm.reset();
         } else {

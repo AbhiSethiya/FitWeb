@@ -333,11 +333,11 @@
       <div class="card mb-8" id="ex-card-${ex.id}">
         <div class="card-header">
           <div>
-            <div class="card-title">${ex.icon || '💪'} ${ex.name}</div>
+            <div class="card-title">'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M12 2v20M4 9l2.5 2.5L4 14M20 9l-2.5 2.5L20 14"/></svg>' ${ex.name}</div>
             <div class="card-subtitle">${ex.sets.length} sets × ${ex.reps || '—'} reps · ${ex.rest || 60}s rest</div>
           </div>
           <button class="btn btn-ghost btn-sm" onclick="SessionManager.startRestTimer(${ex.rest || 60})">
-            ⏲ Rest Timer
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Rest Timer
           </button>
         </div>
 
@@ -437,7 +437,7 @@
         }
         document.querySelector('#session-exercises')?.remove();
         document.querySelector('#session-controls')?.classList.add('d-none');
-        Utils.showToast('Great workout! Session saved 🎉', 'success');
+        Utils.showToast('Great workout! Session saved.', 'success');
       });
     }
 
