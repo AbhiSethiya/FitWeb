@@ -38,6 +38,16 @@
       --transition:  0.22s ease;
     }
 
+    [data-theme="light"] {
+      --nav-bg:    #ffffff;
+      --page-bg:   #f8f9fa;
+      --card-bg:   #ffffff;
+      --border:    rgba(0,0,0,0.08);
+      --text:      #1a1a2e;
+      --text-muted:#4a4a6a;
+      --text-dim:  #6c757d;
+    }
+
     html, body {
       height: 100%;
       background: var(--page-bg);
@@ -360,7 +370,14 @@
       transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
-    .stat-emoji { font-size: 1.4rem; line-height: 1; }
+    .stat-emoji {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 28px;
+      height: 28px;
+    }
+    .stat-emoji svg { display: block; flex-shrink: 0; }
     .stat-value {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 2rem;

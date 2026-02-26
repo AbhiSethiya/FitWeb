@@ -68,17 +68,17 @@
 
 /* ── Light Theme ────────────────────────────── */
 [data-theme="light"] {
-  --bg-primary:    #fafafa;
-  --bg-secondary:  #f4f4f5;
+  --bg-primary:    #f8f9fa;
+  --bg-secondary:  #ffffff;
   --bg-card:       #ffffff;
-  --bg-elevated:   #ffffff;
+  --bg-elevated:   #f1f3f5;
 
-  --text-primary:   #111111;
-  --text-secondary: #525252;
-  --text-muted:     #a3a3a3;
+  --text-primary:   #1a1a2e;
+  --text-secondary: #4a4a6a;
+  --text-muted:     #6c757d;
 
-  --border-color:  rgba(0, 0, 0, 0.08);
-  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-color:  #dee2e6;
+  --border-subtle: #e9ecef;
 
   --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.1);
@@ -86,10 +86,10 @@
   --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
 
   --nav-bg:     #ffffff;
-  --nav-border: rgba(0, 0, 0, 0.08);
+  --nav-border: #e9ecef;
 
-  --input-bg:     #ffffff;
-  --input-border: rgba(0, 0, 0, 0.15);
+  --input-bg:     #f8f9fa;
+  --input-border: #ced4da;
 }
 
 /* ── Selective theme transitions ─────────────── */
