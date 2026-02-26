@@ -350,7 +350,7 @@
     const history = getWeightHistory().slice().reverse();
     if (!history.length) {
       container.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">⚖️</div>
+        <div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg></div>
         <div class="empty-title">No weight entries yet</div>
         <div class="empty-text">Log your weight to start tracking trends.</div>
       </div>`;
@@ -375,7 +375,7 @@
             <span style="font-size:1.4rem;font-weight:800;color:var(--accent-primary)">${h.weight} kg</span>
             <span class="text-sm text-muted">${Utils.formatDate(h.date)}</span>
           </div>
-          <button class="btn btn-ghost btn-sm btn-icon" onclick="ProgressManager.deleteWeightEntry('${h.id}');ProgressManager.renderWeightHistory();ProgressManager.renderWeightChart('weight-chart')">🗑</button>
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="ProgressManager.deleteWeightEntry('${h.id}');ProgressManager.renderWeightHistory();ProgressManager.renderWeightChart('weight-chart')">Delete</button>
         </div>`).join('');
   }
 
@@ -387,7 +387,7 @@
     const records = getPersonalRecords();
     if (!records.length) {
       container.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">🏆</div>
+        <div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
         <div class="empty-title">No personal records yet</div>
         <div class="empty-text">Log your lifts to track new PRs.</div>
       </div>`;
@@ -396,7 +396,7 @@
 
     container.innerHTML = records.map(r => `
       <div class="exercise-card mb-4">
-        <div class="exercise-icon">${r.isNew ? '🏆' : '💪'}</div>
+        <div class="exercise-icon">${r.isNew ? '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M12 2v20M4 9l2.5 2.5L4 14M20 9l-2.5 2.5L20 14"/></svg>'}</div>
         <div class="exercise-info">
           <div class="exercise-name">${Utils.capitalise(r.exercise.replace(/_/g,' '))}</div>
           <div class="exercise-meta">
@@ -405,7 +405,7 @@
             · ${Utils.formatDate(r.date)}
           </div>
         </div>
-        <button class="btn btn-ghost btn-sm btn-icon" onclick="ProgressManager.deletePersonalRecord('${r.id}');ProgressManager.renderPersonalRecords()">🗑</button>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="ProgressManager.deletePersonalRecord('${r.id}');ProgressManager.renderPersonalRecords()">Delete</button>
       </div>`).join('');
   }
 
@@ -463,7 +463,7 @@
         if (!exercise || !value) return Utils.showToast('Fill in all fields', 'error');
         const result = savePersonalRecord(exercise, value, unit);
         if (result.saved) {
-          Utils.showToast(`New PR saved! ${value} ${unit} 🏆`, 'success');
+          Utils.showToast(`New PR saved! ${value} ${unit}`, 'success');
           renderPersonalRecords();
           prForm.reset();
         } else {

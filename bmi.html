@@ -310,7 +310,10 @@
 
                     <!-- Height -->
                     <div class="slider-card">
-                        <div class="slider-label">📏 Height</div>
+                        <div class="slider-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:4px"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            Height
+                        </div>
                         <div class="slider-value-row">
                             <div class="slider-big-num" id="height-display">170</div>
                             <div class="slider-unit-label" id="height-unit-label">cm</div>
@@ -328,7 +331,10 @@
 
                     <!-- Weight -->
                     <div class="slider-card">
-                        <div class="slider-label">🏋️ Weight</div>
+                        <div class="slider-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:4px"><path d="M6 18L18 6M6 6l12 12"/><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/></svg>
+                            Weight
+                        </div>
                         <div class="slider-value-row">
                             <div class="slider-big-num" id="weight-display">70</div>
                             <div class="slider-unit-label" id="weight-unit-label">kg</div>
@@ -390,7 +396,7 @@
             <!-- ── Ideal Weight ── -->
             <div class="section reveal">
                 <div class="section-header">
-                    <h3 class="section-title">🎯 Ideal Weight Range</h3>
+                    <h3 class="section-title">Ideal Weight Range</h3>
                     <span style="font-size:0.8rem;color:#6b7280">Based on BMI 18.5–24.9 for your height</span>
                 </div>
                 <div class="card" style="padding:28px 24px">
@@ -418,14 +424,14 @@
             <!-- ── Save ── -->
             <div class="section reveal">
                 <div class="save-section">
-                    <button class="btn-save" id="save-bmi-btn">💾 Save Reading</button>
+                    <button class="btn-save" id="save-bmi-btn">Save Reading</button>
                 </div>
             </div>
 
             <!-- ── History Chart ── -->
             <div class="section reveal">
                 <div class="section-header">
-                    <h3 class="section-title">📈 BMI History</h3>
+                    <h3 class="section-title">BMI History</h3>
                 </div>
                 <div class="card" style="padding:20px">
                     <canvas class="bmi-chart-canvas" id="bmi-chart"></canvas>
@@ -558,9 +564,10 @@
 
     /* ── Theme sync ── */
     function syncThemeBtn() {
-        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        var isDark = !document.documentElement.getAttribute('data-theme') ||
+                     document.documentElement.getAttribute('data-theme') === 'dark';
         var btn = document.getElementById('themeToggle');
-        if (btn) btn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        if (btn) btn.textContent = isDark ? 'Light Mode' : 'Dark Mode';
     }
     var _origToggle = window.ThemeManager && ThemeManager.toggle;
     if (_origToggle) {

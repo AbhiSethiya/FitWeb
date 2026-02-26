@@ -639,7 +639,7 @@
         <div class="exercise-grid" id="exercise-grid">
           <!-- Populated by JS -->
           <div class="empty-state" style="grid-column:1/-1">
-            <div class="empty-icon">🏋️</div>
+            <div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M12 2v20M4 9l2.5 2.5L4 14M20 9l-2.5 2.5L20 14"/></svg></div>
             <div>Loading exercises…</div>
           </div>
         </div>
@@ -781,14 +781,19 @@
     }
 
     if (!exercises.length) {
-      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🤷</div><div>No exercises found.</div></div>';
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M12 2v20M4 9l2.5 2.5L4 14M20 9l-2.5 2.5L20 14"/></svg></div><div>No exercises found.</div></div>';
       return;
     }
+
+    const SETS_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:3px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>';
+    const REPS_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:3px"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>';
+    const REST_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    const DUMBBELL_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M12 2v20M4 9l2.5 2.5L4 14M20 9l-2.5 2.5L20 14"/></svg>';
 
     grid.innerHTML = exercises.map(ex => `
       <div class="exercise-card card-lift" data-exercise-id="${ex.id}">
         <div class="exercise-card-top">
-          <span class="exercise-icon">${ex.icon || '🏋️'}</span>
+          <span class="exercise-icon">${ex.svgIcon || DUMBBELL_SVG}</span>
           <span class="exercise-name">${ex.name}</span>
         </div>
         <div class="exercise-tags">
@@ -796,9 +801,9 @@
           ${difficultyTag(ex.difficulty)}
         </div>
         <div class="exercise-meta">
-          <span>📦 ${ex.sets} sets</span>
-          <span>🔁 ${ex.reps} reps</span>
-          <span>⏱ ${ex.rest}s rest</span>
+          <span>${SETS_SVG}${ex.sets} sets</span>
+          <span>${REPS_SVG}${ex.reps} reps</span>
+          <span>${REST_SVG}${ex.rest}s rest</span>
         </div>
         <button class="btn-add-plan" onclick="addExerciseToPlanBuilder('${ex.id}')">＋ Add to Plan</button>
       </div>
@@ -868,7 +873,7 @@
     refreshPickerList();
     renderPlans();
     renderPlanSelect();
-    if (typeof Utils !== 'undefined') Utils.showToast('Plan saved! 🎉', 'success');
+    if (typeof Utils !== 'undefined') Utils.showToast('Plan saved!', 'success');
   });
 
   /* ── Open create plan modal ──────────────────────────── */
@@ -894,7 +899,7 @@
     const plans = WorkoutManager.getWorkoutPlans();
 
     if (!plans.length) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div>No saved plans yet. Create one above!</div></div>';
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div><div>No saved plans yet. Create one above!</div></div>';
       return;
     }
 
@@ -909,7 +914,7 @@
             ▶ Start
           </button>
           <button class="btn btn-danger btn-sm" onclick="WorkoutManager.deleteWorkoutPlan('${plan.id}');renderPlans()">
-            🗑
+            Delete
           </button>
         </div>
       </div>

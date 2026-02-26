@@ -291,7 +291,7 @@
     const diffClass = `difficulty-${exercise.difficulty || 'easy'}`;
     return `
       <div class="exercise-card${selectable ? ' selectable' : ''}" data-exercise-id="${exercise.id || ''}">
-        <div class="exercise-icon">${exercise.icon || '💪'}</div>
+        <div class="exercise-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M12 2v20M4 9l2.5 2.5L4 14M20 9l-2.5 2.5L20 14"/></svg></div>
         <div class="exercise-info">
           <div class="exercise-name">${exercise.name}</div>
           <div class="exercise-meta">${exercise.sets} sets × ${exercise.reps} reps · ${exercise.rest}s rest</div>
@@ -320,7 +320,7 @@
               ▶ Start
             </button>
             <button class="btn btn-ghost btn-sm btn-icon" onclick="WorkoutManager.deleteWorkoutPlan('${plan.id}');renderPlans()">
-              🗑
+              Delete
             </button>
           </div>
         </div>

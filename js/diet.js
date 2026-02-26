@@ -554,7 +554,7 @@
     return `
       <div class="meal-card reveal" data-meal-id="${meal.id}">
         <div class="meal-card-header">
-          <div class="meal-emoji">${meal.image}</div>
+          <div class="meal-emoji"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
           <div class="meal-info">
             <div class="meal-name">${meal.name}</div>
             <div class="meal-category">${meal.category}</div>
@@ -582,9 +582,9 @@
         </div>
 
         <div class="meal-card-footer">
-          <span class="meal-meta-item">⏱ ${meal.prepTime + meal.cookTime} min</span>
-          <span class="meal-meta-item">👤 ${meal.servings} serving${meal.servings > 1 ? 's' : ''}</span>
-          <span class="meal-meta-item">💰 ₹${meal.cost}</span>
+          <span class="meal-meta-item">${meal.prepTime + meal.cookTime} min</span>
+          <span class="meal-meta-item">${meal.servings} serving${meal.servings > 1 ? 's' : ''}</span>
+          <span class="meal-meta-item">₹${meal.cost}</span>
           <button class="btn btn-ghost btn-sm" onclick="this.closest('.meal-card').querySelector('.meal-recipe').classList.toggle('expanded');this.textContent=this.textContent.includes('▼')?'▲ Hide Recipe':'▼ View Recipe'">
             ▼ View Recipe
           </button>

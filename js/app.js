@@ -159,7 +159,7 @@
   /* ── Topbar page title ───────────────────── */
   function _setPageTitle() {
     const titles = {
-      home:      'Welcome Back 👋',
+      home:      'Welcome Back',
       dashboard: 'Dashboard',
       workout:   'Workout Planner',
       diet:      'Diet & Nutrition',

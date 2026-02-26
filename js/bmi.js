@@ -137,7 +137,7 @@
     if (!history.length) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-icon">📊</div>
+          <div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
           <div class="empty-title">No records yet</div>
           <div class="empty-text">Calculate your BMI to start tracking your history.</div>
         </div>`;
@@ -158,7 +158,7 @@
             </div>
             <div class="text-right">
               <div class="text-sm">${r.weight}${r.unit === 'imperial' ? ' lbs' : ' kg'} · ${r.height}${r.unit === 'imperial' ? ' in' : ' cm'}</div>
-              <button class="btn btn-ghost btn-sm mt-4" onclick="BMICalculator.deleteBMIRecord('${r.id}');BMICalculator.renderBMIHistory()">🗑 Delete</button>
+              <button class="btn btn-ghost btn-sm mt-4" onclick="BMICalculator.deleteBMIRecord('${r.id}');BMICalculator.renderBMIHistory()">Delete</button>
             </div>
           </div>
         </div>`;

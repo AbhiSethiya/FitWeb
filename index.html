@@ -18,8 +18,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #0d0d0d;
-            color: #fff;
+            background: var(--bg-primary, #0d0d0d);
+            color: var(--text-primary, #fff);
             overflow-x: hidden;
         }
 
@@ -32,17 +32,17 @@
             align-items: center;
             justify-content: space-between;
             padding: 18px 32px;
-            background: rgba(13,13,13,0.7);
+            background: rgba(var(--bg-primary-rgb, 13,13,13), 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.05));
         }
         .lp-nav-logo {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 800;
             font-size: 1.25rem;
             letter-spacing: -0.02em;
-            color: #fff;
+            color: var(--text-primary, #fff);
         }
         .lp-nav-logo span { color: #22c55e; }
         .lp-nav-right { display: flex; align-items: center; gap: 12px; }
@@ -79,7 +79,7 @@
         ══════════════════════════════════════════ */
         .s-hero {
             min-height: 100svh;
-            background: #0d0d0d;
+            background: var(--bg-primary, #0d0d0d);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -184,7 +184,7 @@
            SECTION 2 — THE HOOK
         ══════════════════════════════════════════ */
         .s-hook {
-            background: #111;
+            background: var(--bg-secondary, #111);
             padding: 120px 24px;
         }
         .hook-inner {
@@ -201,7 +201,7 @@
             font-weight: 700;
             line-height: 1.2;
             letter-spacing: -0.02em;
-            color: #e0e0e0;
+            color: var(--text-primary, #e0e0e0);
         }
         .hook-right {
             text-align: center;
@@ -216,7 +216,7 @@
         }
         .hook-stat-label {
             font-size: 1rem;
-            color: #a0a0a0;
+            color: var(--text-secondary, #a0a0a0);
             margin-top: 12px;
             line-height: 1.5;
             max-width: 280px;
@@ -228,7 +228,7 @@
            SECTION 3 — FEATURES
         ══════════════════════════════════════════ */
         .s-features {
-            background: #0d0d0d;
+            background: var(--bg-primary, #0d0d0d);
             padding: 120px 24px;
         }
         .features-inner {
@@ -250,8 +250,8 @@
             gap: 20px;
         }
         .feature-card {
-            background: #1a1a1a;
-            border: 1px solid rgba(255,255,255,0.06);
+            background: var(--bg-card, #1a1a1a);
+            border: 1px solid var(--border-color, rgba(255,255,255,0.06));
             border-radius: 12px;
             padding: 36px 28px;
             transition: border-color 0.3s, transform 0.3s;
@@ -270,11 +270,11 @@
             font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 10px;
-            color: #fff;
+            color: var(--text-primary, #fff);
         }
         .feature-desc {
             font-size: 0.88rem;
-            color: #a0a0a0;
+            color: var(--text-secondary, #a0a0a0);
             line-height: 1.6;
         }
 
@@ -314,19 +314,19 @@
            SECTION 5 — AUTH FORM
         ══════════════════════════════════════════ */
         .s-auth {
-            background: #0d0d0d;
+            background: var(--bg-primary, #0d0d0d);
             padding: 120px 24px 100px;
             display: flex;
             justify-content: center;
         }
         .auth-card-lp {
-            background: #141414;
-            border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-card, #141414);
+            border: 1px solid var(--border-color, rgba(255,255,255,0.08));
             border-radius: 20px;
             padding: 40px 36px;
             width: 100%;
             max-width: 480px;
-            box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+            box-shadow: var(--shadow-lg, 0 32px 80px rgba(0,0,0,0.6));
         }
         .auth-card-lp h2 {
             font-family: 'Space Grotesk', sans-serif;
@@ -335,13 +335,13 @@
             letter-spacing: -0.02em;
             margin-bottom: 28px;
             text-align: center;
-            color: #fff;
+            color: var(--text-primary, #fff);
         }
 
         /* Tab switcher */
         .lp-tabs {
             display: flex;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.08));
             margin-bottom: 28px;
             gap: 0;
         }
@@ -353,7 +353,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
             font-weight: 600;
-            color: #555;
+            color: var(--text-muted, #555);
             cursor: pointer;
             position: relative;
             transition: color 0.2s;
@@ -367,7 +367,7 @@
             transform: scaleX(0);
             transition: transform 0.25s cubic-bezier(0.22,1,0.36,1);
         }
-        .lp-tab-btn.active { color: #fff; }
+        .lp-tab-btn.active { color: var(--text-primary, #fff); }
         .lp-tab-btn.active::after { transform: scaleX(1); }
 
         /* Form panel */
@@ -392,7 +392,7 @@
             display: block;
             font-size: 0.78rem;
             font-weight: 600;
-            color: #888;
+            color: var(--text-muted, #888);
             margin-bottom: 6px;
             letter-spacing: 0.04em;
             text-transform: uppercase;
@@ -400,27 +400,27 @@
         .lp-input-wrap { position: relative; }
         .lp-input {
             width: 100%;
-            background: #1c1c1c;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--input-bg, #1c1c1c);
+            border: 1px solid var(--input-border, rgba(255,255,255,0.1));
             border-radius: 10px;
             padding: 11px 14px;
             font-size: 0.9rem;
-            color: #fff;
+            color: var(--text-primary, #fff);
             font-family: 'Inter', sans-serif;
             outline: none;
             transition: border-color 0.2s;
             -webkit-appearance: none;
         }
         .lp-input:focus { border-color: #22c55e; }
-        .lp-input::placeholder { color: #444; }
+        .lp-input::placeholder { color: var(--text-muted, #444); }
         .lp-select {
             width: 100%;
-            background: #1c1c1c;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--input-bg, #1c1c1c);
+            border: 1px solid var(--input-border, rgba(255,255,255,0.1));
             border-radius: 10px;
             padding: 11px 14px;
             font-size: 0.9rem;
-            color: #fff;
+            color: var(--text-primary, #fff);
             font-family: 'Inter', sans-serif;
             outline: none;
             cursor: pointer;
@@ -571,6 +571,87 @@
             color: #444;
         }
 
+        /* ── Hero image ─────────────────────────── */
+        .hero-img-wrapper {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .hero-img-wrapper img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.13;
+            filter: grayscale(30%);
+        }
+
+        /* ── How It Works ───────────────────────── */
+        .s-how {
+            background: var(--bg-secondary, #111);
+            padding: 120px 24px;
+        }
+        .how-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .how-heading {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        .how-heading .section-eyebrow { margin-bottom: 12px; }
+        .how-heading h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.25rem);
+            font-weight: 700;
+            color: var(--text-primary, #e0e0e0);
+        }
+        .how-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .how-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+        }
+        .how-step-img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color, rgba(255,255,255,0.06));
+        }
+        .how-step-img img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .how-step-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #22c55e;
+            line-height: 1;
+        }
+        .how-step-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary, #e0e0e0);
+        }
+        .how-step-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary, #a0a0a0);
+            line-height: 1.6;
+        }
+        @media (max-width: 900px) {
+            .how-steps { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+        }
+
         /* ── Scroll reveal ──────────────────────── */
         .reveal {
             opacity: 0;
@@ -622,6 +703,9 @@
          SECTION 1 — HERO
     ══════════════════════════════════════ -->
     <section class="s-hero" id="hero-section">
+        <div class="hero-img-wrapper" aria-hidden="true">
+          <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop&q=60" alt="" role="presentation" loading="eager">
+        </div>
         <div class="hero-bg-glow" aria-hidden="true"></div>
 
         <h1 class="hero-headline" aria-label="Transform Your Body">
@@ -668,17 +752,17 @@
             <p class="section-eyebrow reveal" id="features-heading">What We Offer</p>
             <div class="features-grid">
                 <article class="feature-card reveal reveal-delay-1">
-                    <span class="feature-icon" aria-hidden="true">⚡</span>
+                    <span class="feature-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
                     <h3 class="feature-title">Smart Workouts</h3>
                     <p class="feature-desc">AI-curated training plans that adapt to your fitness level, goals, and available equipment — no two sessions the same.</p>
                 </article>
                 <article class="feature-card reveal reveal-delay-2">
-                    <span class="feature-icon" aria-hidden="true">🥗</span>
+                    <span class="feature-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span>
                     <h3 class="feature-title">Nutrition Planning</h3>
                     <p class="feature-desc">Personalised macro targets, meal ideas, and calorie tracking that fits your lifestyle, not the other way around.</p>
                 </article>
                 <article class="feature-card reveal reveal-delay-3">
-                    <span class="feature-icon" aria-hidden="true">📈</span>
+                    <span class="feature-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
                     <h3 class="feature-title">Track Progress</h3>
                     <p class="feature-desc">Visual dashboards, body metrics, and trend analysis to keep you motivated and on track toward your transformation.</p>
                 </article>
@@ -687,7 +771,45 @@
     </section>
 
     <!-- ══════════════════════════════════════
-         SECTION 4 — MARQUEE TICKER
+         SECTION 4 — HOW IT WORKS
+    ══════════════════════════════════════ -->
+    <section class="s-how" id="how-section" aria-labelledby="how-heading-title">
+        <div class="how-inner">
+            <div class="how-heading reveal">
+                <p class="section-eyebrow" id="how-heading-title">Get Started in Minutes</p>
+                <h2>How It Works</h2>
+            </div>
+            <div class="how-steps">
+                <div class="how-step reveal reveal-delay-1">
+                    <div class="how-step-img">
+                        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&auto=format&fit=crop&q=60" alt="Person performing fitness exercises in a gym" loading="lazy">
+                    </div>
+                    <div class="how-step-num">01</div>
+                    <div class="how-step-title">Set Your Goals</div>
+                    <p class="how-step-desc">Tell us your body type, fitness goals, and experience level. We craft a plan that fits you.</p>
+                </div>
+                <div class="how-step reveal reveal-delay-2">
+                    <div class="how-step-img">
+                        <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&auto=format&fit=crop&q=60" alt="Person training with dumbbells and exercise equipment" loading="lazy">
+                    </div>
+                    <div class="how-step-num">02</div>
+                    <div class="how-step-title">Follow Your Plan</div>
+                    <p class="how-step-desc">Access personalised workouts and nutrition guidance every day. Track each session with one tap.</p>
+                </div>
+                <div class="how-step reveal reveal-delay-3">
+                    <div class="how-step-img">
+                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=60" alt="Variety of fresh healthy foods including fruits and vegetables" loading="lazy">
+                    </div>
+                    <div class="how-step-num">03</div>
+                    <div class="how-step-title">See Real Results</div>
+                    <p class="how-step-desc">Monitor your progress with visual charts, BMI history, and streak tracking. Stay motivated every step of the way.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════
+         SECTION 5 — MARQUEE TICKER
     ══════════════════════════════════════ -->
     <section class="s-marquee" aria-hidden="true">
         <div class="marquee-track" id="marquee-track">
@@ -726,7 +848,7 @@
                         <label class="lp-label" for="login-password">Password</label>
                         <div class="lp-input-wrap">
                             <input class="lp-input" type="password" id="login-password" placeholder="Your password" autocomplete="current-password" style="padding-right:40px" required>
-                            <button type="button" class="lp-pass-toggle" id="toggle-login-pass" aria-label="Toggle password visibility">👁</button>
+                            <button type="button" class="lp-pass-toggle" id="toggle-login-pass" aria-label="Toggle password visibility"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                         </div>
                     </div>
                     <div class="lp-check-row">
@@ -762,7 +884,7 @@
                                 <label class="lp-label" for="su-password">Password</label>
                                 <div class="lp-input-wrap">
                                     <input class="lp-input" type="password" id="su-password" placeholder="Min 6 chars" autocomplete="new-password" style="padding-right:40px">
-                                    <button type="button" class="lp-pass-toggle" id="toggle-su-pass" aria-label="Toggle password visibility">👁</button>
+                                    <button type="button" class="lp-pass-toggle" id="toggle-su-pass" aria-label="Toggle password visibility"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                                 </div>
                             </div>
                             <div class="lp-field">
