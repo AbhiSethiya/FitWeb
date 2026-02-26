@@ -680,7 +680,7 @@
 
       <!-- ── Greeting ── -->
       <div class="greeting-block section">
-        <h2 id="greeting-text">Good Morning, User! 🌅</h2>
+        <h2 id="greeting-text">Good Morning, User!</h2>
         <div class="greeting-date" id="greeting-date"></div>
         <div class="motivational-quote" id="motivational-quote"></div>
       </div>
@@ -883,8 +883,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (user) {
     var hour = new Date().getHours();
     var greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
-    var emoji    = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
-    document.getElementById('greeting-text').textContent = greeting + ', ' + user.name + '! ' + emoji;
+    var emoji    = '';
+    document.getElementById('greeting-text').textContent = greeting + ', ' + user.name + '!';
     document.getElementById('sidebar-user-name').textContent = user.name;
     document.getElementById('sidebar-avatar').textContent = user.name.charAt(0).toUpperCase();
   }

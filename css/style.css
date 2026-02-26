@@ -2971,10 +2971,18 @@ tbody tr:hover td {
   }
 
   .section {
-    padding: 60px 0;
+    padding: 1.5rem 0;
   }
 
   .section-lg {
+    padding: 2rem 0;
+  }
+
+  .landing-page .section {
+    padding: 60px 0;
+  }
+
+  .landing-page .section-lg {
     padding: 80px 0;
   }
 }
