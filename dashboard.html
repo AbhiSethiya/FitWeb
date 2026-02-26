@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function () {
             : streak === 1 ? 'Great start! Come back tomorrow to build your streak.'
             : streak < 7   ? 'You\'re on a roll! Keep going!'
             : streak < 30  ? 'Amazing consistency! ' + streak + ' days strong! ��'
-            :                'Legend! ' + streak + ' day streak! You\'re unstoppable! 🥇';
+            :                'Legend! ' + streak + ' day streak! You\'re unstoppable!';
     document.getElementById('streak-message').textContent = msg;
     document.getElementById('stat-streak-sub').textContent = streak > 0 ? streak + ' day' + (streak > 1 ? 's' : '') + ' strong' : 'Start today!';
     var badge = document.getElementById('streak-badge-label');
@@ -990,7 +990,7 @@ document.addEventListener('DOMContentLoaded', function () {
       'Drink up! Hydration powers your performance.',
       'Almost there! One more glass to hit your goal.',
       'Halfway! Keep sipping throughout the day.',
-      'Great job! You\'re well hydrated today! 💧',
+      'Great job! You\'re well hydrated today!',
       'Goal reached! Your body thanks you. 🎉',
     ];
     document.getElementById('hydration-badge').textContent = n + ' / ' + HYDRATION_GOAL;
