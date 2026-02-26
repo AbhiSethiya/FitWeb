@@ -1,406 +1,866 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sessions - WorkIn&amp;Out</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* ── Sidebar nav-link classes ── */
-        .sidebar-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 16px; border-bottom: 1px solid var(--nav-border); flex-shrink: 0;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 10px;
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.05rem;
-            color: var(--text-primary); text-decoration: none;
-        }
-        .logo span { color: var(--accent-primary); }
-        .sidebar-close {
-            background: none; border: none; cursor: pointer; color: var(--text-muted);
-            font-size: 1rem; padding: 6px 8px; border-radius: var(--radius-sm);
-            line-height: 1; transition: background var(--transition-fast); display: none;
-        }
-        .sidebar-close:hover { background: var(--bg-secondary); }
-        .nav-links {
-            list-style: none; padding: 12px 10px; margin: 0;
-            flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
-        }
-        .nav-links li { margin: 0; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-            border-radius: var(--radius-md); color: var(--text-secondary);
-            font-weight: 500; font-size: 0.9rem; text-decoration: none;
-            transition: all var(--transition-fast); position: relative;
-        }
-        .nav-link:hover { background: rgba(var(--accent-primary-rgb),0.08); color: var(--accent-primary); }
-        .nav-link.active { background: rgba(var(--accent-primary-rgb),0.12); color: var(--accent-primary); font-weight: 600; }
-        .nav-link.active::before {
-            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
-            width: 3px; background: var(--accent-primary); border-radius: 0 3px 3px 0;
-        }
-        .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
-        @media (max-width: 768px) { .sidebar-close { display: flex; align-items: center; justify-content: center; } }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sessions — WorkIn&Out</title>
 
-        /* ── Topbar hamburger ── */
-        .topbar-hamburger {
-            background: none; border: none; font-size: 1.4rem; cursor: pointer;
-            color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius-sm);
-            display: none; line-height: 1;
-        }
-        @media (max-width: 768px) { .topbar-hamburger { display: block; } }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* ── Session Start Area ── */
-        .start-session-card {
-            text-align: center;
-            padding: 32px 24px;
-        }
-        .start-session-card h4 {
-            margin-bottom: 20px;
-            color: var(--text-primary);
-        }
-        .plan-select-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .plan-select-wrap .form-control {
-            max-width: 280px;
-            flex: 1;
-        }
-        .start-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/style.css" />
 
-        /* ── Active Session Panel ── */
-        .session-panel {
-            border: 2px solid var(--accent-primary);
-            border-radius: var(--radius-xl);
-            padding: 0;
-            overflow: hidden;
-            background: var(--bg-card);
-        }
-        .session-panel-header {
-            background: var(--gradient-primary);
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .session-panel-name { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.1rem; color: #fff; }
-        .session-start-time { font-size: 0.78rem; color: rgba(255,255,255,0.8); }
-        .session-panel-body { padding: 20px; }
+  <style>
+    /* ─── Reset / Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Stopwatch */
-        .stopwatch-section {
-            text-align: center;
-            padding: 16px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            margin-bottom: 16px;
-        }
-        .stopwatch-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-        #session-timer {
-            font-family: 'Poppins', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: 0.04em;
-            color: var(--accent-primary);
-            line-height: 1;
-        }
-        .stopwatch-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 12px;
-        }
+    :root {
+      --nav-bg:      #111111;
+      --page-bg:     #0d0d0d;
+      --card-bg:     #1a1a1a;
+      --border:      rgba(255,255,255,0.06);
+      --accent:      #22c55e;
+      --accent-dim:  rgba(34,197,94,0.18);
+      --accent-rgb:  34,197,94;
+      --text:        #ffffff;
+      --text-muted:  #a0a0a0;
+      --text-dim:    #666666;
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   14px;
+      --sidebar-w:   260px;
+      --sidebar-collapsed: 64px;
+      --transition:  0.22s ease;
+    }
 
-        /* Rest timer */
-        .rest-timer-wrap {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .rest-timer-wrap.visible { display: flex; }
-        .rest-timer-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 8px; }
+    html, body {
+      height: 100%;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* SVG rest circle */
-        .rest-svg-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px; }
-        #rest-svg { transform: rotate(-90deg); }
-        .rest-svg-text {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-        #rest-seconds {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--accent-primary);
-            line-height: 1;
-        }
-        .rest-sec-label { font-size: 0.65rem; color: var(--text-muted); }
-        .rest-duration-btns {
-            display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 8px;
-        }
-        .rest-dur-btn {
-            padding: 5px 12px; border-radius: var(--radius-full); border: 1.5px solid var(--border-color);
-            background: var(--bg-card); color: var(--text-secondary); font-size: 0.78rem;
-            font-weight: 600; cursor: pointer; transition: all var(--transition-fast);
-        }
-        .rest-dur-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
-        .rest-dur-btn.active { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-        /* Exercise list */
-        #session-exercises { margin-top: 12px; }
-        .session-exercise-section { font-weight: 700; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 16px 0 6px; }
+    /* ─── Layout ────────────────────────────────────────── */
+    .layout { display: flex; min-height: 100vh; }
 
-        /* Session finish controls */
-        #session-controls {
-            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
-            padding-top: 12px; border-top: 1px solid var(--border-color); margin-top: 16px;
-        }
+    /* ─── Sidebar ───────────────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--nav-bg);
+      display: flex; flex-direction: column;
+      z-index: 200;
+      transition: width var(--transition), transform var(--transition);
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
 
-        /* ── Session History ── */
-        .session-history-item {
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            margin-bottom: 10px;
-            transition: box-shadow var(--transition-fast);
-            cursor: pointer;
-        }
-        .session-history-item:hover { box-shadow: var(--shadow-md); }
-        .session-hist-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 16px;
-            background: var(--bg-card);
-            gap: 10px;
-        }
-        .session-hist-main { flex: 1; }
-        .session-hist-name { font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
-        .session-hist-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-        .session-hist-meta {
-            display: flex; gap: 12px; flex-wrap: wrap;
-        }
-        .session-hist-stat { font-size: 0.78rem; color: var(--text-secondary); }
-        .session-hist-stat strong { color: var(--text-primary); }
-        .session-hist-expand { font-size: 0.85rem; color: var(--text-muted); transition: transform 0.2s; }
-        .session-history-item.open .session-hist-expand { transform: rotate(180deg); }
-        .session-hist-detail {
-            display: none;
-            padding: 14px 16px;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-        }
-        .session-history-item.open .session-hist-detail { display: block; }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 22px 20px 18px; flex-shrink: 0;
+    }
+    .sidebar-logo-mark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--accent); letter-spacing: -0.5px;
+      white-space: nowrap; line-height: 1;
+    }
+    .sidebar-logo-full {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text-muted); white-space: nowrap;
+      transition: opacity var(--transition);
+    }
 
-        /* ── Summary in modal ── */
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 480px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    .sidebar-nav {
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      padding: 8px 10px; scrollbar-width: none;
+    }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
 
-        /* PR badge */
-        .pr-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; border-radius: var(--radius-full);
-            background: rgba(255,215,0,0.15); color: #c8960c;
-            font-weight: 700; font-size: 0.82rem;
-        }
+    .nav-section-label {
+      display: block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); padding: 14px 10px 6px;
+      white-space: nowrap; transition: opacity var(--transition);
+    }
 
-        /* Empty state */
-        .history-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-        .history-empty-icon { font-size: 3rem; margin-bottom: 12px; }
-    </style>
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 9px 10px; border-radius: var(--radius-md);
+      color: var(--text-muted); font-size: 0.875rem; font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+      white-space: nowrap; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+
+    .nav-item-icon { font-size: 1.1rem; flex-shrink: 0; width: 22px; text-align: center; }
+    .nav-item-text { transition: opacity var(--transition); }
+
+    .sidebar-footer {
+      padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: var(--radius-md);
+      cursor: pointer; margin-top: 4px;
+      transition: background var(--transition);
+    }
+    .sidebar-user:hover { background: rgba(255,255,255,0.05); }
+    .sidebar-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent-dim); color: var(--accent);
+      font-size: 0.9rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-user-info { min-width: 0; overflow: hidden; }
+    .sidebar-user-name {
+      font-size: 0.82rem; font-weight: 600; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sidebar-user-role { font-size: 0.72rem; color: var(--text-dim); }
+
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 199;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .sidebar { width: var(--sidebar-collapsed); }
+      .sidebar-logo-full,
+      .nav-section-label,
+      .nav-item-text,
+      .sidebar-user-info { opacity: 0; pointer-events: none; }
+      .nav-item { justify-content: center; padding: 10px; gap: 0; }
+      .sidebar-user { justify-content: center; }
+    }
+    @media (max-width: 767px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-logo-full, .nav-item-text, .sidebar-user-info { opacity: 1; pointer-events: auto; }
+      .nav-item { justify-content: flex-start; padding: 9px 10px; gap: 12px; }
+    }
+
+    /* ─── Main Content ──────────────────────────────────── */
+    .main-content {
+      flex: 1; margin-left: var(--sidebar-w); min-width: 0;
+      display: flex; flex-direction: column;
+      transition: margin-left var(--transition);
+    }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .main-content { margin-left: var(--sidebar-collapsed); }
+    }
+    @media (max-width: 767px) { .main-content { margin-left: 0; } }
+
+    /* ─── Topbar ────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 58px;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem; font-weight: 600; color: var(--text);
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05);
+      transition: background var(--transition);
+    }
+    .hamburger:hover { background: rgba(255,255,255,0.1); }
+    .hamburger span {
+      display: block; height: 2px; width: 18px; margin: 0 auto;
+      background: var(--text-muted); border-radius: 2px;
+      transition: all var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 767px) { .hamburger { display: flex; } }
+
+    .theme-btn {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05); font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* ─── Page Container ────────────────────────────────── */
+    .page-container {
+      max-width: 1100px; width: 100%;
+      margin: 0 auto; padding: 28px 28px 60px;
+    }
+    @media (max-width: 767px) { .page-container { padding: 20px 16px 80px; } }
+
+    /* ─── Page Header ───────────────────────────────────── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    @media (max-width: 480px) { .page-header h1 { font-size: 1.5rem; } }
+
+    /* ─── Section ───────────────────────────────────────── */
+    .section { margin-bottom: 28px; }
+    .section-label {
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 14px;
+    }
+
+    /* ─── Card ──────────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+    .card-lift {
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .card-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+
+    /* ─── Two-col layout ────────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ─── Session Start Section ─────────────────────────── */
+    #start-section .card { text-align: center; }
+
+    .session-name-row {
+      display: flex; gap: 10px; align-items: center;
+      margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .form-input {
+      flex: 1; min-width: 160px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 13px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.875rem;
+      outline: none; transition: border-color var(--transition);
+    }
+    .form-input:focus { border-color: rgba(34,197,94,0.5); }
+    .form-input::placeholder { color: var(--text-dim); }
+    select.form-input option { background: #1a1a1a; color: var(--text); }
+
+    /* ─── Timer Display ─────────────────────────────────── */
+    #session-timer {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 4.5rem; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      line-height: 1;
+      margin: 12px 0 20px;
+      text-align: center;
+      transition: color var(--transition);
+    }
+    #session-timer.running { color: var(--accent); }
+    #session-timer.paused  { color: var(--text-muted); }
+    @media (max-width: 480px) { #session-timer { font-size: 3rem; } }
+
+    .timer-controls {
+      display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    }
+
+    /* ─── Buttons ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 9px 22px; border-radius: var(--radius-sm);
+      font-size: 0.875rem; font-weight: 600; font-family: 'Inter', sans-serif;
+      transition: all var(--transition); cursor: pointer;
+    }
+    .btn-primary { background: var(--accent); color: #000; border: none; }
+    .btn-primary:hover { background: #16a34a; }
+    .btn-ghost {
+      background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+    .btn-danger {
+      background: transparent; border: 1px solid rgba(239,68,68,0.3); color: #f87171;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.1); }
+    .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+    .btn-icon { padding: 6px 10px; }
+
+    /* ─── Active Session (hidden until started) ─────────── */
+    #active-session-section { display: none; }
+    #active-session-section.visible { display: block; }
+
+    /* ─── Current Exercise Card ─────────────────────────── */
+    .current-exercise-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px; margin-bottom: 18px;
+    }
+    .current-exercise-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem; font-weight: 700; color: var(--text);
+    }
+    .current-exercise-muscle {
+      font-size: 0.8rem; color: var(--accent); margin-top: 4px;
+    }
+    .set-counter {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem; font-weight: 600;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 6px 14px; border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .set-inputs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .set-input-group { display: flex; flex-direction: column; gap: 5px; }
+    .set-input-label {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .set-input-field {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text); font-family: 'Inter', sans-serif;
+      font-size: 1.1rem; font-weight: 600;
+      text-align: center; outline: none;
+      transition: border-color var(--transition);
+    }
+    .set-input-field:focus { border-color: rgba(34,197,94,0.5); }
+
+    .exercise-action-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+
+    /* ─── Rest Timer ─────────────────────────────────────── */
+    .rest-timer-wrap {
+      text-align: center;
+    }
+    #rest-timer-wrap { display: none; }
+    #rest-timer-wrap.visible { display: block; }
+
+    .rest-ring-container {
+      position: relative;
+      width: 120px; height: 120px;
+      margin: 0 auto 14px;
+    }
+    .rest-ring-svg { transform: rotate(-90deg); }
+    #rest-progress-circle {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s linear;
+    }
+    .rest-ring-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.06);
+      stroke-width: 6;
+    }
+    .rest-seconds-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 1.9rem; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+    .rest-label {
+      font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;
+    }
+    .rest-btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+    /* ─── Session Exercises ──────────────────────────────── */
+    #session-exercises { margin-top: 0; }
+
+    .set-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr 48px;
+      gap: 8px; align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .set-row:last-child { border-bottom: none; }
+    .set-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      font-size: 0.78rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .set-num.completed { background: var(--accent-dim); color: var(--accent); }
+    .set-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.875rem;
+      text-align: center; outline: none; width: 100%;
+      transition: border-color var(--transition);
+    }
+    .set-input:focus { border-color: rgba(34,197,94,0.4); }
+
+    .btn-success {
+      background: var(--accent-dim); color: var(--accent);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: var(--radius-sm);
+      padding: 5px 8px; font-size: 0.85rem; font-weight: 700;
+    }
+
+    /* ─── Session controls row ──────────────────────────── */
+    #session-controls { margin-top: 16px; }
+    .session-controls-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+
+    /* ─── Exercise Log Table ────────────────────────────── */
+    .log-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .log-table th {
+      text-align: left; padding: 8px 12px;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+    }
+    .log-table th:not(:first-child) { text-align: center; }
+    .log-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-muted);
+    }
+    .log-table td:not(:first-child) { text-align: center; }
+    .log-table tr:last-child td { border-bottom: none; }
+    .log-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ─── Session Summary ────────────────────────────────── */
+    #session-summary { display: none; }
+    #session-summary.visible { display: block; }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px; margin-bottom: 24px;
+    }
+    @media (max-width: 600px) { .summary-stats { grid-template-columns: repeat(2, 1fr); } }
+
+    .summary-stat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px; text-align: center;
+    }
+    .summary-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem; font-weight: 700; color: var(--accent);
+      line-height: 1; margin-bottom: 4px;
+    }
+    .summary-stat-label { font-size: 0.75rem; color: var(--text-dim); }
+
+    /* ─── Summary Modal ─────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); z-index: 500;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      width: 100%; max-width: 520px;
+      max-height: 85vh; overflow-y: auto;
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem; font-weight: 700;
+    }
+    .modal-close {
+      width: 30px; height: 30px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05); color: var(--text-muted);
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+    /* ─── History list ───────────────────────────────────── */
+    .history-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem; font-weight: 600; color: var(--text);
+    }
+    .history-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 3px; }
+    .history-badge {
+      font-size: 0.72rem; padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-dim); color: var(--accent);
+      font-weight: 600; white-space: nowrap;
+    }
+
+    /* ─── Utility ───────────────────────────────────────── */
+    .d-none { display: none !important; }
+    .overflow-x-auto { overflow-x: auto; }
+    .text-center { text-align: center; }
+    .empty-state {
+      text-align: center; padding: 40px 20px;
+      color: var(--text-dim); font-size: 0.875rem;
+    }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+    /* ─── Session name badge in topbar ──────────────────── */
+    .active-session-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 999px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(34,197,94,0.3);
+      font-size: 0.78rem; font-weight: 600; color: var(--accent);
+    }
+    .active-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
 </head>
 <body>
-<div class="app-layout">
+<div class="layout">
 
-    <!-- ══════════ SIDEBAR ══════════ -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">🏋️ <span>WorkIn&amp;Out</span></div>
-            <button class="sidebar-close" id="sidebarClose">✕</button>
-        </div>
-        <ul class="nav-links">
-            <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
-            <li><a href="workout.html" class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
-            <li><a href="bmi.html" class="nav-link"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
-            <li><a href="diet.html" class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
-            <li><a href="sessions.html" class="nav-link active"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
-            <li><a href="progress.html" class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
-            <li><a href="sleep.html" class="nav-link"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
-            <li><a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">🌙 Dark Mode</button>
-            <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
-        </div>
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <a class="sidebar-logo" href="dashboard.html">
+      <span class="sidebar-logo-mark">W&amp;O</span>
+      <span class="sidebar-logo-full">WorkIn&amp;Out</span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+
+      <a class="nav-item" href="dashboard.html">
+        <span class="nav-item-icon">🏠</span>
+        <span class="nav-item-text">Dashboard</span>
+      </a>
+      <a class="nav-item" href="bmi.html">
+        <span class="nav-item-icon">📊</span>
+        <span class="nav-item-text">BMI</span>
+      </a>
+      <a class="nav-item" href="diet.html">
+        <span class="nav-item-icon">🥗</span>
+        <span class="nav-item-text">Diet</span>
+      </a>
+      <a class="nav-item" href="workout.html">
+        <span class="nav-item-icon">🏋️</span>
+        <span class="nav-item-text">Workout</span>
+      </a>
+      <a class="nav-item active" href="sessions.html">
+        <span class="nav-item-icon">⏱️</span>
+        <span class="nav-item-text">Sessions</span>
+      </a>
+
+      <span class="nav-section-label">Tracking</span>
+
+      <a class="nav-item" href="progress.html">
+        <span class="nav-item-icon">📈</span>
+        <span class="nav-item-text">Progress</span>
+      </a>
+      <a class="nav-item" href="sleep.html">
+        <span class="nav-item-icon">💤</span>
+        <span class="nav-item-text">Recovery</span>
+      </a>
+      <a class="nav-item" href="profile.html">
+        <span class="nav-item-icon">��</span>
+        <span class="nav-item-text">Profile</span>
+      </a>
     </nav>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <button class="hamburger" id="hamburger">☰</button>
 
-    <!-- ══════════ MAIN CONTENT ══════════ -->
-    <main class="main-content">
-
-        <!-- Topbar -->
-        <div class="topbar">
-            <div class="d-flex items-center gap-8">
-                <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
-                <span class="topbar-title">Session Tracker</span>
-            </div>
-            <div class="topbar-actions">
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <button class="nav-item" data-theme-toggle style="width:100%;text-align:left;">
+        <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+        <span class="nav-item-text">Toggle Theme</span>
+      </button>
+      <button class="nav-item" onclick="Auth && Auth.logout()" style="width:100%;text-align:left;color:#f87171;">
+        <span class="nav-item-icon">🚪</span>
+        <span class="nav-item-text">Logout</span>
+      </button>
+      <div class="sidebar-user" onclick="window.location.href='profile.html'">
+        <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role">Fitness Member</div>
         </div>
-
-        <div class="page-container">
-
-            <!-- ══ Start Session ══ -->
-            <div class="section reveal" id="start-section">
-                <div class="section-header">
-                    <h3 class="section-title">🚀 Start a Session</h3>
-                </div>
-                <div class="card start-session-card">
-                    <h4>Choose a workout plan or start quickly</h4>
-                    <div class="plan-select-wrap">
-                        <select class="form-control" id="plan-select">
-                            <option value="">-- Select a Workout Plan --</option>
-                        </select>
-                    </div>
-                    <div class="start-actions">
-                        <button class="btn btn-primary" id="session-start-btn" style="font-size:1.05rem;padding:14px 28px">
-                            ▶ Start Session
-                        </button>
-                        <button class="btn btn-ghost" id="empty-session-btn" style="padding:14px 24px">
-                            ✏️ Start Empty Session
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ Active Session Panel ══ -->
-            <div class="section d-none" id="active-session-section">
-                <div class="session-panel" id="session-panel">
-                    <div class="session-panel-header">
-                        <div>
-                            <div class="session-panel-name" id="active-session-name">Session</div>
-                            <div class="session-start-time" id="active-session-start"></div>
-                        </div>
-                        <span class="badge" style="background:rgba(255,255,255,0.25);color:#fff;font-weight:700">● LIVE</span>
-                    </div>
-                    <div class="session-panel-body">
-
-                        <!-- Stopwatch -->
-                        <div class="stopwatch-section">
-                            <div class="stopwatch-label">⏱ Session Time</div>
-                            <div id="session-timer" class="timer-display">00:00</div>
-                            <div class="stopwatch-controls">
-                                <button class="btn btn-ghost btn-sm" id="session-pause-btn">⏸ Pause</button>
-                                <button class="btn btn-ghost btn-sm" id="session-reset-btn">↺ Reset</button>
-                            </div>
-                        </div>
-
-                        <!-- Rest Timer -->
-                        <div class="rest-timer-wrap" id="rest-timer-wrap">
-                            <div class="rest-timer-label">😮‍💨 Rest Timer</div>
-                            <div class="rest-svg-wrap">
-                                <svg id="rest-svg" width="100" height="100" viewBox="0 0 100 100">
-                                    <circle cx="50" cy="50" r="45" fill="none"
-                                        stroke="var(--bg-card)" stroke-width="8"/>
-                                    <circle id="rest-progress-circle" cx="50" cy="50" r="45" fill="none"
-                                        stroke="var(--accent-primary)" stroke-width="8"
-                                        stroke-linecap="round"
-                                        style="stroke-dasharray:282.74;stroke-dashoffset:282.74;transition:stroke-dashoffset 1s linear"/>
-                                </svg>
-                                <div class="rest-svg-text">
-                                    <div id="rest-seconds" class="rest-seconds">0</div>
-                                    <div class="rest-sec-label">sec</div>
-                                </div>
-                            </div>
-                            <div class="rest-duration-btns">
-                                <button class="rest-dur-btn" onclick="startRest(30)">30s</button>
-                                <button class="rest-dur-btn active" onclick="startRest(60)">60s</button>
-                                <button class="rest-dur-btn" onclick="startRest(90)">90s</button>
-                                <button class="rest-dur-btn" onclick="startRest(120)">2 min</button>
-                                <button class="btn btn-ghost btn-sm" onclick="skipRest()">Skip ⏭</button>
-                            </div>
-                        </div>
-
-                        <!-- Exercise list -->
-                        <div id="session-exercises">
-                            <!-- Populated when session starts -->
-                        </div>
-
-                        <!-- Session controls -->
-                        <div id="session-controls" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--border-color);margin-top:16px">
-                            <button class="btn btn-success" id="session-finish-btn" style="font-size:1rem;padding:12px 24px">
-                                🏁 Finish Session
-                            </button>
-                            <button class="btn btn-danger" id="session-cancel-btn" style="padding:12px 18px">
-                                ✕ Cancel
-                            </button>
-                        </div>
-
-                    </div><!-- /session-panel-body -->
-                </div><!-- /session-panel -->
-            </div><!-- /active-session-section -->
-
-            <!-- ══ Session History ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">📜 Session History</h3>
-                    <span class="text-sm text-muted" id="history-count"></span>
-                </div>
-                <div id="session-history-list">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-        </div><!-- /page-container -->
-    </main>
-</div><!-- /app-layout -->
-
-<!-- ══ Session Summary Modal ══ -->
-<div class="modal-overlay hidden" id="summary-modal-overlay">
-    <div class="modal modal-lg">
-        <div class="modal-header">
-            <div class="modal-title">🎉 Session Complete!</div>
-            <button class="modal-close" id="summary-modal-close">✕</button>
-        </div>
-        <div id="session-summary">
-            <!-- Populated by JS after finishing session -->
-        </div>
-        <div class="modal-footer" style="gap:10px">
-            <button class="btn btn-primary" id="save-summary-btn">💾 Save &amp; Close</button>
-            <button class="btn btn-ghost" id="discard-summary-btn">🗑 Discard</button>
-        </div>
+      </div>
     </div>
+
+  </aside>
+  <!-- /sidebar -->
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="topbarHamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="topbar-title">Sessions</span>
+      </div>
+      <div class="topbar-actions">
+        <div class="active-session-badge d-none" id="active-session-name">
+          <span class="active-dot"></span>
+          <span>Session Active</span>
+        </div>
+        <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Page body -->
+    <div class="page-container">
+
+      <div class="page-header">
+        <h1>Training Sessions</h1>
+      </div>
+
+      <!-- ── Start Section ──────────────────────────────── -->
+      <div id="start-section" class="section">
+        <p class="section-label">Start a Session</p>
+        <div class="card">
+          <div class="session-name-row">
+            <select class="form-input" id="plan-select">
+              <option value="">— Select a workout plan —</option>
+            </select>
+            <button class="btn btn-primary" id="session-start-btn">▶ Start</button>
+          </div>
+
+          <!-- Timer display (always visible) -->
+          <div id="session-timer" class="paused">00:00:00</div>
+
+          <div class="timer-controls">
+            <button class="btn btn-ghost d-none" id="session-pause-btn">⏸ Pause</button>
+            <button class="btn btn-ghost d-none" id="session-reset-btn" onclick="SessionManager && SessionManager.resetStopwatch()">↺ Reset</button>
+            <button class="btn btn-danger d-none" id="session-finish-btn">✓ Finish Session</button>
+            <button class="btn btn-ghost d-none" id="session-cancel-btn">✕ Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Active Session ─────────────────────────────── -->
+      <div id="active-session-section">
+
+        <div class="two-col">
+
+          <!-- Left: Current Exercise + Sets -->
+          <div class="section">
+            <p class="section-label">Current Exercise</p>
+            <div class="card card-lift">
+              <div class="current-exercise-header">
+                <div>
+                  <div class="current-exercise-name" id="current-ex-name">—</div>
+                  <div class="current-exercise-muscle" id="current-ex-muscle"></div>
+                </div>
+                <span class="set-counter" id="set-counter-label">Set — of —</span>
+              </div>
+              <div class="set-inputs">
+                <div class="set-input-group">
+                  <label class="set-input-label">Weight (kg)</label>
+                  <input type="number" class="set-input-field" id="set-weight-input" placeholder="0" min="0" />
+                </div>
+                <div class="set-input-group">
+                  <label class="set-input-label">Reps</label>
+                  <input type="number" class="set-input-field" id="set-reps-input" placeholder="0" min="0" />
+                </div>
+              </div>
+              <div class="exercise-action-row">
+                <button class="btn btn-primary" id="complete-set-btn" onclick="completeCurrentSet()">✓ Complete Set</button>
+                <button class="btn btn-ghost btn-sm" id="rest-timer-btn" onclick="toggleRestTimer()">⏱ Rest Timer</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Rest Timer -->
+          <div class="section">
+            <p class="section-label">Rest Timer</p>
+            <div class="card card-lift">
+              <div id="rest-timer-wrap">
+                <div class="rest-ring-container">
+                  <svg class="rest-ring-svg" width="120" height="120" viewBox="0 0 120 120">
+                    <circle class="rest-ring-bg" cx="60" cy="60" r="45" />
+                    <circle id="rest-progress-circle" cx="60" cy="60" r="45"
+                      stroke-dasharray="282.74" stroke-dashoffset="282.74" />
+                  </svg>
+                  <div class="rest-seconds-overlay">
+                    <span id="rest-seconds">90</span>
+                  </div>
+                </div>
+                <div class="rest-label">seconds remaining</div>
+                <div class="rest-btn-row">
+                  <button class="btn btn-ghost btn-sm" onclick="SessionManager && SessionManager.stopRestTimer();document.getElementById('rest-timer-wrap').classList.remove('visible')">Skip</button>
+                  <button class="btn btn-ghost btn-sm" onclick="addRestTime(30)">＋30s</button>
+                </div>
+              </div>
+              <div id="rest-idle" style="text-align:center;padding:20px 0;color:var(--text-dim);font-size:0.85rem;">
+                Rest timer is idle.<br>Complete a set to start automatically.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session Exercises (set-by-set log) -->
+        <div class="section">
+          <p class="section-label">Exercise Sets</p>
+          <div id="session-exercises">
+            <!-- populated by SessionManager.renderSessionExercises -->
+          </div>
+        </div>
+
+        <!-- Session controls -->
+        <div id="session-controls" class="d-none">
+          <div class="session-controls-row">
+            <button class="btn btn-ghost" id="empty-session-btn" onclick="toggleEmptyState()">View Empty State</button>
+          </div>
+        </div>
+
+      </div>
+      <!-- /active-session-section -->
+
+      <!-- ── Exercise Log ────────────────────────────────── -->
+      <div class="section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <p class="section-label" style="margin-bottom:0">Exercise Log</p>
+          <span id="history-count" style="font-size:0.78rem;color:var(--text-dim);">0 sets</span>
+        </div>
+        <div class="card">
+          <div class="overflow-x-auto">
+            <table class="log-table">
+              <thead>
+                <tr>
+                  <th>Exercise</th>
+                  <th>Set</th>
+                  <th>Weight</th>
+                  <th>Reps</th>
+                </tr>
+              </thead>
+              <tbody id="session-history-list">
+                <tr>
+                  <td colspan="4" class="text-center" style="color:var(--text-dim);padding:24px;">
+                    No sets logged yet.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Session Summary (inline, shown after finish) ── -->
+      <div id="session-summary">
+        <!-- populated by SessionManager.renderSessionSummary -->
+      </div>
+
+    </div><!-- /page-container -->
+  </main>
+</div><!-- /layout -->
+
+<!-- ── Session Summary Modal ─────────────────────────── -->
+<div class="modal-overlay" id="summary-modal-overlay">
+  <div class="modal" id="session-summary-modal">
+    <div class="modal-header">
+      <span class="modal-title">🎉 Session Complete!</span>
+      <button class="modal-close" id="summary-modal-close"
+        onclick="document.getElementById('summary-modal-overlay').classList.remove('open')">✕</button>
+    </div>
+
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <div class="summary-stat-value" id="sum-duration">—</div>
+        <div class="summary-stat-label">Duration</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value" id="sum-exercises">—</div>
+        <div class="summary-stat-label">Exercises</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value" id="sum-sets">—</div>
+        <div class="summary-stat-label">Total Sets</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value" id="sum-calories">—</div>
+        <div class="summary-stat-label">Est. Calories</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-danger btn-sm" id="discard-summary-btn"
+        onclick="discardSession()">Discard</button>
+      <button class="btn btn-primary btn-sm" id="save-summary-btn"
+        onclick="saveAndCloseModal()">Save &amp; Close</button>
+    </div>
+  </div>
 </div>
 
-<!-- Scripts -->
 <script src="js/utils.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/auth.js"></script>
@@ -408,241 +868,303 @@
 <script src="js/workout.js"></script>
 <script src="js/session.js"></script>
 <script>
-    /* ── Sidebar mobile close ── */
-    (function () {
-        function closeSidebar() {
-            document.querySelector('.sidebar').classList.remove('open');
-            document.querySelector('.sidebar-overlay').classList.remove('active');
-            document.querySelector('.hamburger').classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
-        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-        document.querySelectorAll('.nav-link').forEach(function (l) {
-            l.addEventListener('click', function () { if (window.innerWidth <= 768) closeSidebar(); });
-        });
-        var th = document.getElementById('topbarHamburger');
-        if (th) th.addEventListener('click', function () {
-            document.querySelector('.sidebar').classList.toggle('open');
-            document.querySelector('.sidebar-overlay').classList.toggle('active');
-        });
-    })();
+(function () {
+  'use strict';
 
-    /* ── Rest timer helpers ── */
-    function startRest(seconds) {
-        document.querySelectorAll('.rest-dur-btn').forEach(function (b) { b.classList.remove('active'); });
-        document.querySelector('.rest-dur-btn[onclick="startRest(' + seconds + ')"]').classList.add('active');
-        document.getElementById('rest-timer-wrap').classList.add('visible');
-        SessionManager.startRestTimer(seconds);
-    }
+  /* ── Mobile sidebar toggle ─────────────────────────── */
+  const hamburger = document.getElementById('topbarHamburger');
+  const sidebar   = document.getElementById('sidebar');
+  const overlay   = document.getElementById('sidebarOverlay');
 
-    function skipRest() {
-        SessionManager.stopRestTimer();
-        document.getElementById('rest-timer-wrap').classList.remove('visible');
-    }
+  function toggleSidebar(open) {
+    sidebar.classList.toggle('open', open);
+    overlay.classList.toggle('active', open);
+    if (hamburger) hamburger.classList.toggle('open', open);
+  }
 
-    /* ── Show/hide active session panel ── */
-    function showSessionPanel(session) {
-        document.getElementById('start-section').classList.add('d-none');
-        document.getElementById('active-session-section').classList.remove('d-none');
-        document.getElementById('active-session-name').textContent = session.planName || 'Free Session';
-        var startTime = new Date(session.startTime);
-        document.getElementById('active-session-start').textContent =
-            'Started at ' + startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
+  if (hamburger) hamburger.addEventListener('click', () => toggleSidebar(!sidebar.classList.contains('open')));
+  if (overlay)   overlay.addEventListener('click', () => toggleSidebar(false));
 
-    function hideSessionPanel() {
-        document.getElementById('active-session-section').classList.add('d-none');
-        document.getElementById('start-section').classList.remove('d-none');
-    }
+  /* ── Session state ─────────────────────────────────── */
+  let _currentExIndex = 0;
+  let _currentSetIndex = 0;
+  let _logRows = [];
 
-    /* ── Render session history ── */
-    function renderHistory() {
-        var sessions = SessionManager.getSessions().slice().reverse();
-        var container = document.getElementById('session-history-list');
-        var countEl   = document.getElementById('history-count');
+  /* ── Populate plan select ──────────────────────────── */
+  function populatePlanSelect() {
+    const sel = document.getElementById('plan-select');
+    if (!sel || typeof WorkoutManager === 'undefined') return;
+    const plans = WorkoutManager.getWorkoutPlans();
+    sel.innerHTML = '<option value="">— Select a workout plan —</option>' +
+      plans.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  }
 
-        countEl.textContent = sessions.length + ' session' + (sessions.length !== 1 ? 's' : '');
+  /* ── Start session ─────────────────────────────────── */
+  const startBtn  = document.getElementById('session-start-btn');
+  const pauseBtn  = document.getElementById('session-pause-btn');
+  const resetBtn  = document.getElementById('session-reset-btn');
+  const finishBtn = document.getElementById('session-finish-btn');
+  const cancelBtn = document.getElementById('session-cancel-btn');
 
-        if (!sessions.length) {
-            container.innerHTML = '<div class="history-empty"><div class="history-empty-icon">📭</div><div>No sessions recorded yet.<br>Start your first session above!</div></div>';
-            return;
-        }
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      const planSelect = document.getElementById('plan-select');
+      const planId = planSelect ? planSelect.value : null;
 
-        container.innerHTML = sessions.map(function (s, idx) {
-            var summary  = s.summary  || {};
-            var duration = Utils.formatTime(s.durationSeconds || 0);
-            var date     = Utils.formatDate(s.startTime);
-            var exCount  = (s.exercises || []).length;
-            var calsBurned = Math.round((s.durationSeconds || 0) / 60 * 7.5);
+      if (typeof SessionManager !== 'undefined') {
+        SessionManager.startSession(planId || null);
+        SessionManager.renderSessionExercises('session-exercises');
+      }
 
-            /* Exercise breakdown rows */
-            var exRows = (s.exercises || []).map(function (ex) {
-                var doneSets = (ex.sets || []).filter(function (st) { return st.done; });
-                return '<div class="d-flex justify-between text-sm" style="padding:4px 0;border-bottom:1px solid var(--border-color)">' +
-                    '<span class="font-medium">' + (ex.icon || '💪') + ' ' + (ex.name || ex.id) + '</span>' +
-                    '<span class="text-muted">' + doneSets.length + ' sets · ' +
-                        doneSets.reduce(function (a, st) { return a + (st.reps || 0); }, 0) + ' reps</span>' +
-                    '</div>';
-            }).join('');
+      // Show active session UI
+      document.getElementById('active-session-section').classList.add('visible');
+      document.getElementById('session-controls').classList.remove('d-none');
+      startBtn.classList.add('d-none');
+      pauseBtn.classList.remove('d-none');
+      resetBtn.classList.remove('d-none');
+      finishBtn.classList.remove('d-none');
+      cancelBtn.classList.remove('d-none');
 
-            return '<div class="session-history-item" id="hist-' + idx + '" onclick="toggleHistItem(' + idx + ')">' +
-                '<div class="session-hist-header">' +
-                    '<div class="session-hist-main">' +
-                        '<div class="session-hist-name">' + (s.planName || 'Free Session') + '</div>' +
-                        '<div class="session-hist-date">' + date + '</div>' +
-                    '</div>' +
-                    '<div class="session-hist-meta">' +
-                        '<div class="session-hist-stat">⏱ <strong>' + duration + '</strong></div>' +
-                        '<div class="session-hist-stat">💪 <strong>' + exCount + '</strong> exercises</div>' +
-                        '<div class="session-hist-stat">✅ <strong>' + (summary.totalSets || 0) + '</strong> sets</div>' +
-                        '<div class="session-hist-stat">🔥 <strong>~' + calsBurned + '</strong> kcal</div>' +
-                    '</div>' +
-                    '<span class="session-hist-expand">▼</span>' +
-                '</div>' +
-                '<div class="session-hist-detail">' +
-                    '<div class="font-semibold text-sm mb-8">Exercises</div>' +
-                    (exRows || '<div class="text-muted text-sm">No exercises recorded.</div>') +
-                    '<div class="d-flex gap-10 mt-10 flex-wrap">' +
-                        '<div class="text-sm"><span class="text-muted">Total Reps: </span><strong>' + (summary.totalReps || 0) + '</strong></div>' +
-                        '<div class="text-sm"><span class="text-muted">Volume: </span><strong>' + Utils.formatNumber(summary.totalVolume || 0) + ' kg</strong></div>' +
-                    '</div>' +
-                '</div>' +
-            '</div>';
-        }).join('');
-    }
+      // Badge
+      const badge = document.getElementById('active-session-name');
+      if (badge) {
+        badge.classList.remove('d-none');
+        const planName = planSelect && planSelect.selectedOptions[0] ? planSelect.selectedOptions[0].text : 'Session';
+        badge.querySelector('span:last-child').textContent = planName !== '— Select a workout plan —' ? planName : 'Free Session';
+      }
 
-    function toggleHistItem(idx) {
-        var el = document.getElementById('hist-' + idx);
-        if (el) el.classList.toggle('open');
-    }
-
-    /* ── Start session (custom — overrides session.js defaults with panel UI) ── */
-    document.addEventListener('DOMContentLoaded', function () {
-        ThemeManager.init();
-        Auth.requireAuth();
-        App.init();
-
-        /* Theme button sync */
-        function syncThemeBtn() {
-            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            var btn = document.getElementById('themeToggle');
-            if (btn) btn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-        }
-        var _origToggle = ThemeManager.toggle;
-        ThemeManager.toggle = function () { _origToggle(); syncThemeBtn(); };
-        syncThemeBtn();
-
-        /* Populate plan select from WorkoutManager */
-        var planSelect = document.getElementById('plan-select');
-        if (planSelect && window.WorkoutManager) {
-            var plans = WorkoutManager.getWorkoutPlans();
-            plans.forEach(function (p) {
-                var opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = p.name;
-                planSelect.appendChild(opt);
-            });
-        }
-
-        /* Start with selected plan */
-        document.getElementById('session-start-btn').addEventListener('click', function () {
-            var planId = planSelect ? planSelect.value : '';
-            var session = SessionManager.startSession(planId || null);
-            showSessionPanel(session);
-            SessionManager.renderSessionExercises('session-exercises');
-        });
-
-        /* Start empty session */
-        document.getElementById('empty-session-btn').addEventListener('click', function () {
-            var session = SessionManager.startSession(null);
-            showSessionPanel(session);
-            document.getElementById('session-exercises').innerHTML =
-                '<div class="text-center text-muted" style="padding:20px 0">' +
-                '<div style="font-size:2rem">✏️</div>' +
-                '<div class="text-sm mt-8">Free session — no exercises pre-loaded.</div>' +
-                '</div>';
-        });
-
-        /* Pause / Resume */
-        document.getElementById('session-pause-btn').addEventListener('click', function () {
-            var btn = this;
-            if (btn.textContent.trim().startsWith('⏸')) {
-                SessionManager.pauseSession();
-                btn.textContent = '▶ Resume';
-            } else {
-                SessionManager.resumeSession();
-                btn.textContent = '⏸ Pause';
-            }
-        });
-
-        /* Reset stopwatch */
-        document.getElementById('session-reset-btn').addEventListener('click', function () {
-            SessionManager.resetStopwatch();
-        });
-
-        /* Finish session */
-        document.getElementById('session-finish-btn').addEventListener('click', function () {
-            var completed = SessionManager.finishSession();
-            if (!completed) return;
-
-            /* Fill summary modal */
-            document.getElementById('session-summary').innerHTML =
-                SessionManager.renderSessionSummary(completed);
-            document.getElementById('summary-modal-overlay').classList.remove('hidden');
-        });
-
-        /* Cancel session */
-        document.getElementById('session-cancel-btn').addEventListener('click', function () {
-            if (confirm('Cancel this session? Progress will be lost.')) {
-                SessionManager.cancelSession();
-                hideSessionPanel();
-            }
-        });
-
-        /* Summary modal close */
-        document.getElementById('summary-modal-close').addEventListener('click', function () {
-            document.getElementById('summary-modal-overlay').classList.add('hidden');
-            hideSessionPanel();
-            renderHistory();
-        });
-        document.getElementById('save-summary-btn').addEventListener('click', function () {
-            document.getElementById('summary-modal-overlay').classList.add('hidden');
-            hideSessionPanel();
-            renderHistory();
-            Utils.showToast('Session saved! Great work 💪', 'success');
-        });
-        document.getElementById('discard-summary-btn').addEventListener('click', function () {
-            if (confirm('Discard this session? It will be removed from history.')) {
-                /* Remove last saved session */
-                var sessions = SessionManager.getSessions();
-                sessions.pop();
-                Utils.saveToStorage('workinout_sessions', sessions);
-                document.getElementById('summary-modal-overlay').classList.add('hidden');
-                hideSessionPanel();
-                renderHistory();
-            }
-        });
-
-        /* Close summary on overlay click */
-        document.getElementById('summary-modal-overlay').addEventListener('click', function (e) {
-            if (e.target === this) {
-                this.classList.add('hidden');
-                hideSessionPanel();
-                renderHistory();
-            }
-        });
-
-        /* Restore active session if page was reloaded mid-session */
-        var storedSession = SessionManager.getActiveSession();
-        if (storedSession) {
-            showSessionPanel(storedSession);
-            SessionManager.renderSessionExercises('session-exercises');
-        }
-
-        /* Render history */
-        renderHistory();
+      // Populate current exercise panel
+      refreshCurrentExercise();
     });
+  }
+
+  if (pauseBtn) {
+    pauseBtn.addEventListener('click', () => {
+      if (typeof SessionManager === 'undefined') return;
+      const running = document.getElementById('session-timer')?.classList.contains('running');
+      if (running) {
+        SessionManager.pauseSession();
+        pauseBtn.textContent = '▶ Resume';
+      } else {
+        SessionManager.resumeSession();
+        pauseBtn.textContent = '⏸ Pause';
+      }
+    });
+  }
+
+  if (finishBtn) {
+    finishBtn.addEventListener('click', () => {
+      if (typeof SessionManager === 'undefined') return;
+      const session = SessionManager.finishSession();
+      if (!session) return;
+
+      // Show summary modal
+      showSummaryModal(session);
+
+      // Show inline summary too
+      const summaryEl = document.getElementById('session-summary');
+      if (summaryEl) {
+        summaryEl.innerHTML = SessionManager.renderSessionSummary(session);
+        summaryEl.classList.add('visible');
+      }
+
+      // Hide active sections
+      document.getElementById('active-session-section').classList.remove('visible');
+      document.getElementById('session-controls').classList.add('d-none');
+      startBtn.classList.remove('d-none');
+      pauseBtn.classList.add('d-none');
+      resetBtn.classList.add('d-none');
+      finishBtn.classList.add('d-none');
+      cancelBtn.classList.add('d-none');
+      document.getElementById('active-session-name').classList.add('d-none');
+
+      if (typeof Utils !== 'undefined') Utils.showToast('Great workout! Session saved 🎉', 'success');
+    });
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      if (!confirm('Cancel this session? Progress will be lost.')) return;
+      if (typeof SessionManager !== 'undefined') SessionManager.cancelSession();
+      document.getElementById('active-session-section').classList.remove('visible');
+      document.getElementById('session-controls').classList.add('d-none');
+      startBtn.classList.remove('d-none');
+      pauseBtn.classList.add('d-none');
+      resetBtn.classList.add('d-none');
+      finishBtn.classList.add('d-none');
+      cancelBtn.classList.add('d-none');
+      document.getElementById('active-session-name').classList.add('d-none');
+    });
+  }
+
+  /* ── Current exercise panel ────────────────────────── */
+  function refreshCurrentExercise() {
+    if (typeof SessionManager === 'undefined') return;
+    const session = SessionManager.getActiveSession();
+    if (!session || !session.exercises.length) return;
+
+    const ex = session.exercises[_currentExIndex];
+    if (!ex) return;
+
+    document.getElementById('current-ex-name').textContent = (ex.icon || '') + ' ' + ex.name;
+    document.getElementById('current-ex-muscle').textContent = (ex.muscleGroups || [ex.category]).join(', ');
+
+    const totalSets = (ex.sets || []).length;
+    document.getElementById('set-counter-label').textContent =
+      `Set ${Math.min(_currentSetIndex + 1, totalSets)} of ${totalSets}`;
+  }
+
+  /* ── Complete current set ──────────────────────────── */
+  window.completeCurrentSet = function () {
+    if (typeof SessionManager === 'undefined') return;
+    const session = SessionManager.getActiveSession();
+    if (!session || !session.exercises.length) return;
+
+    const ex = session.exercises[_currentExIndex];
+    if (!ex) return;
+
+    const weight = document.getElementById('set-weight-input').value;
+    const reps   = document.getElementById('set-reps-input').value;
+    const setNum = _currentSetIndex + 1;
+
+    SessionManager.completeSet(ex.id, setNum, reps, weight);
+
+    // Add to log table
+    appendLogRow(ex.name, setNum, weight || '—', reps || '—');
+
+    // Advance set/exercise
+    const totalSets = ex.sets.length;
+    if (_currentSetIndex < totalSets - 1) {
+      _currentSetIndex++;
+    } else {
+      _currentExIndex++;
+      _currentSetIndex = 0;
+    }
+
+    // Clear inputs
+    document.getElementById('set-weight-input').value = '';
+    document.getElementById('set-reps-input').value   = '';
+
+    refreshCurrentExercise();
+    SessionManager.renderSessionExercises('session-exercises');
+
+    // Auto-start rest timer
+    const restSeconds = ex.rest || 90;
+    startRestTimerUI(restSeconds);
+  };
+
+  /* ── Log table helper ──────────────────────────────── */
+  function appendLogRow(exercise, set, weight, reps) {
+    const tbody = document.getElementById('session-history-list');
+    if (!tbody) return;
+
+    // Remove placeholder row on first entry
+    if (!_logRows.length) tbody.innerHTML = '';
+
+    _logRows.push({ exercise, set, weight, reps });
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${exercise}</td><td>${set}</td><td>${weight}</td><td>${reps}</td>`;
+    tbody.appendChild(tr);
+
+    const countEl = document.getElementById('history-count');
+    if (countEl) countEl.textContent = `${_logRows.length} set${_logRows.length !== 1 ? 's' : ''}`;
+  }
+
+  /* ── Rest Timer UI ─────────────────────────────────── */
+  function startRestTimerUI(seconds) {
+    const wrap = document.getElementById('rest-timer-wrap');
+    const idle = document.getElementById('rest-idle');
+    if (wrap) wrap.classList.add('visible');
+    if (idle) idle.style.display = 'none';
+
+    if (typeof SessionManager !== 'undefined') {
+      SessionManager.startRestTimer(seconds, () => {
+        if (wrap) wrap.classList.remove('visible');
+        if (idle) idle.style.display = '';
+      });
+    }
+  }
+
+  window.toggleRestTimer = function () {
+    const wrap = document.getElementById('rest-timer-wrap');
+    if (wrap && wrap.classList.contains('visible')) {
+      wrap.classList.remove('visible');
+      document.getElementById('rest-idle').style.display = '';
+      if (typeof SessionManager !== 'undefined') SessionManager.stopRestTimer();
+    } else {
+      startRestTimerUI(90);
+    }
+  };
+
+  window.addRestTime = function (seconds) {
+    if (typeof SessionManager === 'undefined') return;
+    const numEl = document.getElementById('rest-seconds');
+    if (numEl) {
+      const current = parseInt(numEl.textContent, 10) || 0;
+      SessionManager.startRestTimer(current + seconds);
+    }
+  };
+
+  /* ── Summary modal ─────────────────────────────────── */
+  function showSummaryModal(session) {
+    const overlay = document.getElementById('summary-modal-overlay');
+    if (!overlay) return;
+
+    const duration = session.durationSeconds || 0;
+    const summary  = session.summary || {};
+    const exCount  = (session.exercises || []).length;
+    // Very rough calorie estimate: ~5 cal/min
+    const calories = Math.round((duration / 60) * 5);
+
+    const fmt = typeof Utils !== 'undefined' ? Utils.formatTime : s => s + 's';
+
+    document.getElementById('sum-duration').textContent   = fmt(duration);
+    document.getElementById('sum-exercises').textContent  = exCount;
+    document.getElementById('sum-sets').textContent       = summary.totalSets || 0;
+    document.getElementById('sum-calories').textContent   = calories;
+
+    overlay.classList.add('open');
+  }
+
+  window.discardSession = function () {
+    document.getElementById('summary-modal-overlay').classList.remove('open');
+  };
+
+  window.saveAndCloseModal = function () {
+    document.getElementById('summary-modal-overlay').classList.remove('open');
+  };
+
+  /* ── Empty state toggle ─────────────────────────────── */
+  window.toggleEmptyState = function () {};
+
+  /* ── Close modal on overlay click ──────────────────── */
+  document.getElementById('summary-modal-overlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget)
+      e.currentTarget.classList.remove('open');
+  });
+
+  /* ── Init ──────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    populatePlanSelect();
+
+    // If session already active (page reload), restore UI
+    if (typeof SessionManager !== 'undefined') {
+      const active = SessionManager.getActiveSession();
+      if (active) {
+        document.getElementById('active-session-section').classList.add('visible');
+        document.getElementById('session-controls').classList.remove('d-none');
+        startBtn.classList.add('d-none');
+        pauseBtn.classList.remove('d-none');
+        resetBtn.classList.remove('d-none');
+        finishBtn.classList.remove('d-none');
+        cancelBtn.classList.remove('d-none');
+        document.getElementById('active-session-name').classList.remove('d-none');
+        SessionManager.renderSessionExercises('session-exercises');
+        refreshCurrentExercise();
+      }
+    }
+  });
+})();
 </script>
 </body>
 </html>

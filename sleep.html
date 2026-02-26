@@ -1,228 +1,494 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recovery &amp; Wellness - WorkIn&amp;Out</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        .nav-links { list-style:none; padding:12px 10px; margin:0; flex:1; display:flex; flex-direction:column; gap:2px; overflow-y:auto; }
-        .nav-links li { margin:0; }
-        .nav-link { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:var(--radius-md); color:var(--text-secondary); font-weight:500; font-size:0.9rem; text-decoration:none; transition:all var(--transition-fast); position:relative; }
-        .nav-link:hover { background:rgba(var(--accent-primary-rgb),0.08); color:var(--accent-primary); }
-        .nav-link.active { background:rgba(var(--accent-primary-rgb),0.12); color:var(--accent-primary); font-weight:600; }
-        .nav-link.active::before { content:''; position:absolute; left:0; top:20%; bottom:20%; width:3px; background:var(--accent-primary); border-radius:0 3px 3px 0; }
-        .nav-icon { font-size:1.1rem; flex-shrink:0; width:20px; text-align:center; }
-        .sidebar-header { display:flex; align-items:center; justify-content:space-between; padding:20px 16px; border-bottom:1px solid var(--nav-border); flex-shrink:0; }
-        .logo { display:flex; align-items:center; gap:10px; font-family:'Poppins',sans-serif; font-weight:800; font-size:1.05rem; color:var(--text-primary); text-decoration:none; }
-        .logo span { color:var(--accent-primary); }
-        .sidebar-close { background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1rem; padding:6px 8px; border-radius:var(--radius-sm); line-height:1; transition:background var(--transition-fast); display:none; }
-        .sidebar-close:hover { background:var(--bg-secondary); }
-        @media (max-width:768px) { .sidebar-close { display:flex; align-items:center; justify-content:center; } }
-        .topbar-hamburger { background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text-primary); padding:4px 8px; border-radius:var(--radius-sm); display:none; line-height:1; }
-        @media (max-width:768px) { .topbar-hamburger { display:block; } }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recovery — WorkIn&amp;Out</title>
 
-        /* Breathing */
-        .breathing-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; padding:16px 0; }
-        .breathing-circle {
-            width:130px; height:130px; border-radius:50%;
-            background:var(--gradient-primary);
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            font-weight:700; color:#fff; gap:2px;
-            transition:transform 4s ease-in-out, box-shadow 4s ease-in-out;
-            box-shadow:0 0 20px rgba(var(--accent-primary-rgb),0.4);
-        }
-        .breathing-circle.inhale { transform:scale(1.55); box-shadow:0 0 50px rgba(var(--accent-primary-rgb),0.7); }
-        .breathing-circle.hold   { transform:scale(1.55); }
-        .breathing-circle.exhale { transform:scale(1.0);  box-shadow:0 0 20px rgba(var(--accent-primary-rgb),0.3); }
-        .breathing-phase { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; }
-        .breathing-count { font-size:1.8rem; font-weight:900; line-height:1; }
-        .breathing-label-text { font-size:0.82rem; color:var(--text-muted); min-height:1.4em; text-align:center; }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* Technique cards */
-        .technique-card { cursor:pointer; border:2px solid var(--border-color); border-radius:var(--radius-lg); padding:14px; transition:all var(--transition-fast); background:var(--bg-card); }
-        .technique-card:hover  { border-color:var(--accent-primary); transform:translateY(-2px); box-shadow:var(--shadow-md); }
-        .technique-card.active { border-color:var(--accent-primary); background:rgba(var(--accent-primary-rgb),0.06); }
-        .technique-name   { font-weight:700; font-size:0.9rem; margin-bottom:3px; }
-        .technique-rhythm { font-size:0.72rem; color:var(--accent-primary); font-weight:600; font-family:'Poppins',sans-serif; margin-bottom:4px; }
-        .technique-desc   { font-size:0.75rem; color:var(--text-muted); }
-        .technique-grid   { display:grid; grid-template-columns:1fr; gap:10px; }
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/style.css" />
 
-        /* Meditation */
-        .med-duration-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:12px 0; }
-        .med-dur-btn { padding:7px 16px; border-radius:var(--radius-full); border:2px solid var(--border-color); background:var(--bg-card); color:var(--text-secondary); font-size:0.85rem; font-weight:600; cursor:pointer; transition:all var(--transition-fast); }
-        .med-dur-btn:hover  { border-color:var(--accent-primary); color:var(--accent-primary); }
-        .med-dur-btn.active { background:var(--accent-primary); border-color:var(--accent-primary); color:#fff; }
-        .med-timer-display  { font-family:'Poppins',sans-serif; font-weight:900; font-size:3.5rem; color:var(--accent-primary); text-align:center; letter-spacing:0.04em; }
-        .ambient-btn { padding:8px 14px; border-radius:var(--radius-full); border:2px solid var(--border-color); background:var(--bg-secondary); color:var(--text-secondary); font-size:0.82rem; font-weight:600; cursor:pointer; transition:all var(--transition-fast); }
-        .ambient-btn:hover  { border-color:var(--accent-secondary); color:var(--accent-secondary); }
-        .ambient-btn.active { background:rgba(var(--accent-secondary-rgb),0.12); border-color:var(--accent-secondary); color:var(--accent-secondary); }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Stretching */
-        .stretch-card { border:2px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden; transition:all var(--transition-fast); }
-        .stretch-card-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; cursor:pointer; user-select:none; }
-        .stretch-card-header:hover { background:rgba(var(--accent-primary-rgb),0.04); }
-        .stretch-card-body { padding:0 16px; max-height:0; overflow:hidden; transition:max-height 0.35s ease, padding 0.35s ease; }
-        .stretch-card.open .stretch-card-body { max-height:600px; padding:0 16px 16px; }
-        .stretch-card.open .stretch-toggle { transform:rotate(90deg); }
-        .stretch-toggle { transition:transform 0.25s ease; display:inline-block; color:var(--text-muted); }
-        .stretch-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-color); }
-        .stretch-item:last-child { border-bottom:none; }
-        .stretch-num  { width:22px; height:22px; border-radius:50%; background:rgba(var(--accent-primary-rgb),0.12); color:var(--accent-primary); font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
-        .stretch-name { font-weight:600; font-size:0.87rem; }
-        .stretch-tip  { font-size:0.75rem; color:var(--text-muted); margin-top:2px; }
-        .stretch-dur  { font-size:0.75rem; color:var(--text-muted); flex-shrink:0; white-space:nowrap; margin-left:auto; padding-left:8px; }
+    :root {
+      --nav-bg:            #111111;
+      --page-bg:           #0d0d0d;
+      --card-bg:           #1a1a1a;
+      --border:            rgba(255,255,255,0.06);
+      --accent:            #22c55e;
+      --accent-dim:        rgba(34,197,94,0.15);
+      --accent-rgb:        34,197,94;
+      --text:              #ffffff;
+      --text-muted:        #a0a0a0;
+      --text-dim:          #666666;
+      --radius-sm:         6px;
+      --radius-md:         10px;
+      --radius-lg:         14px;
+      --sidebar-w:         260px;
+      --sidebar-collapsed: 64px;
+      --transition:        0.22s ease;
+    }
 
-        /* Tips */
-        .tips-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
-        .tip-card  { background:var(--bg-secondary); border-radius:var(--radius-lg); padding:16px; display:flex; gap:12px; }
-        .tip-emoji { font-size:1.5rem; flex-shrink:0; margin-top:2px; }
-        .tip-title { font-weight:700; font-size:0.9rem; margin-bottom:4px; }
-        .tip-desc  { font-size:0.8rem; color:var(--text-muted); line-height:1.5; }
+    html, body {
+      height: 100%; background: var(--page-bg); color: var(--text);
+      font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-        @media (max-width:640px) { .tips-grid { grid-template-columns:1fr; } }
-    </style>
+    /* ── Layout ─────────────────────────────── */
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ────────────────────────────── */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-w);
+      background: var(--nav-bg); display: flex; flex-direction: column;
+      z-index: 200; transition: width var(--transition), transform var(--transition);
+      overflow: hidden; border-right: 1px solid var(--border);
+    }
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 22px 20px 18px; flex-shrink: 0; }
+    .sidebar-logo-mark { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; white-space: nowrap; line-height: 1; }
+    .sidebar-logo-full { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; transition: opacity var(--transition); }
+    .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 10px; scrollbar-width: none; }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+    .nav-section-label { display: block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); padding: 14px 10px 6px; white-space: nowrap; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: var(--radius-md); color: var(--text-muted); font-size: 0.88rem; font-weight: 500; transition: background var(--transition), color var(--transition); white-space: nowrap; position: relative; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { color: var(--text); background: var(--accent-dim); }
+    .nav-item.active::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 0 3px 3px 0; background: var(--accent); }
+    .nav-item-icon { font-size: 1.1rem; flex-shrink: 0; width: 22px; text-align: center; }
+    .nav-item-text { transition: opacity var(--transition); }
+    .sidebar-footer { padding: 10px 10px 14px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: var(--radius-md); cursor: pointer; margin-top: 8px; transition: background var(--transition); overflow: hidden; }
+    .sidebar-user:hover { background: rgba(255,255,255,0.05); }
+    .sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-user-info { overflow: hidden; }
+    .sidebar-user-name { font-size: 0.82rem; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sidebar-user-role { font-size: 0.72rem; color: var(--text-dim); }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .sidebar { width: var(--sidebar-collapsed); }
+      .sidebar-logo-full, .nav-section-label, .nav-item-text, .sidebar-user-info { opacity: 0; pointer-events: none; }
+      .nav-item { justify-content: center; padding: 10px; gap: 0; }
+      .nav-item.active::before { display: none; }
+      .sidebar-user { justify-content: center; }
+    }
+    @media (max-width: 767px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); box-shadow: 4px 0 24px rgba(0,0,0,0.5); }
+      .sidebar.open { transform: translateX(0); }
+    }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199; backdrop-filter: blur(2px); }
+    .sidebar-overlay.active { display: block; }
+
+    /* ── Main Content ───────────────────────── */
+    .main-content { flex: 1; margin-left: var(--sidebar-w); min-width: 0; display: flex; flex-direction: column; transition: margin-left var(--transition); }
+    @media (min-width: 768px) and (max-width: 1024px) { .main-content { margin-left: var(--sidebar-collapsed); } }
+    @media (max-width: 767px) { .main-content { margin-left: 0; } }
+
+    /* ── Topbar ─────────────────────────────── */
+    .topbar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; height: 58px; background: rgba(13,13,13,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.05); transition: background var(--transition); }
+    .hamburger:hover { background: rgba(255,255,255,0.1); }
+    .hamburger span { display: block; height: 2px; width: 18px; margin: 0 auto; background: var(--text-muted); border-radius: 2px; }
+    @media (max-width: 767px) { .hamburger { display: flex; } }
+    .theme-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.05); font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+    .theme-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* ── Page Container ─────────────────────── */
+    .page-container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 28px 28px 60px; }
+    @media (max-width: 767px) { .page-container { padding: 20px 16px 80px; } }
+
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .page-header p { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── Sections / Cards ───────────────────── */
+    .section { margin-bottom: 28px; }
+    .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; transition: transform var(--transition), box-shadow var(--transition); }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+    .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Breathing ──────────────────────────── */
+    .breathing-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+    @media (max-width: 700px) { .breathing-layout { grid-template-columns: 1fr; } }
+
+    .technique-grid { display: flex; flex-direction: column; gap: 10px; }
+    .technique-card {
+      padding: 14px 16px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .technique-card:hover { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.04); }
+    .technique-card.active { border-color: var(--accent); background: var(--accent-dim); }
+    .technique-name { font-weight: 700; font-size: 0.9rem; color: var(--text); margin-bottom: 2px; }
+    .technique-rhythm { font-size: 0.75rem; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+    .technique-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* Breathing circle */
+    .breathing-circle-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .breathing-circle {
+      width: 160px; height: 160px; border-radius: 50%;
+      border: 3px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 4px; transition: transform 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+      position: relative;
+    }
+    @keyframes breatheIn {
+      from { transform: scale(1);    box-shadow: 0 0 0   rgba(34,197,94,0); }
+      to   { transform: scale(1.35); box-shadow: 0 0 40px rgba(34,197,94,0.35); }
+    }
+    @keyframes breatheOut {
+      from { transform: scale(1.35); box-shadow: 0 0 40px rgba(34,197,94,0.35); }
+      to   { transform: scale(1);    box-shadow: 0 0 0   rgba(34,197,94,0); }
+    }
+    @keyframes holdPulse {
+      0%,100% { box-shadow: 0 0 20px rgba(34,197,94,0.25); }
+      50%     { box-shadow: 0 0 30px rgba(34,197,94,0.45); }
+    }
+    .breathing-circle.inhale { border-color: var(--accent); animation: breatheIn 4s ease forwards; }
+    .breathing-circle.hold   { border-color: #60a5fa;       animation: holdPulse 1s ease infinite; }
+    .breathing-circle.exhale { border-color: #a78bfa;       animation: breatheOut 8s ease forwards; }
+    .breathing-phase { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); }
+    .breathing-count { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .breathing-label { font-size: 0.82rem; color: var(--text-muted); text-align: center; max-width: 220px; }
+    .breathing-controls { display: flex; gap: 10px; }
+    .breathing-cycles { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ── Meditation Timer ───────────────────── */
+    .med-timer-display {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 4.5rem; font-weight: 800; color: var(--text);
+      text-align: center; letter-spacing: -2px; line-height: 1;
+      margin: 8px 0;
+    }
+    .med-status { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px; }
+    .med-dur-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+    .med-dur-btn {
+      padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
+      border: 1px solid var(--border); color: var(--text-muted);
+      transition: all var(--transition); cursor: pointer;
+    }
+    .med-dur-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .med-dur-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+    .med-controls { display: flex; gap: 10px; justify-content: center; }
+
+    /* ── Buttons ────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: var(--radius-md); font-size: 0.88rem; font-weight: 600; transition: all var(--transition); cursor: pointer; border: none; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); }
+    .btn-ghost { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+
+    /* ── Form ───────────────────────────────── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .form-input, .form-select { width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: border-color var(--transition); outline: none; }
+    .form-input:focus, .form-select:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--text-dim); }
+    .form-select option { background: #1a1a1a; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* Star rating */
+    .star-rating { display: flex; gap: 4px; }
+    .star-btn { font-size: 1.4rem; cursor: pointer; color: var(--text-dim); transition: color var(--transition), transform var(--transition); background: none; border: none; padding: 2px; }
+    .star-btn:hover, .star-btn.active { color: #f59e0b; transform: scale(1.2); }
+
+    /* ── Sleep history table ─────────────────── */
+    .sleep-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 12px; }
+    .sleep-table th { padding: 8px 12px; text-align: left; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+    .sleep-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text-muted); }
+    .sleep-table tr:last-child td { border-bottom: none; }
+    .sleep-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .sleep-stars { color: #f59e0b; }
+
+    /* ── Stretching ─────────────────────────── */
+    .stretch-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 10px; transition: border-color var(--transition); }
+    .stretch-card:hover { border-color: rgba(34,197,94,0.2); }
+    .stretch-card-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; }
+    .stretch-card-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+    .stretch-card.open .stretch-card-body { max-height: 600px; padding: 0 20px 20px; }
+    .stretch-toggle { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.3s ease; display: inline-block; }
+    .stretch-card.open .stretch-toggle { transform: rotate(90deg); }
+    .stretch-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .stretch-item:last-child { border-bottom: none; }
+    .stretch-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-dim); color: var(--accent); font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .stretch-name { font-weight: 600; font-size: 0.88rem; color: var(--text); margin-bottom: 2px; }
+    .stretch-tip { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+    .stretch-dur { font-size: 0.75rem; font-weight: 600; color: var(--accent); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── Recovery tips ──────────────────────── */
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+    .tip-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; display: flex; align-items: flex-start; gap: 14px; transition: transform var(--transition), box-shadow var(--transition); }
+    .tip-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+    .tip-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .tip-title { font-weight: 700; font-size: 0.88rem; color: var(--text); margin-bottom: 4px; }
+    .tip-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── Utility ────────────────────────────── */
+    .d-flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-8 { gap: 8px; }
+    .gap-10 { gap: 10px; }
+    .text-sm { font-size: 0.85rem; }
+    .text-muted { color: var(--text-muted); }
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+    .empty-state { text-align: center; padding: 40px 20px; }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 6px; }
+    .empty-text { font-size: 0.85rem; color: var(--text-muted); }
+  </style>
 </head>
 <body>
-<div class="app-layout">
+<div class="layout">
 
-    <!-- SIDEBAR -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <a href="dashboard.html" class="logo">🏋️ <span>WorkIn&amp;Out</span></a>
-            <button class="sidebar-close" id="sidebarClose">✕</button>
-        </div>
-        <ul class="nav-links">
-            <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
-            <li><a href="workout.html"   class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
-            <li><a href="bmi.html"       class="nav-link"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
-            <li><a href="diet.html"      class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
-            <li><a href="sessions.html"  class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
-            <li><a href="progress.html"  class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
-            <li><a href="sleep.html"     class="nav-link active"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
-            <li><a href="profile.html"   class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">🌙 Dark Mode</button>
-            <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
-        </div>
+  <!-- ── Sidebar ──────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-logo" href="dashboard.html">
+      <span class="sidebar-logo-mark">W&amp;O</span>
+      <span class="sidebar-logo-full">WorkIn&amp;Out</span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a class="nav-item" href="dashboard.html"><span class="nav-item-icon">🏠</span><span class="nav-item-text">Dashboard</span></a>
+      <a class="nav-item" href="bmi.html"><span class="nav-item-icon">📊</span><span class="nav-item-text">BMI</span></a>
+      <a class="nav-item" href="diet.html"><span class="nav-item-icon">🥗</span><span class="nav-item-text">Diet</span></a>
+      <a class="nav-item" href="workout.html"><span class="nav-item-icon">🏋️</span><span class="nav-item-text">Workout</span></a>
+      <a class="nav-item" href="sessions.html"><span class="nav-item-icon">⏱️</span><span class="nav-item-text">Sessions</span></a>
+      <span class="nav-section-label">Tracking</span>
+      <a class="nav-item" href="progress.html"><span class="nav-item-icon">📈</span><span class="nav-item-text">Progress</span></a>
+      <a class="nav-item active" href="sleep.html"><span class="nav-item-icon">💤</span><span class="nav-item-text">Recovery</span></a>
+      <a class="nav-item" href="profile.html"><span class="nav-item-icon">👤</span><span class="nav-item-text">Profile</span></a>
     </nav>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <button class="hamburger" id="hamburger">☰</button>
-
-    <!-- MAIN -->
-    <main class="main-content">
-        <div class="topbar">
-            <div class="d-flex items-center gap-8">
-                <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
-                <span class="topbar-title">Recovery &amp; Wellness</span>
-            </div>
-            <div class="topbar-actions">
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
+    <div class="sidebar-footer">
+      <button class="nav-item" data-theme-toggle style="width:100%;text-align:left;">
+        <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+        <span class="nav-item-text">Toggle Theme</span>
+      </button>
+      <button class="nav-item" onclick="Auth && Auth.logout()" style="width:100%;text-align:left;color:#f87171;">
+        <span class="nav-item-icon">🚪</span>
+        <span class="nav-item-text">Logout</span>
+      </button>
+      <div class="sidebar-user" onclick="window.location.href='profile.html'">
+        <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role">Fitness Member</div>
         </div>
+      </div>
+    </div>
+  </aside>
 
-        <div class="page-container">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-            <div class="page-header">
-                <h2 style="font-family:'Poppins',sans-serif;font-weight:800;margin:0">🌿 Recovery &amp; Wellness</h2>
-                <p class="page-header-subtitle">Breathe, meditate, stretch and recharge</p>
+  <!-- ── Main ─────────────────────────────────────── -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="topbarHamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="topbar-title">Recovery</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-btn" data-theme-toggle title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <div class="page-container">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <h1>Recovery &amp; Wellness</h1>
+        <p>Breathe, meditate, stretch and track your sleep for optimal recovery.</p>
+      </div>
+
+      <!-- ── Breathing Exercise ───────────────────── -->
+      <div class="section">
+        <div class="section-title"><span>🌬️</span> Breathing Exercises</div>
+        <div class="card" style="padding: 28px;">
+          <div class="breathing-layout" id="breathing-layout">
+
+            <!-- Technique selector -->
+            <div>
+              <div class="card-title">Choose Technique</div>
+              <div class="technique-grid" id="technique-grid"></div>
             </div>
 
-            <!-- 1. Breathing Exercises -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🌬️ Breathing Exercises</h3>
-                </div>
-                <div class="card">
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px" id="breathing-layout">
-                        <div>
-                            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px">Choose a technique, then press Start</p>
-                            <div class="technique-grid" id="technique-grid"></div>
-                        </div>
-                        <div class="breathing-wrap">
-                            <div class="breathing-circle" id="breathing-circle">
-                                <span class="breathing-phase" id="breathing-phase">Ready</span>
-                                <span class="breathing-count" id="breathing-count">—</span>
-                            </div>
-                            <div class="breathing-label-text" id="breathing-label">Select a technique and press Start</div>
-                            <div style="display:flex;gap:10px;align-items:center">
-                                <button class="btn btn-primary" id="breathing-btn">▶ Start</button>
-                                <button class="btn btn-ghost"   id="breathing-reset">Reset</button>
-                            </div>
-                            <div style="font-size:0.78rem;color:var(--text-muted)" id="breathing-cycles"></div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Circle + controls -->
+            <div class="breathing-circle-wrap">
+              <div class="breathing-circle" id="breathing-circle">
+                <span class="breathing-phase" id="breathing-phase">Ready</span>
+                <span class="breathing-count" id="breathing-count">—</span>
+              </div>
+              <div class="breathing-label" id="breathing-label">Select a technique and press Start</div>
+              <div class="breathing-controls">
+                <button class="btn btn-primary" id="breathing-btn">▶ Start</button>
+                <button class="btn btn-ghost" id="breathing-reset">⟳ Reset</button>
+              </div>
+              <div class="breathing-cycles" id="breathing-cycles"></div>
             </div>
 
-            <!-- 2. Meditation Timer -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🧘 Meditation Timer</h3>
-                </div>
-                <div class="card" style="max-width:560px">
-                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px">Set your session duration and find your calm</p>
-                    <div class="med-duration-btns">
-                        <button class="med-dur-btn active" data-min="5">5 min</button>
-                        <button class="med-dur-btn" data-min="10">10 min</button>
-                        <button class="med-dur-btn" data-min="15">15 min</button>
-                        <button class="med-dur-btn" data-min="20">20 min</button>
-                        <button class="med-dur-btn" data-min="30">30 min</button>
-                    </div>
-                    <div class="med-timer-display" id="med-display">05:00</div>
-                    <div style="margin-top:4px;text-align:center;font-size:0.78rem;color:var(--text-muted)" id="med-status">Ready to begin</div>
-                    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
-                        <button class="btn btn-primary" id="med-btn">▶ Start</button>
-                        <button class="btn btn-ghost"   id="med-reset">⟳ Reset</button>
-                    </div>
-                    <div style="margin-top:20px">
-                        <div style="font-size:0.8rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px">🎵 Ambient Sound (visual)</div>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap">
-                            <button class="ambient-btn active" data-sound="silence">🔇 Silence</button>
-                            <button class="ambient-btn" data-sound="rain">🌧️ Rain</button>
-                            <button class="ambient-btn" data-sound="forest">🌲 Forest</button>
-                            <button class="ambient-btn" data-sound="ocean">🌊 Ocean</button>
-                            <button class="ambient-btn" data-sound="fire">🔥 Campfire</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- 3. Stretching Routines -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🤸 Stretching Routines</h3>
-                </div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px" id="stretch-routines"></div>
-            </div>
+      <!-- ── Meditation Timer ─────────────────────── -->
+      <div class="section">
+        <div class="section-title"><span>🧘</span> Meditation Timer</div>
+        <div class="card" style="max-width:480px;">
+          <div class="card-title">Session Duration</div>
+          <div class="med-dur-btns">
+            <button class="med-dur-btn active" data-min="5">5 min</button>
+            <button class="med-dur-btn" data-min="10">10 min</button>
+            <button class="med-dur-btn" data-min="15">15 min</button>
+            <button class="med-dur-btn" data-min="20">20 min</button>
+          </div>
+          <div class="med-timer-display" id="med-display">05:00</div>
+          <div class="med-status" id="med-status">Ready to begin</div>
+          <div class="med-controls">
+            <button class="btn btn-primary" id="med-btn">▶ Start</button>
+            <button class="btn btn-ghost" id="med-reset">⟳ Reset</button>
+          </div>
+        </div>
+      </div>
 
-            <!-- 4. Recovery Tips -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">💡 Sleep &amp; Recovery Tips</h3>
+      <!-- ── Sleep Log ────────────────────────────── -->
+      <div class="section">
+        <div class="section-title"><span>🌙</span> Sleep Log</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Log Tonight</div>
+            <form id="sleep-log-form">
+              <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" id="sleep-date" class="form-input" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Bedtime</label>
+                  <input type="time" id="sleep-bedtime" class="form-input" />
                 </div>
-                <div class="tips-grid">
-                    <div class="tip-card"><span class="tip-emoji">🕐</span><div><div class="tip-title">Consistent Sleep Schedule</div><div class="tip-desc">Go to bed and wake at the same time daily — even on weekends. This anchors your circadian rhythm for deeper, more restorative sleep.</div></div></div>
-                    <div class="tip-card"><span class="tip-emoji">📵</span><div><div class="tip-title">Screen-Free Hour</div><div class="tip-desc">Avoid screens 60 minutes before bed. Blue light suppresses melatonin production and delays sleep onset by up to 2 hours.</div></div></div>
-                    <div class="tip-card"><span class="tip-emoji">🌡️</span><div><div class="tip-title">Cool Your Room</div><div class="tip-desc">Keep your bedroom at 65–68°F (18–20°C). A cooler environment triggers the body's natural drop in core temperature needed for sleep.</div></div></div>
-                    <div class="tip-card"><span class="tip-emoji">☕</span><div><div class="tip-title">Caffeine Cutoff at 2 PM</div><div class="tip-desc">Caffeine has a ~5-hour half-life. An afternoon coffee can still be active in your system at midnight, fragmenting sleep quality.</div></div></div>
-                    <div class="tip-card"><span class="tip-emoji">💧</span><div><div class="tip-title">Stay Well Hydrated</div><div class="tip-desc">Drink at least 8 glasses of water daily. Dehydration impairs muscle recovery, cognitive function, and next-day performance.</div></div></div>
-                    <div class="tip-card"><span class="tip-emoji">🏃</span><div><div class="tip-title">Time Your Exercise</div><div class="tip-desc">Regular exercise dramatically improves sleep quality. Avoid intense workouts within 2–3 hours of bedtime as they raise cortisol.</div></div></div>
-                    <div class="tip-card"><span class="tip-emoji">🧘</span><div><div class="tip-title">Build a Wind-Down Ritual</div><div class="tip-desc">A consistent pre-sleep routine — reading, gentle stretching, or meditation — signals your brain it's time to transition to sleep.</div></div></div>
-                    <div class="tip-card"><span class="tip-emoji">🛏️</span><div><div class="tip-title">Bed is for Sleep Only</div><div class="tip-desc">Avoid working or watching TV in bed. Your brain associates the bed with wakefulness if you use it for other activities.</div></div></div>
+                <div class="form-group">
+                  <label class="form-label">Wake Time</label>
+                  <input type="time" id="sleep-waketime" class="form-input" />
                 </div>
-            </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Quality</label>
+                <div class="star-rating" id="star-rating">
+                  <button type="button" class="star-btn" data-val="1">★</button>
+                  <button type="button" class="star-btn" data-val="2">★</button>
+                  <button type="button" class="star-btn" data-val="3">★</button>
+                  <button type="button" class="star-btn" data-val="4">★</button>
+                  <button type="button" class="star-btn" data-val="5">★</button>
+                </div>
+                <input type="hidden" id="sleep-quality" value="0" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notes (optional)</label>
+                <input type="text" id="sleep-notes" class="form-input" placeholder="e.g. Vivid dreams, woke up refreshed" />
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;">Log Sleep</button>
+            </form>
+          </div>
 
-        </div><!-- /page-container -->
-    </main>
-</div><!-- /app-layout -->
+          <div class="card">
+            <div class="card-title">Sleep History</div>
+            <div id="sleep-history-wrap">
+              <table class="sleep-table" id="sleep-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Bedtime</th>
+                    <th>Wake</th>
+                    <th>Hrs</th>
+                    <th>Rating</th>
+                  </tr>
+                </thead>
+                <tbody id="sleep-table-body">
+                  <tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:20px;">No sleep entries yet</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Stretching Routines ──────────────────── -->
+      <div class="section">
+        <div class="section-title"><span>🤸</span> Stretching Routines</div>
+        <div id="stretch-routines"></div>
+      </div>
+
+      <!-- ── Recovery Tips ───────────────────────── -->
+      <div class="section">
+        <div class="section-title"><span>💡</span> Recovery Tips</div>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <div class="tip-icon">💧</div>
+            <div>
+              <div class="tip-title">Hydrate Well</div>
+              <div class="tip-desc">Drink 2–3 litres of water daily. Muscles recover faster when well hydrated.</div>
+            </div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">😴</div>
+            <div>
+              <div class="tip-title">7–9 Hours of Sleep</div>
+              <div class="tip-desc">Growth hormone peaks during deep sleep — this is when muscle repair happens.</div>
+            </div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🥩</div>
+            <div>
+              <div class="tip-title">Protein Timing</div>
+              <div class="tip-desc">Consume 20–40 g of protein within 30 min post-workout to maximise synthesis.</div>
+            </div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🧊</div>
+            <div>
+              <div class="tip-title">Cold Exposure</div>
+              <div class="tip-desc">A cold shower or ice bath reduces muscle soreness and inflammation significantly.</div>
+            </div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🚶</div>
+            <div>
+              <div class="tip-title">Active Recovery</div>
+              <div class="tip-desc">Light walking or swimming on rest days boosts blood flow without taxing muscles.</div>
+            </div>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">📵</div>
+            <div>
+              <div class="tip-title">Screen-Free Wind-Down</div>
+              <div class="tip-desc">Avoid screens 1 hour before bed. Blue light suppresses melatonin production.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-container -->
+  </main>
+</div><!-- /layout -->
 
 <script src="js/utils.js"></script>
 <script src="js/theme.js"></script>
@@ -247,7 +513,7 @@
     if (closeBtn)  closeBtn.addEventListener('click', closeSidebar);
     if (overlay)   overlay.addEventListener('click', closeSidebar);
 
-    ThemeManager.init();
+    if (window.ThemeManager) ThemeManager.init();
     if (!Auth.requireAuth()) return;
 
     // Responsive breathing layout
@@ -416,8 +682,8 @@
 
     medBtn.addEventListener('click', function() {
         if (!medOn) {
-            medOn  = true;
-            medBtn.textContent   = '⏸ Pause';
+            medOn = true;
+            medBtn.textContent    = '⏸ Pause';
             medStatus.textContent = 'Meditating…';
             medInt = setInterval(function() {
                 medSecs--;
@@ -431,7 +697,7 @@
                     medStatus.textContent = 'Session complete! Well done. 🧘';
                     medSecs = medMin * 60;
                     medDisplay.textContent = fmt(medSecs);
-                    Utils.showToast('Meditation complete! 🧘 Well done.', 'success');
+                    if (window.Utils) Utils.showToast('Meditation complete! 🧘 Well done.', 'success');
                 }
             }, 1000);
         } else {
@@ -451,11 +717,87 @@
         medStatus.textContent  = 'Ready to begin';
     });
 
-    document.querySelectorAll('.ambient-btn').forEach(function(btn) {
+    // ═══════════════════════════════════════════
+    //  SLEEP LOG
+    // ═══════════════════════════════════════════
+    var SLEEP_KEY = 'workinout_sleep_log';
+    var sleepQuality = 0;
+
+    // Set today's date
+    var sleepDateEl = document.getElementById('sleep-date');
+    if (sleepDateEl && !sleepDateEl.value) sleepDateEl.value = new Date().toISOString().slice(0,10);
+
+    // Star rating
+    document.querySelectorAll('.star-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('.ambient-btn').forEach(function(b) { b.classList.remove('active'); });
-            btn.classList.add('active');
+            sleepQuality = parseInt(btn.dataset.val);
+            document.getElementById('sleep-quality').value = sleepQuality;
+            document.querySelectorAll('.star-btn').forEach(function(s) {
+                s.classList.toggle('active', parseInt(s.dataset.val) <= sleepQuality);
+            });
         });
+    });
+
+    function getSleepLog() {
+        try { return JSON.parse(localStorage.getItem(SLEEP_KEY)) || []; } catch(e) { return []; }
+    }
+
+    function renderSleepTable() {
+        var log  = getSleepLog().slice().reverse().slice(0, 20);
+        var tbody = document.getElementById('sleep-table-body');
+        if (!tbody) return;
+        if (!log.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:20px;">No sleep entries yet</td></tr>';
+            return;
+        }
+        tbody.innerHTML = log.map(function(e) {
+            var stars = '★'.repeat(e.quality || 0) + '☆'.repeat(5 - (e.quality || 0));
+            var hrs = e.bedtime && e.waketime ? calcHours(e.bedtime, e.waketime) : '--';
+            return '<tr>'
+                 + '<td>' + (e.date || '--') + '</td>'
+                 + '<td>' + (e.bedtime || '--') + '</td>'
+                 + '<td>' + (e.waketime || '--') + '</td>'
+                 + '<td style="color:var(--accent);font-weight:700">' + hrs + '</td>'
+                 + '<td class="sleep-stars">' + stars + '</td>'
+                 + '</tr>';
+        }).join('');
+    }
+
+    function calcHours(bed, wake) {
+        var b = bed.split(':').map(Number);
+        var w = wake.split(':').map(Number);
+        var bMin = b[0]*60 + b[1];
+        var wMin = w[0]*60 + w[1];
+        if (wMin < bMin) wMin += 1440;
+        var diff = (wMin - bMin) / 60;
+        return diff.toFixed(1) + 'h';
+    }
+
+    renderSleepTable();
+
+    document.getElementById('sleep-log-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var entry = {
+            id:       Date.now(),
+            date:     document.getElementById('sleep-date').value,
+            bedtime:  document.getElementById('sleep-bedtime').value,
+            waketime: document.getElementById('sleep-waketime').value,
+            quality:  sleepQuality,
+            notes:    document.getElementById('sleep-notes').value,
+        };
+        if (!entry.date || !entry.bedtime || !entry.waketime) {
+            if (window.Utils) Utils.showToast('Please fill in date, bedtime and wake time', 'error');
+            return;
+        }
+        var log = getSleepLog();
+        log.push(entry);
+        localStorage.setItem(SLEEP_KEY, JSON.stringify(log));
+        if (window.Utils) Utils.showToast('Sleep logged! 😴', 'success');
+        renderSleepTable();
+        this.reset();
+        sleepQuality = 0;
+        document.querySelectorAll('.star-btn').forEach(function(s) { s.classList.remove('active'); });
+        if (sleepDateEl) sleepDateEl.value = new Date().toISOString().slice(0,10);
     });
 
     // ═══════════════════════════════════════════
@@ -465,41 +807,41 @@
         {
             name:'🌅 Morning Stretch', tag:'5–7 min · Full Body',
             exercises:[
-                { name:'Neck Rolls',            dur:'30 sec each side', tip:'Slow and controlled — no crunching sounds.'   },
-                { name:'Shoulder Circles',       dur:'10 reps each way', tip:'Roll backward then forward fully.'            },
-                { name:'Torso Twist',            dur:'45 sec each side', tip:'Keep hips facing forward as you rotate.'     },
-                { name:'Standing Quad Stretch',  dur:'30 sec each side', tip:'Use a wall for balance if needed.'           },
-                { name:'Forward Fold',           dur:'60 sec',           tip:'Bend knees slightly if hamstrings are tight.' },
+                { name:'Neck Rolls',           dur:'30 sec each side', tip:'Slow and controlled — no crunching.' },
+                { name:'Shoulder Circles',      dur:'10 reps each way', tip:'Roll backward then forward fully.'  },
+                { name:'Torso Twist',           dur:'45 sec each side', tip:'Keep hips facing forward as you rotate.' },
+                { name:'Standing Quad Stretch', dur:'30 sec each side', tip:'Use a wall for balance if needed.'  },
+                { name:'Forward Fold',          dur:'60 sec',           tip:'Bend knees slightly if hamstrings are tight.' },
             ]
         },
         {
             name:'🏋️ Pre-Workout', tag:'5 min · Dynamic',
             exercises:[
-                { name:'Leg Swings',     dur:'10 reps each leg', tip:'Hold a wall and swing front-to-back.'        },
-                { name:'Hip Circles',    dur:'10 reps each way', tip:'Big circles to open the hip joint.'          },
-                { name:'Arm Circles',    dur:'15 reps each way', tip:'Start small, gradually increase range.'      },
-                { name:'Walking Lunges', dur:'10 steps',         tip:'Drive through the front heel on each step.'  },
+                { name:'Leg Swings',     dur:'10 reps each leg', tip:'Hold a wall and swing front-to-back.'       },
+                { name:'Hip Circles',    dur:'10 reps each way', tip:'Big circles to open the hip joint.'         },
+                { name:'Arm Circles',    dur:'15 reps each way', tip:'Start small, gradually increase range.'     },
+                { name:'Walking Lunges', dur:'10 steps',         tip:'Drive through the front heel on each step.' },
                 { name:'Inchworms',      dur:'5 reps',           tip:'Walk hands out to push-up position and back.' },
             ]
         },
         {
             name:'🧊 Post-Workout', tag:'8–10 min · Cool Down',
             exercises:[
-                { name:'Standing Hamstring Stretch', dur:'60 sec each', tip:'Hinge at hips, keep the back flat.'         },
-                { name:'Pigeon Pose',                dur:'90 sec each', tip:'Use a folded blanket under your hip.'        },
-                { name:"Child's Pose",               dur:'60 sec',      tip:'Breathe into your lower back.'               },
-                { name:'Chest Opener',               dur:'45 sec',      tip:'Clasp hands behind back, lift chest.'        },
-                { name:'Seated Spinal Twist',        dur:'45 sec each', tip:'Sit tall, twist gently on each exhale.'      },
+                { name:'Standing Hamstring Stretch', dur:'60 sec each', tip:'Hinge at hips, keep the back flat.'    },
+                { name:'Pigeon Pose',                dur:'90 sec each', tip:'Use a folded blanket under your hip.'  },
+                { name:"Child's Pose",               dur:'60 sec',      tip:'Breathe into your lower back.'         },
+                { name:'Chest Opener',               dur:'45 sec',      tip:'Clasp hands behind back, lift chest.'  },
+                { name:'Seated Spinal Twist',        dur:'45 sec each', tip:'Sit tall, twist gently on each exhale.'},
             ]
         },
         {
             name:'🌙 Bedtime Routine', tag:'10 min · Relaxing',
             exercises:[
-                { name:'Legs Up the Wall', dur:'3 min',      tip:'Great for circulation and deep relaxation.'           },
-                { name:'Supine Twist',     dur:'60 sec each', tip:'Let gravity do the work, breathe slowly.'             },
-                { name:'Happy Baby Pose',  dur:'60 sec',      tip:'Gently rock side to side to release the spine.'       },
-                { name:'Butterfly Stretch',dur:'90 sec',      tip:"Don't push knees — let them fall naturally."          },
-                { name:'4-7-8 Breathing',  dur:'4 cycles',   tip:'Perfect transition to sleep.'                         },
+                { name:'Legs Up the Wall', dur:'3 min',       tip:'Great for circulation and deep relaxation.'  },
+                { name:'Supine Twist',     dur:'60 sec each', tip:'Let gravity do the work, breathe slowly.'    },
+                { name:'Happy Baby Pose',  dur:'60 sec',      tip:'Gently rock side to side to release the spine.' },
+                { name:'Butterfly Stretch',dur:'90 sec',      tip:"Don't push knees — let them fall naturally." },
+                { name:'4-7-8 Breathing',  dur:'4 cycles',    tip:'Perfect transition to sleep.'                },
             ]
         },
     ];

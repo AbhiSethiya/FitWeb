@@ -1,810 +1,1141 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - WorkIn&amp;Out</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* ── Weekly bars ── */
-        .weekly-chart {
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            height: 100px;
-            padding: 0 4px;
-        }
-        .bar-col {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            height: 100%;
-            justify-content: flex-end;
-        }
-        .bar-fill {
-            width: 100%;
-            border-radius: 6px 6px 0 0;
-            background: rgba(var(--accent-primary-rgb), 0.35);
-            transition: height 0.8s cubic-bezier(0.22,1,0.36,1);
-            animation: barGrow 0.8s ease both;
-            min-height: 6px;
-        }
-        .bar-fill.today-bar {
-            background: var(--gradient-primary);
-            box-shadow: 0 0 10px rgba(var(--accent-primary-rgb), 0.4);
-        }
-        .bar-day {
-            font-size: 0.68rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-        .bar-day.today-label { color: var(--accent-primary); }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — WorkIn&amp;Out</title>
 
-        /* ── Quick actions ── */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
-        .quick-action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 8px;
-            border-radius: var(--radius-lg);
-            border: 2px solid var(--border-color);
-            background: var(--bg-card);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            text-decoration: none;
-        }
-        .quick-action-btn:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-        .quick-action-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-        .quick-action-label {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-align: center;
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* ── Greeting header ── */
-        .dashboard-greeting {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .greeting-text h2 {
-            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-            font-weight: 800;
-            margin-bottom: 2px;
-        }
-        .greeting-date { font-size: 0.85rem; color: var(--text-muted); }
-        .motivational-quote {
-            font-size: 0.82rem;
-            font-style: italic;
-            color: var(--text-muted);
-            margin-top: 6px;
-            max-width: 420px;
-        }
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/style.css" />
 
-        /* ── Hydration tracker ── */
-        .hydration-glasses {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 12px 0;
-        }
-        .glass-icon {
-            font-size: 1.6rem;
-            cursor: pointer;
-            transition: transform 0.15s, filter 0.15s;
-            filter: grayscale(1) opacity(0.35);
-        }
-        .glass-icon.filled {
-            filter: none;
-        }
-        .glass-icon:hover { transform: scale(1.15); }
+  <style>
+    /* ─── Reset / Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ── Streak badge ── */
-        .streak-number {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 900;
-            font-size: 3rem;
-            line-height: 1;
-            color: var(--accent-warning);
-        }
-        .streak-fire { font-size: 2.5rem; }
+    :root {
+      --nav-bg:      #111111;
+      --page-bg:     #0d0d0d;
+      --card-bg:     #1a1a1a;
+      --border:      rgba(255,255,255,0.06);
+      --accent:      #22c55e;
+      --accent-dim:  rgba(34,197,94,0.18);
+      --accent-rgb:  34,197,94;
+      --text:        #ffffff;
+      --text-muted:  #a0a0a0;
+      --text-dim:    #666666;
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   14px;
+      --sidebar-w:   260px;
+      --sidebar-collapsed: 64px;
+      --transition:  0.22s ease;
+    }
 
-        /* ── Recent activity ── */
-        .activity-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .activity-row:last-child { border-bottom: none; }
-        .activity-dot {
-            width: 36px; height: 36px; border-radius: var(--radius-md);
-            background: rgba(var(--accent-primary-rgb), 0.12);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; flex-shrink: 0;
-        }
-        .activity-name { font-weight: 600; font-size: 0.88rem; }
-        .activity-meta { font-size: 0.75rem; color: var(--text-muted); }
-        .activity-dur { margin-left: auto; font-weight: 700; font-size: 0.82rem; color: var(--accent-primary); flex-shrink: 0; }
+    html, body {
+      height: 100%;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* ── Monthly stats ── */
-        .monthly-stat-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 0; border-bottom: 1px solid var(--border-color);
-        }
-        .monthly-stat-item:last-child { border-bottom: none; }
-        .monthly-stat-icon {
-            width: 40px; height: 40px; border-radius: var(--radius-md);
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;
-        }
-        .monthly-stat-val { font-family:'Poppins',sans-serif; font-weight:800; font-size:1.4rem; line-height:1; }
-        .monthly-stat-lbl { font-size:0.75rem; color:var(--text-muted); margin-top:1px; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-        /* ── Today's workout ── */
-        .workout-exercise-row {
-            display:flex; align-items:center; gap:10px; padding:8px 0;
-            border-bottom:1px solid var(--border-color);
-        }
-        .workout-exercise-row:last-child { border-bottom:none; }
-        .ex-num {
-            width:24px; height:24px; border-radius:50%;
-            background:rgba(var(--accent-primary-rgb),0.15);
-            color:var(--accent-primary); font-size:0.72rem; font-weight:700;
-            display:flex; align-items:center; justify-content:center; flex-shrink:0;
-        }
-        .ex-name { font-weight:600; font-size:0.88rem; flex:1; }
-        .ex-detail { font-size:0.75rem; color:var(--text-muted); }
+    /* ─── Layout ────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
 
-        /* ── Responsive quick actions ── */
-        @media (max-width: 600px) {
-            .quick-actions { grid-template-columns: repeat(2, 1fr); }
-        }
-    </style>
+    /* ─── Sidebar ───────────────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--nav-bg);
+      display: flex;
+      flex-direction: column;
+      z-index: 200;
+      transition: width var(--transition), transform var(--transition);
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    /* Logo */
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 22px 20px 18px;
+      flex-shrink: 0;
+    }
+    .sidebar-logo-mark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .sidebar-logo-full {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: opacity var(--transition);
+    }
+
+    /* Nav */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 8px 10px;
+      scrollbar-width: none;
+    }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+
+    .nav-section-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 14px 10px 6px;
+      white-space: nowrap;
+      transition: opacity var(--transition);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+      white-space: nowrap;
+      position: relative;
+    }
+    .nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+    .nav-item.active {
+      color: var(--text);
+      background: var(--accent-dim);
+    }
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 6px; bottom: 6px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--accent);
+    }
+    .nav-item-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      width: 22px;
+      text-align: center;
+    }
+    .nav-item-text {
+      transition: opacity var(--transition);
+    }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      padding: 10px 10px 14px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background var(--transition);
+      overflow: hidden;
+    }
+    .sidebar-user:hover { background: rgba(255,255,255,0.05); }
+    .sidebar-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-user-info { overflow: hidden; transition: opacity var(--transition); }
+    .sidebar-user-name {
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .sidebar-user-role { font-size: 0.72rem; color: var(--text-dim); }
+
+    /* ─── Tablet: collapse to icon-only ────────────────── */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .sidebar {
+        width: var(--sidebar-collapsed);
+      }
+      .sidebar-logo-full,
+      .nav-section-label,
+      .nav-item-text,
+      .sidebar-user-info { opacity: 0; pointer-events: none; }
+      .sidebar-logo-mark { font-size: 1rem; }
+      .nav-item { justify-content: center; padding: 10px; gap: 0; }
+      .nav-item.active::before { display: none; }
+      .sidebar-user { justify-content: center; }
+    }
+
+    /* ─── Mobile: hidden drawer ─────────────────────────── */
+    @media (max-width: 767px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-w);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-logo-full,
+      .nav-section-label,
+      .nav-item-text,
+      .sidebar-user-info { opacity: 1; pointer-events: auto; }
+    }
+
+    /* Overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 199;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* ─── Main Content ──────────────────────────────────── */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-w);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      transition: margin-left var(--transition);
+    }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .main-content { margin-left: var(--sidebar-collapsed); }
+    }
+    @media (max-width: 767px) {
+      .main-content { margin-left: 0; }
+    }
+
+    /* ─── Topbar ────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px;
+      height: 58px;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      color: var(--text);
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05);
+      transition: background var(--transition);
+    }
+    .hamburger:hover { background: rgba(255,255,255,0.1); }
+    .hamburger span {
+      display: block; height: 2px; width: 18px; margin: 0 auto;
+      background: var(--text-muted);
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 767px) { .hamburger { display: flex; } }
+
+    .theme-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05);
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* ─── Page Container ────────────────────────────────── */
+    .page-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 28px 48px;
+    }
+    @media (max-width: 767px) { .page-container { padding: 20px 16px 80px; } }
+
+    /* ─── Section ───────────────────────────────────────── */
+    .section { margin-bottom: 28px; }
+    .section-heading {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+
+    /* ─── Greeting ──────────────────────────────────────── */
+    .greeting-block { margin-bottom: 28px; }
+    .greeting-block h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    @media (max-width: 480px) { .greeting-block h2 { font-size: 1.35rem; } }
+    .greeting-date { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; }
+    .motivational-quote { font-size: 0.82rem; color: var(--text-dim); font-style: italic; }
+
+    /* ─── Stats Grid ────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; } }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .stat-emoji { font-size: 1.4rem; line-height: 1; }
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+    .stat-sub   { font-size: 0.72rem; color: var(--text-dim); }
+
+    /* ─── 2-col grid ────────────────────────────────────── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ─── Card ──────────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: box-shadow var(--transition);
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .card-link {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      opacity: 0.85;
+      transition: opacity var(--transition);
+    }
+    .card-link:hover { opacity: 1; }
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .badge-accent  { background: var(--accent-dim); color: var(--accent); }
+    .badge-muted   { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+    .badge-warning { background: rgba(255,165,2,0.15); color: #f59e0b; }
+
+    /* ─── Weekly Chart ──────────────────────────────────── */
+    .weekly-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 110px;
+    }
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .bar-fill {
+      width: 100%;
+      border-radius: 5px 5px 0 0;
+      background: rgba(var(--accent-rgb), 0.25);
+      min-height: 5px;
+      transition: height 0.8s cubic-bezier(0.22,1,0.36,1);
+      animation: barGrow 0.8s ease both;
+    }
+    @keyframes barGrow {
+      from { transform: scaleY(0); transform-origin: bottom; }
+      to   { transform: scaleY(1); transform-origin: bottom; }
+    }
+    .bar-fill.today-bar {
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.4);
+    }
+    .bar-day { font-size: 0.65rem; font-weight: 600; color: var(--text-dim); }
+    .bar-day.today-label { color: var(--accent); }
+
+    /* ─── Today's Workout rows ──────────────────────────── */
+    .workout-exercise-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.84rem;
+    }
+    .workout-exercise-row:last-child { border-bottom: none; }
+    .ex-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim); flex-shrink: 0;
+    }
+    .ex-name { flex: 1; color: var(--text); font-weight: 500; }
+    .ex-detail { color: var(--text-muted); font-size: 0.78rem; }
+
+    /* ─── Recent Activity ───────────────────────────────── */
+    .activity-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .activity-name { font-size: 0.84rem; font-weight: 500; color: var(--text); }
+    .activity-meta { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+    .activity-dur  { margin-left: auto; font-size: 0.78rem; color: var(--text-dim); flex-shrink: 0; }
+
+    /* ─── Streak ────────────────────────────────────────── */
+    .streak-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.8rem; font-weight: 700;
+      color: var(--text); line-height: 1;
+    }
+    .streak-fire { font-size: 2rem; }
+
+    /* ─── Hydration ─────────────────────────────────────── */
+    .hydration-glasses {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin: 10px 0;
+    }
+    .glass-icon {
+      font-size: 1.4rem; cursor: pointer;
+      filter: grayscale(1) opacity(0.35);
+      transition: filter 0.2s ease, transform 0.15s ease;
+      user-select: none;
+    }
+    .glass-icon.filled { filter: none; }
+    .glass-icon:hover  { transform: scale(1.2); }
+
+    /* ─── Monthly stats list ────────────────────────────── */
+    .monthly-stat-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .monthly-stat-item:last-child { border-bottom: none; }
+    .monthly-stat-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .monthly-stat-val { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .monthly-stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
+
+    /* ─── Quick Actions ─────────────────────────────────── */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 640px) { .quick-actions { grid-template-columns: repeat(2, 1fr); } }
+
+    .quick-action-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 18px 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      color: var(--text-muted);
+      font-size: 0.78rem; font-weight: 600;
+      text-align: center;
+      transition: border-color var(--transition), transform var(--transition), color var(--transition), box-shadow var(--transition);
+      cursor: pointer;
+    }
+    .quick-action-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .quick-action-icon { font-size: 1.6rem; }
+
+    /* ─── Buttons ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.84rem; font-weight: 600;
+      cursor: pointer; border: none;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover { background: #1ea851; }
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .btn-sm { padding: 6px 13px; font-size: 0.78rem; }
+  </style>
 </head>
 <body>
-<div class="app-layout">
 
-    <!-- ══════════ SIDEBAR ══════════ -->
-    <aside class="sidebar" id="sidebar">
-        <a class="sidebar-logo" href="dashboard.html">
-            <div class="sidebar-logo-icon">🏋️</div>
-            <div class="sidebar-logo-text">WorkIn<span>&amp;Out</span></div>
-        </a>
+<div class="layout">
 
-        <nav class="sidebar-nav">
-            <span class="nav-section-label">Main</span>
-            <a class="nav-item active" href="dashboard.html">
-                <span class="nav-item-icon">📊</span> Dashboard
-            </a>
-            <a class="nav-item" href="workout.html">
-                <span class="nav-item-icon">🏋️</span> Workouts
-            </a>
-            <a class="nav-item" href="bmi.html">
-                <span class="nav-item-icon">⚖️</span> BMI
-            </a>
-            <a class="nav-item" href="diet.html">
-                <span class="nav-item-icon">🥗</span> Diet
-            </a>
-            <a class="nav-item" href="sessions.html">
-                <span class="nav-item-icon">⏱️</span> Sessions
-            </a>
-            <span class="nav-section-label">Tracking</span>
-            <a class="nav-item" href="progress.html">
-                <span class="nav-item-icon">📈</span> Progress
-            </a>
-            <a class="nav-item" href="sleep.html">
-                <span class="nav-item-icon">🌿</span> Recovery
-            </a>
-            <a class="nav-item" href="profile.html">
-                <span class="nav-item-icon">👤</span> Profile
-            </a>
-        </nav>
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <aside class="sidebar" id="sidebar">
 
-        <div class="sidebar-footer">
-            <button class="nav-item" data-theme-toggle style="border:none;width:100%;text-align:left;background:none;">
-                <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
-                <span>Toggle Theme</span>
-            </button>
-            <button class="nav-item text-danger" onclick="Auth.logout()" style="border:none;width:100%;text-align:left;background:none;">
-                <span class="nav-item-icon">🚪</span> Logout
-            </button>
-            <div class="sidebar-user" onclick="window.location.href='profile.html'">
-                <div class="sidebar-avatar" id="sidebar-avatar">U</div>
-                <div class="sidebar-user-info">
-                    <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
-                    <div class="sidebar-user-role">Fitness Member</div>
-                </div>
-            </div>
+    <!-- Logo -->
+    <a class="sidebar-logo" href="dashboard.html">
+      <span class="sidebar-logo-mark">W&amp;O</span>
+      <span class="sidebar-logo-full">WorkIn&amp;Out</span>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+
+      <a class="nav-item active" href="dashboard.html">
+        <span class="nav-item-icon">🏠</span>
+        <span class="nav-item-text">Dashboard</span>
+      </a>
+      <a class="nav-item" href="bmi.html">
+        <span class="nav-item-icon">📊</span>
+        <span class="nav-item-text">BMI</span>
+      </a>
+      <a class="nav-item" href="diet.html">
+        <span class="nav-item-icon">🥗</span>
+        <span class="nav-item-text">Diet</span>
+      </a>
+      <a class="nav-item" href="workout.html">
+        <span class="nav-item-icon">🏋️</span>
+        <span class="nav-item-text">Workout</span>
+      </a>
+      <a class="nav-item" href="sessions.html">
+        <span class="nav-item-icon">⏱️</span>
+        <span class="nav-item-text">Sessions</span>
+      </a>
+
+      <span class="nav-section-label">Tracking</span>
+
+      <a class="nav-item" href="progress.html">
+        <span class="nav-item-icon">📈</span>
+        <span class="nav-item-text">Progress</span>
+      </a>
+      <a class="nav-item" href="sleep.html">
+        <span class="nav-item-icon">💤</span>
+        <span class="nav-item-text">Recovery</span>
+      </a>
+      <a class="nav-item" href="profile.html">
+        <span class="nav-item-icon">👤</span>
+        <span class="nav-item-text">Profile</span>
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <button class="nav-item" data-theme-toggle style="width:100%;text-align:left;">
+        <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+        <span class="nav-item-text">Toggle Theme</span>
+      </button>
+      <button class="nav-item" onclick="Auth && Auth.logout()" style="width:100%;text-align:left;color:#f87171;">
+        <span class="nav-item-icon">🚪</span>
+        <span class="nav-item-text">Logout</span>
+      </button>
+      <div class="sidebar-user" onclick="window.location.href='profile.html'">
+        <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role">Fitness Member</div>
         </div>
-    </aside>
-
-    <!-- ══════════ MAIN CONTENT ══════════ -->
-    <main class="main-content">
-
-        <!-- Top bar -->
-        <div class="topbar">
-            <div class="d-flex items-center gap-8">
-                <button class="hamburger" id="hamburger" aria-label="Menu">
-                    <span></span><span></span><span></span>
-                </button>
-                <span class="topbar-title">Dashboard</span>
-            </div>
-            <div class="topbar-actions">
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <button class="btn btn-ghost btn-icon" aria-label="Notifications" style="font-size:1.2rem;">🔔</button>
-            </div>
-        </div>
-
-        <!-- Page body -->
-        <div class="page-container">
-
-            <!-- Greeting -->
-            <div class="dashboard-greeting">
-                <div class="greeting-text">
-                    <h2 id="greeting-text">Good Morning, User! 🌅</h2>
-                    <div class="greeting-date" id="greeting-date"></div>
-                    <div class="motivational-quote" id="motivational-quote"></div>
-                </div>
-                <div class="d-flex items-center gap-6">
-                    <span class="badge badge-success animate-pulse">● Live</span>
-                </div>
-            </div>
-
-            <!-- ── Stats Grid ── -->
-            <div class="section">
-                <div class="section-header">
-                    <h3 class="section-title">📋 Your Stats</h3>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card reveal stagger-1">
-                        <div class="stat-icon teal">🔥</div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="stat-streak-val">0</div>
-                            <div class="stat-label">Day Streak</div>
-                            <div class="stat-change" id="stat-streak-sub" style="color:var(--accent-warning);">Keep it going!</div>
-                        </div>
-                    </div>
-                    <div class="stat-card reveal stagger-2">
-                        <div class="stat-icon" style="background:rgba(var(--accent-secondary-rgb),0.15);">🏋️</div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="stat-monthly-workouts">0</div>
-                            <div class="stat-label">Workouts This Month</div>
-                            <div class="stat-change" id="stat-monthly-sub" style="color:var(--text-muted);">sessions logged</div>
-                        </div>
-                    </div>
-                    <div class="stat-card reveal stagger-3">
-                        <div class="stat-icon" style="background:rgba(255,165,2,0.15);">⚖️</div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="stat-bmi-val">—</div>
-                            <div class="stat-label">Current BMI</div>
-                            <div class="stat-change" id="stat-bmi-cat" style="color:var(--text-muted);">Not recorded yet</div>
-                        </div>
-                    </div>
-                    <div class="stat-card reveal stagger-4">
-                        <div class="stat-icon teal">💧</div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="stat-hydration-val">0</div>
-                            <div class="stat-label">Glasses Today</div>
-                            <div class="stat-change" id="stat-hydration-sub" style="color:var(--accent-primary);">Goal: 8 glasses</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ── Today's Workout + Weekly Chart ── -->
-            <div class="grid-2 section" style="align-items:start;">
-
-                <!-- Today's Workout -->
-                <div class="card reveal stagger-1">
-                    <div class="card-header">
-                        <div class="card-title">📋 Today's Workout</div>
-                        <a href="workout.html" class="text-accent text-sm" style="font-weight:600;">Edit →</a>
-                    </div>
-                    <div id="today-workout-content">
-                        <!-- rendered by JS -->
-                    </div>
-                </div>
-
-                <!-- Weekly Activity Chart -->
-                <div class="card reveal stagger-2">
-                    <div class="card-header">
-                        <div class="card-title">📅 Weekly Activity</div>
-                        <span class="badge badge-muted" id="weekly-total-badge">0 min total</span>
-                    </div>
-                    <div class="weekly-chart" id="weekly-chart">
-                        <!-- Bars rendered by JS -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ── Workout Streak + Recent Activity ── -->
-            <div class="grid-2 section" style="align-items:start;">
-
-                <!-- Workout Streak -->
-                <div class="card reveal stagger-1">
-                    <div class="card-header">
-                        <div class="card-title">🔥 Workout Streak</div>
-                        <span class="badge badge-warning" id="streak-badge-label">Active</span>
-                    </div>
-                    <div class="d-flex items-center gap-16 mb-10">
-                        <span class="streak-fire">🔥</span>
-                        <div>
-                            <div class="streak-number" id="streak-display">0</div>
-                            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">consecutive days</div>
-                        </div>
-                    </div>
-                    <div id="streak-message" style="font-size:0.85rem;color:var(--text-secondary);"></div>
-                    <div style="margin-top:14px;">
-                        <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Last 7 Days</div>
-                        <div id="streak-days" style="display:flex;gap:6px;"></div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="card reveal stagger-2">
-                    <div class="card-header">
-                        <div class="card-title">⏱️ Recent Activity</div>
-                        <a href="sessions.html" class="text-accent text-sm" style="font-weight:600;">All →</a>
-                    </div>
-                    <div id="recent-activity-list">
-                        <!-- rendered by JS -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ── Hydration Tracker + Monthly Stats ── -->
-            <div class="grid-2 section" style="align-items:start;">
-
-                <!-- Hydration Tracker -->
-                <div class="card reveal stagger-1">
-                    <div class="card-header">
-                        <div class="card-title">💧 Hydration Tracker</div>
-                        <span class="badge badge-primary" id="hydration-badge">0 / 8</span>
-                    </div>
-                    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">Tap a glass to log water intake</p>
-                    <div class="hydration-glasses" id="hydration-glasses">
-                        <!-- rendered by JS -->
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-                        <button class="btn btn-primary btn-sm" id="hydration-add-btn">+ Add Glass</button>
-                        <button class="btn btn-ghost btn-sm" id="hydration-reset-btn">Reset</button>
-                    </div>
-                    <div style="margin-top:10px;">
-                        <div style="height:6px;background:var(--bg-secondary);border-radius:var(--radius-full);overflow:hidden;">
-                            <div id="hydration-progress-bar" style="height:100%;background:var(--gradient-primary);border-radius:var(--radius-full);transition:width 0.4s ease;width:0%;"></div>
-                        </div>
-                        <div id="hydration-tip" style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;"></div>
-                    </div>
-                </div>
-
-                <!-- Monthly Stats -->
-                <div class="card reveal stagger-2">
-                    <div class="card-header">
-                        <div class="card-title">📊 Monthly Stats</div>
-                        <span class="badge badge-muted" id="monthly-badge">This Month</span>
-                    </div>
-                    <div id="monthly-stats-list">
-                        <!-- rendered by JS -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ── Quick Actions ── -->
-            <div class="section">
-                <div class="section-header">
-                    <h3 class="section-title">⚡ Quick Actions</h3>
-                </div>
-                <div class="quick-actions">
-                    <a class="quick-action-btn" href="workout.html">
-                        <div class="quick-action-icon" style="background:rgba(var(--accent-primary-rgb),0.12);">🏋️</div>
-                        <div class="quick-action-label">Start Workout</div>
-                    </a>
-                    <a class="quick-action-btn" href="diet.html">
-                        <div class="quick-action-icon" style="background:rgba(255,165,2,0.12);">🥗</div>
-                        <div class="quick-action-label">Log Meal</div>
-                    </a>
-                    <a class="quick-action-btn" href="progress.html">
-                        <div class="quick-action-icon" style="background:rgba(var(--accent-secondary-rgb),0.12);">⚖️</div>
-                        <div class="quick-action-label">Add Weight</div>
-                    </a>
-                    <a class="quick-action-btn" href="sessions.html">
-                        <div class="quick-action-icon" style="background:rgba(var(--accent-danger-rgb),0.12);">⏱️</div>
-                        <div class="quick-action-label">Start Timer</div>
-                    </a>
-                </div>
-            </div>
-
-        </div><!-- /page-container -->
-    </main>
-
-</div><!-- /app-layout -->
-
-<!-- ── Bottom Nav (mobile) ── -->
-<nav class="bottom-nav">
-    <div class="bottom-nav-inner">
-        <a class="bottom-nav-item active" href="dashboard.html">
-            <span class="nav-icon">📊</span>
-            <span>Home</span>
-        </a>
-        <a class="bottom-nav-item" href="workout.html">
-            <span class="nav-icon">🏋️</span>
-            <span>Workout</span>
-        </a>
-        <a class="bottom-nav-item" href="diet.html">
-            <span class="nav-icon">🥗</span>
-            <span>Diet</span>
-        </a>
-        <a class="bottom-nav-item" href="progress.html">
-            <span class="nav-icon">📈</span>
-            <span>Progress</span>
-        </a>
-        <a class="bottom-nav-item" href="profile.html">
-            <span class="nav-icon">👤</span>
-            <span>Profile</span>
-        </a>
+      </div>
     </div>
-</nav>
 
+  </aside>
+  <!-- /sidebar -->
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Page body -->
+    <div class="page-container">
+
+      <!-- ── Greeting ── -->
+      <div class="greeting-block section">
+        <h2 id="greeting-text">Good Morning, User! 🌅</h2>
+        <div class="greeting-date" id="greeting-date"></div>
+        <div class="motivational-quote" id="motivational-quote"></div>
+      </div>
+
+      <!-- ── Stats Grid ── -->
+      <div class="section">
+        <p class="section-heading">Your Stats</p>
+        <div class="stats-grid">
+
+          <div class="stat-card reveal stagger-1">
+            <div class="stat-emoji">🔥</div>
+            <div class="stat-value" id="stat-streak-val">0</div>
+            <div class="stat-label">Day Streak</div>
+            <div class="stat-sub" id="stat-streak-sub">Keep it going!</div>
+          </div>
+
+          <div class="stat-card reveal stagger-2">
+            <div class="stat-emoji">🏋️</div>
+            <div class="stat-value" id="stat-monthly-workouts">0</div>
+            <div class="stat-label">Workouts This Month</div>
+            <div class="stat-sub" id="stat-monthly-sub">sessions logged</div>
+          </div>
+
+          <div class="stat-card reveal stagger-3">
+            <div class="stat-emoji">⚖️</div>
+            <div class="stat-value" id="stat-bmi-val">—</div>
+            <div class="stat-label">Current BMI</div>
+            <div class="stat-sub" id="stat-bmi-cat">Not recorded yet</div>
+          </div>
+
+          <div class="stat-card reveal stagger-4">
+            <div class="stat-emoji">💧</div>
+            <div class="stat-value" id="stat-hydration-val">0</div>
+            <div class="stat-label">Glasses Today</div>
+            <div class="stat-sub" id="stat-hydration-sub">Goal: 8 glasses</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Today's Workout + Weekly Chart ── -->
+      <div class="grid-2 section">
+
+        <!-- Today's Workout -->
+        <div class="card reveal stagger-1">
+          <div class="card-header">
+            <span class="card-title">📋 Today's Workout</span>
+            <a href="workout.html" class="card-link">Edit →</a>
+          </div>
+          <div id="today-workout-content">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Weekly Activity -->
+        <div class="card reveal stagger-2">
+          <div class="card-header">
+            <span class="card-title">WEEKLY ACTIVITY</span>
+            <span class="badge badge-muted" id="weekly-total-badge">0 min total</span>
+          </div>
+          <div class="weekly-chart" id="weekly-chart">
+            <!-- bars rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Streak + Recent Sessions ── -->
+      <div class="grid-2 section">
+
+        <!-- Workout Streak -->
+        <div class="card reveal stagger-1">
+          <div class="card-header">
+            <span class="card-title">🔥 Workout Streak</span>
+            <span class="badge badge-warning" id="streak-badge-label">Active</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+            <span class="streak-fire">🔥</span>
+            <div>
+              <div class="streak-number" id="streak-display">0</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">consecutive days</div>
+            </div>
+          </div>
+          <div id="streak-message" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;"></div>
+          <div>
+            <p style="font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">Last 7 Days</p>
+            <div id="streak-days" style="display:flex;gap:6px;"></div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card reveal stagger-2">
+          <div class="card-header">
+            <span class="card-title">⏱️ Recent Sessions</span>
+            <a href="sessions.html" class="card-link">All →</a>
+          </div>
+          <div id="recent-activity-list">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Hydration + Monthly Stats ── -->
+      <div class="grid-2 section">
+
+        <!-- Hydration Tracker -->
+        <div class="card reveal stagger-1">
+          <div class="card-header">
+            <span class="card-title">💧 Hydration Tracker</span>
+            <span class="badge badge-accent" id="hydration-badge">0 / 8</span>
+          </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Tap a glass to log water intake</p>
+          <div class="hydration-glasses" id="hydration-glasses"></div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" id="hydration-add-btn">+ Add Glass</button>
+            <button class="btn btn-ghost btn-sm" id="hydration-reset-btn">Reset</button>
+          </div>
+          <div style="margin-top:12px;">
+            <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:20px;overflow:hidden;">
+              <div id="hydration-progress-bar" style="height:100%;background:var(--accent);border-radius:20px;transition:width 0.4s ease;width:0%;"></div>
+            </div>
+            <div id="hydration-tip" style="font-size:0.72rem;color:var(--text-dim);margin-top:6px;"></div>
+          </div>
+        </div>
+
+        <!-- Monthly Stats -->
+        <div class="card reveal stagger-2">
+          <div class="card-header">
+            <span class="card-title">📊 Monthly Stats</span>
+            <span class="badge badge-muted" id="monthly-badge">This Month</span>
+          </div>
+          <div id="monthly-stats-list"></div>
+        </div>
+
+      </div>
+
+      <!-- ── Quick Actions ── -->
+      <div class="section">
+        <p class="section-heading">Quick Actions</p>
+        <div class="quick-actions">
+          <a class="quick-action-btn" href="workout.html">
+            <span class="quick-action-icon">🏋️</span>
+            <span>Start Workout</span>
+          </a>
+          <a class="quick-action-btn" href="diet.html">
+            <span class="quick-action-icon">🥗</span>
+            <span>Log Meal</span>
+          </a>
+          <a class="quick-action-btn" href="progress.html">
+            <span class="quick-action-icon">⚖️</span>
+            <span>Record Weight</span>
+          </a>
+          <a class="quick-action-btn" href="progress.html">
+            <span class="quick-action-icon">📈</span>
+            <span>View Progress</span>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /page-container -->
+  </main>
+
+</div><!-- /layout -->
+
+<!-- Scripts -->
 <script src="js/utils.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/app.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        ThemeManager.init();
-        Auth.requireAuth();
-        App.init();
+document.addEventListener('DOMContentLoaded', function () {
 
-        var HYDRATION_KEY = 'workinout_hydration_' + new Date().toISOString().slice(0, 10);
-        var SESSIONS_KEY  = 'workinout_sessions';
-        var BMI_KEY       = 'workinout_bmi_history';
-        var SCHEDULE_KEY  = 'workinout_weekly_schedule';
+  /* init theme + auth */
+  if (window.ThemeManager) ThemeManager.init();
+  if (window.Auth) Auth.requireAuth();
 
-        var QUOTES = [
-            '"The only bad workout is the one that didn\'t happen."',
-            '"Push yourself because no one else is going to do it for you."',
-            '"Success starts with self-discipline."',
-            '"Your body can stand almost anything. It\'s your mind you have to convince."',
-            '"Don\'t limit your challenges. Challenge your limits."',
-            '"Strength does not come from the body. It comes from the will of the soul."',
-            '"Wake up with determination. Go to bed with satisfaction."',
-            '"It never gets easier, you just get better."',
-        ];
+  /* ── Storage keys ── */
+  var TODAY_KEY      = new Date().toISOString().slice(0, 10);
+  var HYDRATION_KEY  = 'workinout_hydration_' + TODAY_KEY;
+  var SESSIONS_KEY   = 'workinout_sessions';
+  var BMI_KEY        = 'workinout_bmi_history';
+  var SCHEDULE_KEY   = 'workinout_weekly_schedule';
 
-        // ── User info ──
-        var user = Auth.getCurrentUser();
-        if (user) {
-            var hour = new Date().getHours();
-            var greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
-            var emoji    = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
-            document.getElementById('greeting-text').textContent = greeting + ', ' + user.name + '! ' + emoji;
-            document.getElementById('greeting-date').textContent = new Date().toLocaleDateString('en-US', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-            });
-            document.getElementById('sidebar-user-name').textContent = user.name;
-            document.getElementById('sidebar-avatar').textContent = user.name.charAt(0).toUpperCase();
-        }
+  /* ── Quotes ── */
+  var QUOTES = [
+    '"The only bad workout is the one that didn\'t happen."',
+    '"Push yourself because no one else is going to do it for you."',
+    '"Success starts with self-discipline."',
+    '"Your body can stand almost anything. It\'s your mind you have to convince."',
+    '"Don\'t limit your challenges. Challenge your limits."',
+    '"Strength does not come from the body. It comes from the will of the soul."',
+    '"Wake up with determination. Go to bed with satisfaction."',
+    '"It never gets easier, you just get better."',
+  ];
 
-        // ── Motivational quote ──
-        var dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-        document.getElementById('motivational-quote').textContent = QUOTES[dayOfYear % QUOTES.length];
+  /* ── User info ── */
+  var user = window.Auth && Auth.getCurrentUser();
+  if (user) {
+    var hour = new Date().getHours();
+    var greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+    var emoji    = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
+    document.getElementById('greeting-text').textContent = greeting + ', ' + user.name + '! ' + emoji;
+    document.getElementById('sidebar-user-name').textContent = user.name;
+    document.getElementById('sidebar-avatar').textContent = user.name.charAt(0).toUpperCase();
+  }
+  document.getElementById('greeting-date').textContent = new Date().toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  var dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  document.getElementById('motivational-quote').textContent = QUOTES[dayOfYear % QUOTES.length];
 
-        // ── Helper: get sessions ──
-        function getSessions() {
-            try { return JSON.parse(localStorage.getItem(SESSIONS_KEY)) || []; } catch(e) { return []; }
-        }
+  /* ── Sessions helper ── */
+  function getSessions() {
+    try { return JSON.parse(localStorage.getItem(SESSIONS_KEY)) || []; } catch(e) { return []; }
+  }
 
-        // ── Workout streak ──
-        function calcStreak() {
-            var sessions = getSessions();
-            if (!sessions.length) return 0;
-            var dates = sessions.map(function(s) {
-                return (s.date || s.startTime || '').slice(0, 10);
-            }).filter(Boolean);
-            var unique = {};
-            dates.forEach(function(d) { unique[d] = true; });
-            var sorted = Object.keys(unique).sort().reverse();
-            var streak = 0;
-            var today  = new Date();
-            for (var i = 0; i < sorted.length; i++) {
-                var d = new Date(sorted[i] + 'T12:00:00');
-                var diff = Math.round((today - d) / 86400000);
-                if (diff === streak) { streak++; }
-                else if (diff > streak + 1) break;
-            }
-            return streak;
-        }
-
-        function renderStreak() {
-            var streak = calcStreak();
-            document.getElementById('streak-display').textContent = streak;
-            document.getElementById('stat-streak-val').textContent = streak;
-
-            var msg = '';
-            if (streak === 0)       msg = 'Log your first session today to start your streak! 💪';
-            else if (streak === 1)  msg = 'Great start! Come back tomorrow to build your streak.';
-            else if (streak < 7)   msg = 'You\'re on a roll! Keep going! 🔥';
-            else if (streak < 30)  msg = 'Amazing consistency! ' + streak + ' days strong! 🏆';
-            else                   msg = 'Legend! ' + streak + ' day streak! You\'re unstoppable! 🥇';
-            document.getElementById('streak-message').textContent = msg;
-            document.getElementById('stat-streak-sub').textContent = streak > 0 ? streak + ' day' + (streak > 1 ? 's' : '') + ' strong' : 'Start today!';
-
-            if (streak === 0) document.getElementById('streak-badge-label').textContent = 'Start Today';
-            else if (streak >= 7) document.getElementById('streak-badge-label').textContent = '🔥 On Fire!';
-
-            // Last 7 days dots
-            var sessions = getSessions();
-            var dateSet  = {};
-            sessions.forEach(function(s) {
-                var d = (s.date || s.startTime || '').slice(0, 10);
-                if (d) dateSet[d] = true;
-            });
-            var dotsEl = document.getElementById('streak-days');
-            var today  = new Date();
-            dotsEl.innerHTML = Array.from({length: 7}, function(_, i) {
-                var d = new Date(today);
-                d.setDate(d.getDate() - (6 - i));
-                var key    = d.toISOString().slice(0, 10);
-                var done   = !!dateSet[key];
-                var isToday = (key === today.toISOString().slice(0, 10));
-                var day    = ['S','M','T','W','T','F','S'][d.getDay()];
-                return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">' +
-                    '<div style="width:28px;height:28px;border-radius:50%;background:' +
-                    (done ? 'var(--accent-primary)' : 'var(--bg-secondary)') +
-                    ';border:2px solid ' + (isToday ? 'var(--accent-primary)' : 'transparent') +
-                    ';display:flex;align-items:center;justify-content:center;font-size:0.7rem;">' +
-                    (done ? '✓' : '') + '</div>' +
-                    '<span style="font-size:0.65rem;color:var(--text-muted);">' + day + '</span>' +
-                '</div>';
-            }).join('');
-        }
-        renderStreak();
-
-        // ── Recent activity ──
-        function renderRecentActivity() {
-            var sessions = getSessions().slice().reverse().slice(0, 5);
-            var el = document.getElementById('recent-activity-list');
-            if (!sessions.length) {
-                el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.88rem;">No sessions logged yet.<br><a href="sessions.html" style="color:var(--accent-primary);">Start your first session →</a></div>';
-                return;
-            }
-            el.innerHTML = sessions.map(function(s) {
-                var name = s.name || s.workoutName || 'Workout Session';
-                var dur  = s.duration ? (Math.floor(s.duration / 60) + ' min') : '—';
-                var date = (s.date || s.startTime || '').slice(0, 10);
-                var friendly = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', {month:'short',day:'numeric'}) : '';
-                return '<div class="activity-row">' +
-                    '<div class="activity-dot">🏋️</div>' +
-                    '<div><div class="activity-name">' + name + '</div>' +
-                    '<div class="activity-meta">' + friendly + '</div></div>' +
-                    '<div class="activity-dur">' + dur + '</div>' +
-                '</div>';
-            }).join('');
-        }
-        renderRecentActivity();
-
-        // ── Hydration tracker ──
-        var HYDRATION_GOAL = 8;
-        function getHydration() {
-            return parseInt(localStorage.getItem(HYDRATION_KEY) || '0', 10);
-        }
-        function saveHydration(n) {
-            localStorage.setItem(HYDRATION_KEY, String(Math.max(0, Math.min(HYDRATION_GOAL + 4, n))));
-        }
-        function renderHydration() {
-            var n    = getHydration();
-            var pct  = Math.min(n / HYDRATION_GOAL * 100, 100);
-            var tips = [
-                'Drink up! Hydration powers your performance.',
-                'Almost there! One more glass to hit your goal.',
-                'Halfway! Keep sipping throughout the day.',
-                'Great job! You\'re well hydrated today! 💧',
-                'Goal reached! Your body thanks you. 🎉',
-            ];
-            document.getElementById('hydration-badge').textContent = n + ' / ' + HYDRATION_GOAL;
-            document.getElementById('stat-hydration-val').textContent = n;
-            document.getElementById('hydration-progress-bar').style.width = pct + '%';
-            var tipIdx = n === 0 ? 0 : n < 4 ? 2 : n < HYDRATION_GOAL ? 1 : n === HYDRATION_GOAL ? 4 : 3;
-            document.getElementById('hydration-tip').textContent = tips[tipIdx];
-
-            var glassesEl = document.getElementById('hydration-glasses');
-            glassesEl.innerHTML = Array.from({length: HYDRATION_GOAL}, function(_, i) {
-                return '<span class="glass-icon' + (i < n ? ' filled' : '') + '" data-idx="' + i + '" title="Glass ' + (i+1) + '">🥛</span>';
-            }).join('');
-
-            glassesEl.querySelectorAll('.glass-icon').forEach(function(g) {
-                g.addEventListener('click', function() {
-                    var idx = parseInt(g.dataset.idx, 10);
-                    var cur = getHydration();
-                    saveHydration(idx < cur ? idx : idx + 1);
-                    renderHydration();
-                });
-            });
-        }
-        renderHydration();
-        document.getElementById('hydration-add-btn').addEventListener('click', function() {
-            saveHydration(getHydration() + 1);
-            renderHydration();
-            if (getHydration() === HYDRATION_GOAL) Utils.showToast('Hydration goal reached! 💧', 'success');
-        });
-        document.getElementById('hydration-reset-btn').addEventListener('click', function() {
-            saveHydration(0);
-            renderHydration();
-        });
-
-        // ── BMI stat ──
-        function renderBMIStat() {
-            try {
-                var bmiHistory = JSON.parse(localStorage.getItem(BMI_KEY)) || [];
-                if (bmiHistory.length) {
-                    var latest = bmiHistory[bmiHistory.length - 1];
-                    var bmi = parseFloat(latest.bmi || latest.value);
-                    if (!isNaN(bmi)) {
-                        document.getElementById('stat-bmi-val').textContent = bmi.toFixed(1);
-                        var cat = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : bmi < 30 ? 'Overweight' : 'Obese';
-                        document.getElementById('stat-bmi-cat').textContent = cat;
-                        document.getElementById('stat-bmi-cat').style.color =
-                            bmi >= 18.5 && bmi < 25 ? 'var(--accent-success)' : 'var(--accent-warning)';
-                    }
-                }
-            } catch(e) {}
-        }
-        renderBMIStat();
-
-        // ── Monthly stats ──
-        function renderMonthlyStats() {
-            var sessions = getSessions();
-            var now  = new Date();
-            var month = now.getMonth();
-            var year  = now.getFullYear();
-            var thisMonth = sessions.filter(function(s) {
-                var d = new Date((s.date || s.startTime || '').slice(0, 10) + 'T12:00:00');
-                return d.getMonth() === month && d.getFullYear() === year;
-            });
-            var total  = sessions.length;
-            var monthN = thisMonth.length;
-
-            document.getElementById('stat-monthly-workouts').textContent = monthN;
-            document.getElementById('stat-monthly-sub').textContent = monthN === 1 ? '1 session logged' : monthN + ' sessions logged';
-
-            var monthName = now.toLocaleDateString('en-US', {month:'long'});
-            document.getElementById('monthly-badge').textContent = monthName;
-
-            var bmiHistory = [];
-            try { bmiHistory = JSON.parse(localStorage.getItem(BMI_KEY)) || []; } catch(e) {}
-            var latestBMI = bmiHistory.length ? (parseFloat((bmiHistory[bmiHistory.length-1].bmi || bmiHistory[bmiHistory.length-1].value)) || 0) : 0;
-
-            document.getElementById('monthly-stats-list').innerHTML = [
-                { icon:'🏋️', color:'rgba(0,212,170,0.12)', val: monthN, lbl: 'Workouts This Month' },
-                { icon:'📋', color:'rgba(108,99,255,0.12)', val: total,  lbl: 'Total Sessions Logged' },
-                { icon:'🔥', color:'rgba(255,107,53,0.12)', val: calcStreak(), lbl: 'Current Streak (days)' },
-                { icon:'⚖️', color:'rgba(255,165,2,0.12)',  val: latestBMI ? latestBMI.toFixed(1) : '—', lbl: 'Latest BMI' },
-            ].map(function(item) {
-                return '<div class="monthly-stat-item">' +
-                    '<div class="monthly-stat-icon" style="background:' + item.color + ';">' + item.icon + '</div>' +
-                    '<div><div class="monthly-stat-val">' + item.val + '</div>' +
-                    '<div class="monthly-stat-lbl">' + item.lbl + '</div></div>' +
-                '</div>';
-            }).join('');
-        }
-        renderMonthlyStats();
-
-        // ── Today's workout from schedule ──
-        function renderTodayWorkout() {
-            var el = document.getElementById('today-workout-content');
-            var dayKeys = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-            var today   = dayKeys[new Date().getDay()];
-            var schedule = {};
-            try { schedule = JSON.parse(localStorage.getItem(SCHEDULE_KEY)) || {}; } catch(e) {}
-
-            var planId = schedule[today];
-            if (!planId) {
-                el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem;">🌴 Rest day — no workout scheduled.<br><a href="workout.html" style="color:var(--accent-primary);font-weight:600;margin-top:8px;display:inline-block;">Plan your week →</a></div>';
-                return;
-            }
-
-            var plans = [];
-            try { plans = JSON.parse(localStorage.getItem('workinout_workout_plans')) || []; } catch(e) {}
-            var plan  = plans.find(function(p) { return p.id === planId || p.id === parseInt(planId); });
-            if (!plan) {
-                el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem;">Workout plan not found.<br><a href="workout.html" style="color:var(--accent-primary);">Manage workouts →</a></div>';
-                return;
-            }
-
-            var exercises = plan.exercises || [];
-            var cap = today.charAt(0).toUpperCase() + today.slice(1);
-            el.innerHTML = '<div style="margin-bottom:10px;">' +
-                '<div style="font-weight:700;font-size:1rem;">' + plan.name + '</div>' +
-                '<div style="font-size:0.75rem;color:var(--text-muted);">' + cap + ' · ' + exercises.length + ' exercises</div>' +
-            '</div>' +
-            (exercises.length ? exercises.slice(0,5).map(function(ex, i) {
-                var detail = '';
-                if (ex.sets && ex.reps) detail = ex.sets + ' × ' + ex.reps;
-                else if (ex.duration)  detail = ex.duration;
-                else if (ex.sets)      detail = ex.sets + ' sets';
-                return '<div class="workout-exercise-row">' +
-                    '<div class="ex-num">' + (i+1) + '</div>' +
-                    '<div class="ex-name">' + (ex.name || ex.exercise || 'Exercise') + '</div>' +
-                    '<div class="ex-detail">' + detail + '</div>' +
-                '</div>';
-            }).join('') + (exercises.length > 5 ? '<div style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:8px;">+' + (exercises.length - 5) + ' more</div>' : '') :
-            '<div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:12px;">No exercises added yet.</div>') +
-            '<a href="workout.html" class="btn btn-primary btn-sm" style="margin-top:14px;display:inline-flex;">Start Workout →</a>';
-        }
-        renderTodayWorkout();
-
-        // ── Weekly chart (from sessions) ──
-        function renderWeeklyChart() {
-            var sessions = getSessions();
-            var days    = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            var today   = new Date();
-            var todayI  = (today.getDay() + 6) % 7; // 0=Mon
-
-            var mins = days.map(function(_, i) {
-                var d = new Date(today);
-                d.setDate(d.getDate() - (todayI - i));
-                var key = d.toISOString().slice(0, 10);
-                var total = 0;
-                sessions.forEach(function(s) {
-                    var sDate = (s.date || s.startTime || '').slice(0, 10);
-                    if (sDate === key && s.duration) total += s.duration;
-                });
-                return Math.round(total / 60);
-            });
-
-            var totalMin = mins.reduce(function(a, b) { return a + b; }, 0);
-            document.getElementById('weekly-total-badge').textContent = totalMin + ' min total';
-
-            var maxMin = Math.max.apply(null, mins.filter(Boolean)) || 1;
-            var chartEl = document.getElementById('weekly-chart');
-            chartEl.innerHTML = days.map(function(d, i) {
-                var isToday = i === todayI;
-                var pct     = mins[i] ? Math.max((mins[i] / maxMin) * 88, 10) : 6;
-                return '<div class="bar-col">' +
-                    '<div class="bar-fill' + (isToday ? ' today-bar' : '') + '" ' +
-                         'style="height:' + pct + '%;animation-delay:' + (i * 0.07) + 's;" ' +
-                         'title="' + (mins[i] || 'Rest') + (mins[i] ? ' min' : '') + '">' +
-                    '</div>' +
-                    '<div class="bar-day' + (isToday ? ' today-label' : '') + '">' + d + '</div>' +
-                '</div>';
-            }).join('');
-        }
-        renderWeeklyChart();
+  /* ── Streak ── */
+  function calcStreak() {
+    var sessions = getSessions();
+    if (!sessions.length) return 0;
+    var unique = {};
+    sessions.forEach(function(s) {
+      var d = (s.date || s.startTime || '').slice(0, 10);
+      if (d) unique[d] = true;
     });
+    var sorted = Object.keys(unique).sort().reverse();
+    var streak = 0, today = new Date();
+    for (var i = 0; i < sorted.length; i++) {
+      var diff = Math.round((today - new Date(sorted[i] + 'T12:00:00')) / 86400000);
+      if (diff === streak) streak++;
+      else if (diff > streak + 1) break;
+    }
+    return streak;
+  }
+
+  function renderStreak() {
+    var streak = calcStreak();
+    document.getElementById('streak-display').textContent = streak;
+    document.getElementById('stat-streak-val').textContent = streak;
+    var msg = streak === 0 ? 'Log your first session today to start your streak! 💪'
+            : streak === 1 ? 'Great start! Come back tomorrow to build your streak.'
+            : streak < 7   ? 'You\'re on a roll! Keep going! 🔥'
+            : streak < 30  ? 'Amazing consistency! ' + streak + ' days strong! ��'
+            :                'Legend! ' + streak + ' day streak! You\'re unstoppable! 🥇';
+    document.getElementById('streak-message').textContent = msg;
+    document.getElementById('stat-streak-sub').textContent = streak > 0 ? streak + ' day' + (streak > 1 ? 's' : '') + ' strong' : 'Start today!';
+    var badge = document.getElementById('streak-badge-label');
+    badge.textContent = streak === 0 ? 'Start Today' : streak >= 7 ? '🔥 On Fire!' : 'Active';
+
+    /* last 7 days dots */
+    var sessions = getSessions(), dateSet = {};
+    sessions.forEach(function(s) {
+      var d = (s.date || s.startTime || '').slice(0, 10);
+      if (d) dateSet[d] = true;
+    });
+    var dotsEl = document.getElementById('streak-days');
+    var t = new Date();
+    dotsEl.innerHTML = Array.from({length: 7}, function(_, i) {
+      var d = new Date(t); d.setDate(d.getDate() - (6 - i));
+      var key = d.toISOString().slice(0, 10);
+      var done = !!dateSet[key];
+      var isToday = key === TODAY_KEY;
+      var day = ['S','M','T','W','T','F','S'][d.getDay()];
+      return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">' +
+        '<div style="width:28px;height:28px;border-radius:50%;background:' +
+        (done ? 'var(--accent)' : 'rgba(255,255,255,0.06)') +
+        ';border:2px solid ' + (isToday ? 'var(--accent)' : 'transparent') +
+        ';display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:' +
+        (done ? '#000' : 'var(--text-dim)') + ';">' + (done ? '✓' : '') + '</div>' +
+        '<span style="font-size:0.62rem;color:var(--text-dim);">' + day + '</span></div>';
+    }).join('');
+  }
+  renderStreak();
+
+  /* ── Recent activity ── */
+  function renderRecentActivity() {
+    var sessions = getSessions().slice().reverse().slice(0, 5);
+    var el = document.getElementById('recent-activity-list');
+    if (!sessions.length) {
+      el.innerHTML = '<div style="text-align:center;padding:28px 0;color:var(--text-muted);font-size:0.84rem;">No sessions logged yet.<br><a href="sessions.html" style="color:var(--accent);font-weight:600;">Start your first session →</a></div>';
+      return;
+    }
+    el.innerHTML = sessions.map(function(s) {
+      var name = s.name || s.workoutName || 'Workout Session';
+      var dur  = s.duration ? Math.floor(s.duration / 60) + ' min' : '—';
+      var date = (s.date || s.startTime || '').slice(0, 10);
+      var friendly = date ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '';
+      return '<div class="activity-row">' +
+        '<div class="activity-dot">🏋️</div>' +
+        '<div><div class="activity-name">' + name + '</div>' +
+        '<div class="activity-meta">' + friendly + '</div></div>' +
+        '<div class="activity-dur">' + dur + '</div></div>';
+    }).join('');
+  }
+  renderRecentActivity();
+
+  /* ── Hydration ── */
+  var HYDRATION_GOAL = 8;
+  function getHydration() { return parseInt(localStorage.getItem(HYDRATION_KEY) || '0', 10); }
+  function saveHydration(n) { localStorage.setItem(HYDRATION_KEY, String(Math.max(0, Math.min(HYDRATION_GOAL + 4, n)))); }
+  function renderHydration() {
+    var n   = getHydration();
+    var pct = Math.min(n / HYDRATION_GOAL * 100, 100);
+    var tips = [
+      'Drink up! Hydration powers your performance.',
+      'Almost there! One more glass to hit your goal.',
+      'Halfway! Keep sipping throughout the day.',
+      'Great job! You\'re well hydrated today! 💧',
+      'Goal reached! Your body thanks you. 🎉',
+    ];
+    document.getElementById('hydration-badge').textContent = n + ' / ' + HYDRATION_GOAL;
+    document.getElementById('stat-hydration-val').textContent = n;
+    document.getElementById('hydration-progress-bar').style.width = pct + '%';
+    var tipIdx = n === 0 ? 0 : n < 4 ? 2 : n < HYDRATION_GOAL ? 1 : n === HYDRATION_GOAL ? 4 : 3;
+    document.getElementById('hydration-tip').textContent = tips[tipIdx];
+
+    var glassesEl = document.getElementById('hydration-glasses');
+    glassesEl.innerHTML = Array.from({length: HYDRATION_GOAL}, function(_, i) {
+      return '<span class="glass-icon' + (i < n ? ' filled' : '') + '" data-idx="' + i + '" title="Glass ' + (i+1) + '">🥛</span>';
+    }).join('');
+    glassesEl.querySelectorAll('.glass-icon').forEach(function(g) {
+      g.addEventListener('click', function() {
+        var idx = parseInt(g.dataset.idx, 10), cur = getHydration();
+        saveHydration(idx < cur ? idx : idx + 1);
+        renderHydration();
+      });
+    });
+  }
+  renderHydration();
+  document.getElementById('hydration-add-btn').addEventListener('click', function() {
+    saveHydration(getHydration() + 1); renderHydration();
+    if (getHydration() === HYDRATION_GOAL && window.Utils) Utils.showToast('Hydration goal reached! 💧', 'success');
+  });
+  document.getElementById('hydration-reset-btn').addEventListener('click', function() {
+    saveHydration(0); renderHydration();
+  });
+
+  /* ── BMI stat ── */
+  (function() {
+    try {
+      var hist = JSON.parse(localStorage.getItem(BMI_KEY)) || [];
+      if (!hist.length) return;
+      var bmi = parseFloat((hist[hist.length-1].bmi || hist[hist.length-1].value));
+      if (isNaN(bmi)) return;
+      document.getElementById('stat-bmi-val').textContent = bmi.toFixed(1);
+      var cat = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : bmi < 30 ? 'Overweight' : 'Obese';
+      var catEl = document.getElementById('stat-bmi-cat');
+      catEl.textContent = cat;
+      catEl.style.color = (bmi >= 18.5 && bmi < 25) ? 'var(--accent)' : '#f59e0b';
+    } catch(e) {}
+  })();
+
+  /* ── Monthly stats ── */
+  function renderMonthlyStats() {
+    var sessions = getSessions();
+    var now = new Date(), month = now.getMonth(), year = now.getFullYear();
+    var thisMonth = sessions.filter(function(s) {
+      var d = new Date((s.date || s.startTime || '').slice(0,10) + 'T12:00:00');
+      return d.getMonth() === month && d.getFullYear() === year;
+    });
+    var monthN = thisMonth.length;
+    document.getElementById('stat-monthly-workouts').textContent = monthN;
+    document.getElementById('stat-monthly-sub').textContent = monthN === 1 ? '1 session logged' : monthN + ' sessions logged';
+    document.getElementById('monthly-badge').textContent = now.toLocaleDateString('en-US', {month:'long'});
+
+    var bmiHist = [];
+    try { bmiHist = JSON.parse(localStorage.getItem(BMI_KEY)) || []; } catch(e) {}
+    var latestBMI = bmiHist.length ? (parseFloat(bmiHist[bmiHist.length-1].bmi || bmiHist[bmiHist.length-1].value) || 0) : 0;
+
+    document.getElementById('monthly-stats-list').innerHTML = [
+      {icon:'🏋️', bg:'rgba(34,197,94,0.12)',   val: monthN,    lbl:'Workouts This Month'},
+      {icon:'📋', bg:'rgba(108,99,255,0.12)',   val: sessions.length, lbl:'Total Sessions Logged'},
+      {icon:'🔥', bg:'rgba(255,107,53,0.12)',   val: calcStreak(),    lbl:'Current Streak (days)'},
+      {icon:'⚖️', bg:'rgba(255,165,2,0.12)',    val: latestBMI ? latestBMI.toFixed(1) : '—', lbl:'Latest BMI'},
+    ].map(function(item) {
+      return '<div class="monthly-stat-item">' +
+        '<div class="monthly-stat-icon" style="background:' + item.bg + ';">' + item.icon + '</div>' +
+        '<div><div class="monthly-stat-val">' + item.val + '</div>' +
+        '<div class="monthly-stat-lbl">' + item.lbl + '</div></div></div>';
+    }).join('');
+  }
+  renderMonthlyStats();
+
+  /* ── Today's workout ── */
+  function renderTodayWorkout() {
+    var el = document.getElementById('today-workout-content');
+    var dayKeys = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+    var today   = dayKeys[new Date().getDay()];
+    var schedule = {};
+    try { schedule = JSON.parse(localStorage.getItem(SCHEDULE_KEY)) || {}; } catch(e) {}
+    var planId = schedule[today];
+    if (!planId) {
+      el.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:0.82rem;">🌴 Rest day — no workout scheduled.<br><a href="workout.html" style="color:var(--accent);font-weight:600;margin-top:8px;display:inline-block;">Plan your week →</a></div>';
+      return;
+    }
+    var plans = [];
+    try { plans = JSON.parse(localStorage.getItem('workinout_workout_plans')) || []; } catch(e) {}
+    var plan = plans.find(function(p) { return p.id === planId || p.id === parseInt(planId); });
+    if (!plan) {
+      el.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:0.82rem;">Plan not found. <a href="workout.html" style="color:var(--accent);">Manage workouts →</a></div>';
+      return;
+    }
+    var exs = plan.exercises || [];
+    var cap = today.charAt(0).toUpperCase() + today.slice(1);
+    el.innerHTML =
+      '<div style="margin-bottom:12px;">' +
+        '<div style="font-weight:700;font-size:0.95rem;color:var(--text);">' + plan.name + '</div>' +
+        '<div style="font-size:0.73rem;color:var(--text-muted);">' + cap + ' · ' + exs.length + ' exercises</div>' +
+      '</div>' +
+      (exs.length ? exs.slice(0,5).map(function(ex, i) {
+        var detail = ex.sets && ex.reps ? ex.sets + ' × ' + ex.reps
+                   : ex.duration ? ex.duration
+                   : ex.sets ? ex.sets + ' sets' : '';
+        return '<div class="workout-exercise-row">' +
+          '<div class="ex-num">' + (i+1) + '</div>' +
+          '<div class="ex-name">' + (ex.name || ex.exercise || 'Exercise') + '</div>' +
+          '<div class="ex-detail">' + detail + '</div></div>';
+      }).join('') + (exs.length > 5 ? '<div style="text-align:center;font-size:0.75rem;color:var(--text-dim);margin:6px 0;">+' + (exs.length - 5) + ' more</div>' : '') :
+      '<div style="color:var(--text-muted);font-size:0.82rem;text-align:center;padding:12px 0;">No exercises added yet.</div>') +
+      '<a href="workout.html" class="btn btn-primary btn-sm" style="margin-top:14px;">Start Workout →</a>';
+  }
+  renderTodayWorkout();
+
+  /* ── Weekly chart ── */
+  function renderWeeklyChart() {
+    var sessions = getSessions();
+    var days   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    var today  = new Date();
+    var todayI = (today.getDay() + 6) % 7;
+    var mins   = days.map(function(_, i) {
+      var d = new Date(today); d.setDate(d.getDate() - (todayI - i));
+      var key = d.toISOString().slice(0, 10), total = 0;
+      sessions.forEach(function(s) {
+        if ((s.date || s.startTime || '').slice(0,10) === key && s.duration) total += s.duration;
+      });
+      return Math.round(total / 60);
+    });
+    var totalMin = mins.reduce(function(a, b) { return a + b; }, 0);
+    document.getElementById('weekly-total-badge').textContent = totalMin + ' min total';
+    var maxMin  = Math.max.apply(null, mins.filter(Boolean)) || 1;
+    document.getElementById('weekly-chart').innerHTML = days.map(function(d, i) {
+      var isToday = i === todayI;
+      var pct     = mins[i] ? Math.max((mins[i] / maxMin) * 90, 10) : 5;
+      return '<div class="bar-col">' +
+        '<div class="bar-fill' + (isToday ? ' today-bar' : '') + '" ' +
+          'style="height:' + pct + '%;animation-delay:' + (i * 0.07) + 's;" ' +
+          'title="' + (mins[i] || 'Rest') + (mins[i] ? ' min' : '') + '"></div>' +
+        '<div class="bar-day' + (isToday ? ' today-label' : '') + '">' + d + '</div></div>';
+    }).join('');
+  }
+  renderWeeklyChart();
+
+});
 </script>
 </body>
 </html>

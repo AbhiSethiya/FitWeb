@@ -1,419 +1,711 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progress - WorkIn&amp;Out</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* ── Sidebar nav-link classes ── */
-        .sidebar-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 16px; border-bottom: 1px solid var(--nav-border); flex-shrink: 0;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 10px;
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.05rem;
-            color: var(--text-primary); text-decoration: none;
-        }
-        .logo span { color: var(--accent-primary); }
-        .sidebar-close {
-            background: none; border: none; cursor: pointer; color: var(--text-muted);
-            font-size: 1rem; padding: 6px 8px; border-radius: var(--radius-sm);
-            line-height: 1; transition: background var(--transition-fast); display: none;
-        }
-        .sidebar-close:hover { background: var(--bg-secondary); }
-        .nav-links {
-            list-style: none; padding: 12px 10px; margin: 0;
-            flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
-        }
-        .nav-links li { margin: 0; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-            border-radius: var(--radius-md); color: var(--text-secondary);
-            font-weight: 500; font-size: 0.9rem; text-decoration: none;
-            transition: all var(--transition-fast); position: relative;
-        }
-        .nav-link:hover { background: rgba(var(--accent-primary-rgb),0.08); color: var(--accent-primary); }
-        .nav-link.active { background: rgba(var(--accent-primary-rgb),0.12); color: var(--accent-primary); font-weight: 600; }
-        .nav-link.active::before {
-            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
-            width: 3px; background: var(--accent-primary); border-radius: 0 3px 3px 0;
-        }
-        .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
-        @media (max-width: 768px) { .sidebar-close { display: flex; align-items: center; justify-content: center; } }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress — WorkIn&amp;Out</title>
 
-        /* ── Topbar hamburger ── */
-        .topbar-hamburger {
-            background: none; border: none; font-size: 1.4rem; cursor: pointer;
-            color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius-sm);
-            display: none; line-height: 1;
-        }
-        @media (max-width: 768px) { .topbar-hamburger { display: block; } }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* ── Streak badge ── */
-        .streak-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: linear-gradient(135deg,#ff6b35,#ffa502);
-            color: #fff; padding: 6px 16px; border-radius: var(--radius-full);
-            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1rem;
-        }
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/style.css" />
 
-        /* ── Summary stats ── */
-        .summary-stats {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px; margin-top: 20px;
-        }
-        .summary-stat {
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg); padding: 20px; text-align: center;
-            box-shadow: var(--shadow-sm); transition: box-shadow var(--transition-fast);
-        }
-        .summary-stat:hover { box-shadow: var(--shadow-md); }
-        .summary-stat-value {
-            font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 2rem;
-            color: var(--accent-primary); line-height: 1;
-        }
-        .summary-stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ── Weight current display ── */
-        .weight-current {
-            display: flex; align-items: baseline; gap: 8px;
-        }
-        .weight-current-val {
-            font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 3.5rem;
-            color: var(--accent-primary); line-height: 1;
-        }
-        .weight-current-unit { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
-        .weight-change {
-            display: inline-block; padding: 4px 12px; border-radius: var(--radius-full);
-            font-weight: 700; font-size: 0.85rem; margin-top: 6px;
-        }
-        .weight-change.up   { background: rgba(255,71,87,0.12);  color: var(--accent-danger);  }
-        .weight-change.down { background: rgba(46,213,115,0.12);  color: var(--accent-success); }
-        .weight-change.same { background: var(--bg-secondary); color: var(--text-muted); }
+    :root {
+      --nav-bg:            #111111;
+      --page-bg:           #0d0d0d;
+      --card-bg:           #1a1a1a;
+      --border:            rgba(255,255,255,0.06);
+      --accent:            #22c55e;
+      --accent-dim:        rgba(34,197,94,0.15);
+      --accent-rgb:        34,197,94;
+      --text:              #ffffff;
+      --text-muted:        #a0a0a0;
+      --text-dim:          #666666;
+      --radius-sm:         6px;
+      --radius-md:         10px;
+      --radius-lg:         14px;
+      --sidebar-w:         260px;
+      --sidebar-collapsed: 64px;
+      --transition:        0.22s ease;
+    }
 
-        /* ── Chart canvas ── */
-        .chart-canvas-wrap { position: relative; width: 100%; height: 260px; margin-top: 16px; }
-        .chart-canvas-wrap canvas { width: 100% !important; height: 100% !important; display: block; }
+    html, body {
+      height: 100%;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-        /* ── Measurements grid ── */
-        .meas-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;
-        }
+    /* ── Layout ─────────────────────────────── */
+    .layout { display: flex; min-height: 100vh; }
 
-        /* ── HR Zone cards ── */
-        .zone-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
-        }
-        .zone-card {
-            border-radius: var(--radius-lg); padding: 20px; color: #fff; text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-        .zone-card-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1rem; }
-        .zone-card-range { font-size: 0.78rem; opacity: 0.85; margin-top: 4px; }
-        .zone-card-desc  { font-size: 0.75rem; opacity: 0.75; margin-top: 8px; font-style: italic; }
-        .zone-bpm { font-size: 0.82rem; margin-top: 8px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); padding: 4px 8px; }
+    /* ── Sidebar ────────────────────────────── */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--nav-bg);
+      display: flex; flex-direction: column;
+      z-index: 200;
+      transition: width var(--transition), transform var(--transition);
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 22px 20px 18px; flex-shrink: 0;
+    }
+    .sidebar-logo-mark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--accent); letter-spacing: -0.5px;
+      white-space: nowrap; line-height: 1;
+    }
+    .sidebar-logo-full {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text-muted); white-space: nowrap;
+      transition: opacity var(--transition);
+    }
+    .sidebar-nav {
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      padding: 8px 10px; scrollbar-width: none;
+    }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+    .nav-section-label {
+      display: block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); padding: 14px 10px 6px;
+      white-space: nowrap;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: var(--radius-md);
+      color: var(--text-muted); font-size: 0.88rem; font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+      white-space: nowrap; position: relative;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { color: var(--text); background: var(--accent-dim); }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 6px; bottom: 6px;
+      width: 3px; border-radius: 0 3px 3px 0; background: var(--accent);
+    }
+    .nav-item-icon { font-size: 1.1rem; flex-shrink: 0; width: 22px; text-align: center; }
+    .nav-item-text { transition: opacity var(--transition); }
+    .sidebar-footer {
+      padding: 10px 10px 14px;
+      border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: var(--radius-md);
+      cursor: pointer; margin-top: 8px;
+      transition: background var(--transition); overflow: hidden;
+    }
+    .sidebar-user:hover { background: rgba(255,255,255,0.05); }
+    .sidebar-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent-dim); color: var(--accent);
+      font-weight: 700; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sidebar-user-info { overflow: hidden; }
+    .sidebar-user-name {
+      font-size: 0.82rem; font-weight: 600; color: var(--text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .sidebar-user-role { font-size: 0.72rem; color: var(--text-dim); }
 
-        /* ── Achievements ── */
-        .achievements-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px;
-        }
-        .achievement-badge {
-            background: var(--bg-card); border: 2px solid var(--border-color);
-            border-radius: var(--radius-lg); padding: 20px 12px; text-align: center;
-            transition: all var(--transition-fast); cursor: default;
-        }
-        .achievement-badge.unlocked {
-            border-color: var(--accent-primary); background: rgba(var(--accent-primary-rgb),0.06);
-            animation: glowPulse 3s ease-in-out infinite;
-        }
-        .achievement-badge.locked { opacity: 0.4; filter: grayscale(1); }
-        .achievement-badge-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 8px; }
-        .achievement-badge-name { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); }
-        .achievement-badge-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .sidebar { width: var(--sidebar-collapsed); }
+      .sidebar-logo-full, .nav-section-label, .nav-item-text, .sidebar-user-info
+        { opacity: 0; pointer-events: none; }
+      .nav-item { justify-content: center; padding: 10px; gap: 0; }
+      .nav-item.active::before { display: none; }
+      .sidebar-user { justify-content: center; }
+    }
+    @media (max-width: 767px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); box-shadow: 4px 0 24px rgba(0,0,0,0.5); }
+      .sidebar.open { transform: translateX(0); }
+    }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6); z-index: 199; backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.active { display: block; }
 
-        /* ── PR table ── */
-        .pr-grid { display: grid; gap: 10px; }
+    /* ── Main Content ───────────────────────── */
+    .main-content {
+      flex: 1; margin-left: var(--sidebar-w); min-width: 0;
+      display: flex; flex-direction: column;
+      transition: margin-left var(--transition);
+    }
+    @media (min-width: 768px) and (max-width: 1024px) { .main-content { margin-left: var(--sidebar-collapsed); } }
+    @media (max-width: 767px) { .main-content { margin-left: 0; } }
 
-        /* ── Photo upload ── */
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .photo-slot {
-            border: 2px dashed var(--border-color); border-radius: var(--radius-lg);
-            min-height: 200px; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 10px;
-            background: var(--bg-secondary); cursor: pointer;
-            transition: border-color var(--transition-fast);
-            position: relative; overflow: hidden;
-        }
-        .photo-slot:hover { border-color: var(--accent-primary); }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; border-radius: calc(var(--radius-lg) - 2px); }
-        .photo-slot-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; z-index: 1; }
-        .photo-slot-icon  { font-size: 2rem; z-index: 1; }
-        .photo-date { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; z-index: 1; }
+    /* ── Topbar ─────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 58px;
+      background: rgba(13,13,13,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem; font-weight: 600; color: var(--text);
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05);
+      transition: background var(--transition);
+    }
+    .hamburger:hover { background: rgba(255,255,255,0.1); }
+    .hamburger span { display: block; height: 2px; width: 18px; margin: 0 auto; background: var(--text-muted); border-radius: 2px; }
+    @media (max-width: 767px) { .hamburger { display: flex; } }
+    .theme-btn {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05); font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.1); }
 
-        @media (max-width: 640px) {
-            .photo-grid { grid-template-columns: 1fr; }
-            .form-row    { grid-template-columns: 1fr; }
-        }
-    </style>
+    /* ── Page Container ─────────────────────── */
+    .page-container {
+      max-width: 1200px; width: 100%;
+      margin: 0 auto; padding: 28px 28px 60px;
+    }
+    @media (max-width: 767px) { .page-container { padding: 20px 16px 80px; } }
+
+    /* ── Page Header ────────────────────────── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem; font-weight: 700; color: var(--text);
+      line-height: 1.2; margin-bottom: 4px;
+    }
+    .page-header p { font-size: 0.85rem; color: var(--text-muted); }
+    .streak-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,120,0,0.12); border: 1px solid rgba(255,120,0,0.3);
+      border-radius: 20px; padding: 5px 14px;
+      font-size: 0.88rem; font-weight: 700; color: #ff7800;
+      margin-top: 10px;
+    }
+
+    /* ── Summary Stats ──────────────────────── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 14px; margin-bottom: 28px;
+    }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    .stat-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 20px 18px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .stat-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+    .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-unit { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* ── Section heading ────────────────────── */
+    .section { margin-bottom: 28px; }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem; font-weight: 700; color: var(--text);
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title span { font-size: 1.1rem; }
+
+    /* ── Card ───────────────────────────────── */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 22px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem; font-weight: 700; color: var(--text);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Weight current display ─────────────── */
+    .weight-hero {
+      display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
+    }
+    .weight-current-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem; font-weight: 800; color: var(--accent); line-height: 1;
+    }
+    .weight-unit { font-size: 1.1rem; color: var(--text-muted); font-weight: 500; }
+    .weight-change {
+      font-size: 0.82rem; font-weight: 600; padding: 3px 10px;
+      border-radius: 20px; display: inline-block;
+    }
+    .weight-change.up   { background: rgba(239,68,68,0.12); color: #f87171; }
+    .weight-change.down { background: rgba(34,197,94,0.12); color: var(--accent); }
+    .weight-change.same { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+    /* ── Form inputs ────────────────────────── */
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block; font-size: 0.78rem; font-weight: 600;
+      color: var(--text-muted); margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .form-input, .form-select {
+      width: 100%; padding: 10px 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: var(--radius-md); color: var(--text);
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      transition: border-color var(--transition);
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--text-dim); }
+    .form-select option { background: #1a1a1a; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .form-row-3 { grid-template-columns: 1fr 1fr; } }
+
+    /* ── Buttons ────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 20px; border-radius: var(--radius-md);
+      font-size: 0.88rem; font-weight: 600;
+      transition: all var(--transition); cursor: pointer; border: none;
+    }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.06); color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .btn-sm { padding: 7px 14px; font-size: 0.82rem; }
+    .btn-icon { padding: 8px; min-width: 34px; }
+
+    /* ── Canvas chart ───────────────────────── */
+    .chart-wrap {
+      width: 100%; height: 220px; margin-top: 16px; margin-bottom: 8px;
+    }
+    .chart-wrap canvas { width: 100% !important; height: 100% !important; display: block; }
+
+    /* ── Weight history ─────────────────────── */
+    #weight-history { margin-top: 12px; }
+    .history-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); margin-bottom: 6px;
+      transition: background var(--transition);
+    }
+    .history-row:hover { background: rgba(255,255,255,0.03); }
+
+    /* ── Measurements history ───────────────── */
+    #measurements-history { margin-top: 12px; }
+
+    /* ── PR list ────────────────────────────── */
+    .pr-layout { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+    @media (max-width: 900px) { .pr-layout { grid-template-columns: 1fr; } }
+    .pr-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); margin-bottom: 8px;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .pr-row:hover { background: rgba(255,255,255,0.03); transform: translateX(3px); }
+    .pr-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .pr-name { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+    .pr-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .pr-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+
+    /* ── Photo comparison ───────────────────── */
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .photo-grid { grid-template-columns: 1fr; } }
+    .photo-slot {
+      aspect-ratio: 3/4; border: 2px dashed var(--border);
+      border-radius: var(--radius-lg); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px;
+      cursor: pointer; overflow: hidden; position: relative;
+      transition: border-color var(--transition), background var(--transition);
+      background: rgba(255,255,255,0.02);
+    }
+    .photo-slot:hover { border-color: var(--accent); background: rgba(34,197,94,0.04); }
+    .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-slot-label { font-size: 0.82rem; color: var(--text-muted); text-align: center; }
+    .photo-upload-icon { font-size: 2rem; }
+    .photo-label-top {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px;
+    }
+    .photo-date { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
+
+    /* ── HR Zones ───────────────────────────── */
+    .zone-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    @media (max-width: 800px) { .zone-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .zone-grid { grid-template-columns: 1fr 1fr; } }
+    .zone-card {
+      border-radius: var(--radius-md); padding: 16px 14px;
+      transition: transform var(--transition);
+    }
+    .zone-card:hover { transform: translateY(-4px); }
+    .zone-card-name { font-size: 0.75rem; font-weight: 700; opacity: 0.9; color: #fff; margin-bottom: 4px; }
+    .zone-card-range { font-size: 0.7rem; opacity: 0.7; color: #fff; }
+    .zone-bpm { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 800; color: #fff; margin: 6px 0 4px; }
+    .zone-card-desc { font-size: 0.7rem; opacity: 0.75; color: #fff; }
+
+    /* ── Achievements ───────────────────────── */
+    .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .achievement-badge {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 18px 14px;
+      text-align: center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .achievement-badge:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+    .achievement-badge.unlocked { border-color: rgba(34,197,94,0.4); }
+    .achievement-badge.locked { opacity: 0.45; }
+    .achievement-badge-icon { font-size: 2rem; margin-bottom: 8px; }
+    .achievement-badge-name { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .achievement-badge-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── Utility ────────────────────────────── */
+    .d-flex { display: flex; }
+    .items-center { align-items: center; }
+    .items-end { align-items: flex-end; }
+    .justify-between { justify-content: space-between; }
+    .gap-6 { gap: 6px; }
+    .gap-8 { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .flex-wrap { flex-wrap: wrap; }
+    .mb-4 { margin-bottom: 4px; }
+    .mb-8 { margin-bottom: 8px; }
+    .mb-12 { margin-bottom: 12px; }
+    .mt-12 { margin-top: 12px; }
+    .p-6 { padding: 6px; }
+    .p-8 { padding: 8px; }
+    .text-sm { font-size: 0.85rem; }
+    .text-muted { color: var(--text-muted); }
+    .border { border: 1px solid var(--border); }
+    .rounded { border-radius: var(--radius-md); }
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 600;
+    }
+    .badge-accent { background: var(--accent-dim); color: var(--accent); }
+    .badge-muted { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+    .empty-state { text-align: center; padding: 40px 20px; }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 6px; }
+    .empty-text { font-size: 0.85rem; color: var(--text-muted); }
+    .exercise-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      transition: background var(--transition);
+    }
+    .exercise-card:hover { background: rgba(255,255,255,0.03); }
+    .exercise-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .exercise-info { flex: 1; min-width: 0; }
+    .exercise-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+    .exercise-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+  </style>
 </head>
 <body>
-<div class="app-layout">
+<div class="layout">
 
-    <!-- ══════════ SIDEBAR ══════════ -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">🏋️ <span>WorkIn&amp;Out</span></div>
-            <button class="sidebar-close" id="sidebarClose">✕</button>
-        </div>
-        <ul class="nav-links">
-            <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
-            <li><a href="workout.html"   class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
-            <li><a href="bmi.html"       class="nav-link"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
-            <li><a href="diet.html"      class="nav-link"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
-            <li><a href="sessions.html"  class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
-            <li><a href="progress.html"  class="nav-link active"><span class="nav-icon">📈</span><span>Progress</span></a></li>
-            <li><a href="sleep.html"     class="nav-link"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
-            <li><a href="profile.html"   class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">🌙 Dark Mode</button>
-            <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
-        </div>
+  <!-- ── Sidebar ──────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-logo" href="dashboard.html">
+      <span class="sidebar-logo-mark">W&amp;O</span>
+      <span class="sidebar-logo-full">WorkIn&amp;Out</span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a class="nav-item" href="dashboard.html"><span class="nav-item-icon">🏠</span><span class="nav-item-text">Dashboard</span></a>
+      <a class="nav-item" href="bmi.html"><span class="nav-item-icon">📊</span><span class="nav-item-text">BMI</span></a>
+      <a class="nav-item" href="diet.html"><span class="nav-item-icon">🥗</span><span class="nav-item-text">Diet</span></a>
+      <a class="nav-item" href="workout.html"><span class="nav-item-icon">🏋️</span><span class="nav-item-text">Workout</span></a>
+      <a class="nav-item" href="sessions.html"><span class="nav-item-icon">⏱️</span><span class="nav-item-text">Sessions</span></a>
+      <span class="nav-section-label">Tracking</span>
+      <a class="nav-item active" href="progress.html"><span class="nav-item-icon">📈</span><span class="nav-item-text">Progress</span></a>
+      <a class="nav-item" href="sleep.html"><span class="nav-item-icon">💤</span><span class="nav-item-text">Recovery</span></a>
+      <a class="nav-item" href="profile.html"><span class="nav-item-icon">👤</span><span class="nav-item-text">Profile</span></a>
     </nav>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <button class="hamburger" id="hamburger">☰</button>
+    <div class="sidebar-footer">
+      <button class="nav-item" data-theme-toggle style="width:100%;text-align:left;">
+        <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+        <span class="nav-item-text">Toggle Theme</span>
+      </button>
+      <button class="nav-item" onclick="Auth && Auth.logout()" style="width:100%;text-align:left;color:#f87171;">
+        <span class="nav-item-icon">🚪</span>
+        <span class="nav-item-text">Logout</span>
+      </button>
+      <div class="sidebar-user" onclick="window.location.href='profile.html'">
+        <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role">Fitness Member</div>
+        </div>
+      </div>
+    </div>
+  </aside>
 
-    <!-- ══════════ MAIN CONTENT ══════════ -->
-    <main class="main-content">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- Topbar -->
-        <div class="topbar">
-            <div class="d-flex items-center gap-8">
-                <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
-                <span class="topbar-title">Progress Tracking</span>
+  <!-- ── Main ─────────────────────────────────────── -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="topbarHamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="topbar-title">Progress</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="theme-btn" data-theme-toggle title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <div class="page-container">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <h1>Your Progress</h1>
+        <p>Track weight, measurements, personal records and achievements.</p>
+        <div class="streak-badge">🔥 <span id="workout-streak">0</span> Day Streak</div>
+      </div>
+
+      <!-- Summary stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Workouts</div>
+          <div class="stat-value" id="total-workouts">0</div>
+          <div class="stat-unit">sessions logged</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Volume</div>
+          <div class="stat-value" id="total-volume">0</div>
+          <div class="stat-unit">kg lifted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Duration</div>
+          <div class="stat-value" id="avg-duration">0</div>
+          <div class="stat-unit">minutes per session</div>
+        </div>
+      </div>
+
+      <!-- Weight Tracking -->
+      <div class="section">
+        <div class="section-title"><span>⚖️</span> Weight Tracking</div>
+        <div class="grid-2">
+          <!-- Current weight card -->
+          <div class="card">
+            <div class="card-title">Current Weight</div>
+            <div class="weight-hero">
+              <span class="weight-current-val" id="current-weight">--</span>
+              <span class="weight-unit">kg</span>
             </div>
-            <div class="topbar-actions">
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
+            <span class="weight-change same" id="weight-change">No data yet</span>
+
+            <form id="weight-form" style="margin-top:20px;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Date</label>
+                  <input type="date" id="weight-date-input" name="date" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Weight (kg)</label>
+                  <input type="number" id="weight-log-input" name="weight" class="form-input"
+                         placeholder="e.g. 72.5" step="0.1" min="10" max="300" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;">Log Weight</button>
+            </form>
+          </div>
+
+          <!-- Chart card -->
+          <div class="card">
+            <div class="card-title">Weight Chart</div>
+            <div class="chart-wrap">
+              <canvas id="weight-chart"></canvas>
             </div>
+          </div>
         </div>
 
-        <div class="page-container">
+        <!-- History -->
+        <div id="weight-history" style="margin-top:16px;"></div>
+      </div>
 
-            <!-- ══ 1. Progress Overview Header ══ -->
-            <div class="section reveal">
-                <div class="page-header d-flex items-center justify-between flex-wrap gap-8">
-                    <div>
-                        <h2 style="font-family:'Poppins',sans-serif;font-weight:800;margin:0">Progress Tracking</h2>
-                        <p class="page-header-subtitle">Monitor your fitness journey over time</p>
-                    </div>
-                    <div class="streak-badge">
-                        🔥 <span id="workout-streak">0</span> Day Streak
-                    </div>
+      <!-- Body Measurements -->
+      <div class="section">
+        <div class="section-title"><span>📏</span> Body Measurements</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Log Measurements</div>
+            <form id="measurements-form">
+              <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-input" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Chest (cm)</label>
+                  <input type="number" name="chest" class="form-input" placeholder="e.g. 95" step="0.5" min="0" />
                 </div>
-                <div class="summary-stats">
-                    <div class="summary-stat">
-                        <div class="summary-stat-value" id="total-workouts">0</div>
-                        <div class="summary-stat-label">Total Workouts</div>
-                    </div>
-                    <div class="summary-stat">
-                        <div class="summary-stat-value" id="total-volume">0</div>
-                        <div class="summary-stat-label">Total Volume (kg)</div>
-                    </div>
-                    <div class="summary-stat">
-                        <div class="summary-stat-value" id="avg-duration">0</div>
-                        <div class="summary-stat-label">Avg Session (min)</div>
-                    </div>
+                <div class="form-group">
+                  <label class="form-label">Waist (cm)</label>
+                  <input type="number" name="waist" class="form-input" placeholder="e.g. 80" step="0.5" min="0" />
                 </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Hips (cm)</label>
+                  <input type="number" name="hips" class="form-input" placeholder="e.g. 98" step="0.5" min="0" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Bicep L (cm)</label>
+                  <input type="number" name="bicep" class="form-input" placeholder="e.g. 36" step="0.5" min="0" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Bicep R (cm)</label>
+                  <input type="number" name="bicepR" class="form-input" placeholder="e.g. 36" step="0.5" min="0" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Thigh L (cm)</label>
+                  <input type="number" name="thigh" class="form-input" placeholder="e.g. 55" step="0.5" min="0" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Thigh R (cm)</label>
+                  <input type="number" name="thighR" class="form-input" placeholder="e.g. 55" step="0.5" min="0" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Calf L (cm)</label>
+                  <input type="number" name="calf" class="form-input" placeholder="e.g. 38" step="0.5" min="0" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Calf R (cm)</label>
+                <input type="number" name="calfR" class="form-input" placeholder="e.g. 38" step="0.5" min="0" />
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;">Save Measurements</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Measurements Chart</div>
+            <div class="chart-wrap" style="height:260px;">
+              <canvas id="measurements-chart"></canvas>
             </div>
+            <div id="measurements-history"></div>
+          </div>
+        </div>
+      </div>
 
-            <!-- ══ 2. Weight Tracker ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">⚖️ Weight Tracker</h3>
+      <!-- Personal Records -->
+      <div class="section">
+        <div class="section-title"><span>🏆</span> Personal Records</div>
+        <div class="pr-layout">
+          <div>
+            <div id="pr-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Log New PR</div>
+            <form id="pr-form">
+              <div class="form-group">
+                <label class="form-label">Exercise</label>
+                <input type="text" id="pr-exercise" class="form-input" placeholder="e.g. Bench Press" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Value</label>
+                  <input type="number" id="pr-value" class="form-input" placeholder="e.g. 100" step="0.5" />
                 </div>
-                <div class="card p-12">
-                    <div class="d-flex items-start justify-between flex-wrap gap-12 mb-12">
-                        <div>
-                            <div class="weight-current">
-                                <span class="weight-current-val" id="current-weight">--</span>
-                                <span class="weight-current-unit">kg</span>
-                            </div>
-                            <span class="weight-change same" id="weight-change">No data yet</span>
-                        </div>
-                        <form id="weight-form" class="d-flex items-end gap-8 flex-wrap">
-                            <div class="form-group" style="margin-bottom:0">
-                                <label class="form-label">Date</label>
-                                <input type="date" id="weight-date-input" name="date" class="form-input" style="width:160px">
-                            </div>
-                            <div class="form-group" style="margin-bottom:0">
-                                <label class="form-label">Weight (kg)</label>
-                                <input type="number" id="weight-log-input" name="weight" class="form-input" placeholder="e.g. 72.5" step="0.1" min="10" max="300" style="width:130px">
-                            </div>
-                            <button type="submit" class="btn btn-primary">+ Log</button>
-                        </form>
-                    </div>
-                    <div class="chart-canvas-wrap">
-                        <canvas id="weight-chart"></canvas>
-                    </div>
-                    <div style="margin-top:20px">
-                        <h4 style="font-size:0.9rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Recent Entries</h4>
-                        <div id="weight-history"></div>
-                    </div>
+                <div class="form-group">
+                  <label class="form-label">Unit</label>
+                  <select id="pr-unit" class="form-select">
+                    <option value="kg">kg</option>
+                    <option value="lbs">lbs</option>
+                    <option value="reps">reps</option>
+                    <option value="min">min</option>
+                    <option value="km">km</option>
+                  </select>
                 </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;">Save PR 🏆</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo Comparison -->
+      <div class="section">
+        <div class="section-title"><span>📸</span> Progress Photos</div>
+        <div class="card">
+          <div class="photo-grid">
+            <div>
+              <div class="photo-label-top">Before</div>
+              <div class="photo-slot" id="before-slot" onclick="document.getElementById('before-upload').click()">
+                <div class="photo-upload-icon">��</div>
+                <div class="photo-slot-label">Tap to upload<br>before photo</div>
+              </div>
+              <div class="photo-date" id="before-date"></div>
+              <input type="file" id="before-upload" accept="image/*" style="display:none" />
             </div>
-
-            <!-- ══ 3. Body Measurements ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">📏 Body Measurements</h3>
-                </div>
-                <div class="card p-12">
-                    <form id="measurements-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Chest (cm)</label>
-                                <input type="number" name="chest" class="form-input" placeholder="e.g. 100" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Waist (cm)</label>
-                                <input type="number" name="waist" class="form-input" placeholder="e.g. 80" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Hips (cm)</label>
-                                <input type="number" name="hips" class="form-input" placeholder="e.g. 95" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Bicep L (cm)</label>
-                                <input type="number" name="bicep" class="form-input" placeholder="e.g. 35" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Bicep R (cm)</label>
-                                <input type="number" name="bicepR" class="form-input" placeholder="e.g. 35" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Thigh L (cm)</label>
-                                <input type="number" name="thigh" class="form-input" placeholder="e.g. 55" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Thigh R (cm)</label>
-                                <input type="number" name="thighR" class="form-input" placeholder="e.g. 55" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Calf L (cm)</label>
-                                <input type="number" name="calf" class="form-input" placeholder="e.g. 38" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Calf R (cm)</label>
-                                <input type="number" name="calfR" class="form-input" placeholder="e.g. 38" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Date</label>
-                                <input type="date" name="date" class="form-input">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-8">Save Measurements</button>
-                    </form>
-                    <div class="chart-canvas-wrap mt-12">
-                        <canvas id="measurements-chart"></canvas>
-                    </div>
-                    <div id="measurements-history" style="margin-top:16px"></div>
-                </div>
+            <div>
+              <div class="photo-label-top">After</div>
+              <div class="photo-slot" id="after-slot" onclick="document.getElementById('after-upload').click()">
+                <div class="photo-upload-icon">📷</div>
+                <div class="photo-slot-label">Tap to upload<br>after photo</div>
+              </div>
+              <div class="photo-date" id="after-date"></div>
+              <input type="file" id="after-upload" accept="image/*" style="display:none" />
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- ══ 4. Personal Records ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🏆 Personal Records</h3>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start" class="pr-layout">
-                    <div class="card p-12">
-                        <div id="pr-list"></div>
-                    </div>
-                    <div class="card p-12">
-                        <h4 style="font-family:'Poppins',sans-serif;font-weight:700;margin-bottom:16px">Add / Update PR</h4>
-                        <form id="pr-form">
-                            <div class="form-group">
-                                <label class="form-label">Exercise</label>
-                                <input type="text" id="pr-exercise" class="form-input" placeholder="e.g. Bench Press">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Value</label>
-                                    <input type="number" id="pr-value" class="form-input" placeholder="e.g. 100" step="0.5">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Unit</label>
-                                    <select id="pr-unit" class="form-select">
-                                        <option value="kg">kg</option>
-                                        <option value="lbs">lbs</option>
-                                        <option value="reps">reps</option>
-                                        <option value="min">min</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-full">🏆 Save PR</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+      <!-- Heart Rate Zones -->
+      <div class="section">
+        <div class="section-title"><span>❤️</span> Heart Rate Zones</div>
+        <div class="zone-grid" id="hr-zones-grid"></div>
+      </div>
 
-            <!-- ══ 5. Before / After Photos ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">📸 Before &amp; After Photos</h3>
-                </div>
-                <div class="card p-12">
-                    <div class="photo-grid">
-                        <div>
-                            <p class="form-label mb-4">Before Photo</p>
-                            <div class="photo-slot" id="before-slot" onclick="document.getElementById('before-upload').click()">
-                                <span class="photo-slot-icon">📷</span>
-                                <span class="photo-slot-label">Click to upload</span>
-                                <span class="photo-date" id="before-date"></span>
-                            </div>
-                            <input type="file" id="before-upload" accept="image/*" style="display:none">
-                        </div>
-                        <div>
-                            <p class="form-label mb-4">After Photo</p>
-                            <div class="photo-slot" id="after-slot" onclick="document.getElementById('after-upload').click()">
-                                <span class="photo-slot-icon">📷</span>
-                                <span class="photo-slot-label">Click to upload</span>
-                                <span class="photo-date" id="after-date"></span>
-                            </div>
-                            <input type="file" id="after-upload" accept="image/*" style="display:none">
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <!-- Achievements -->
+      <div class="section">
+        <div class="section-title"><span>🏅</span> Achievements</div>
+        <div class="achievements-grid" id="achievements-grid"></div>
+      </div>
 
-            <!-- ══ 6. Heart Rate Zones ══ -->
-            <div class="section reveal">
-                <div class="section-header d-flex items-center justify-between flex-wrap gap-8">
-                    <h3 class="section-title">❤️ Heart Rate Zones</h3>
-                    <span style="font-size:0.82rem;color:var(--text-muted)">Formula: Max HR = 220 − age</span>
-                </div>
-                <div class="zone-grid" id="hr-zones-grid"></div>
-            </div>
-
-            <!-- ══ 7. Achievements & Badges ══ -->
-            <div class="section reveal">
-                <div class="section-header">
-                    <h3 class="section-title">🏅 Achievements &amp; Badges</h3>
-                </div>
-                <div class="achievements-grid" id="achievements-grid"></div>
-            </div>
-
-        </div><!-- /page-container -->
-    </main>
-</div><!-- /app-layout -->
+    </div><!-- /page-container -->
+  </main>
+</div><!-- /layout -->
 
 <script src="js/utils.js"></script>
 <script src="js/theme.js"></script>
@@ -426,13 +718,13 @@
     'use strict';
 
     // ── Sidebar toggle ─────────────────────────
-    const sidebar  = document.getElementById('sidebar');
-    const overlay  = document.getElementById('sidebarOverlay');
-    const closeBtn = document.getElementById('sidebarClose');
+    const sidebar   = document.getElementById('sidebar');
+    const overlay   = document.getElementById('sidebarOverlay');
+    const closeBtn  = document.getElementById('sidebarClose');
     const hamburger = document.getElementById('hamburger');
     const topbarH   = document.getElementById('topbarHamburger');
 
-    function openSidebar()  { sidebar.classList.add('open');  overlay.classList.add('active'); }
+    function openSidebar()  { sidebar.classList.add('open');    overlay.classList.add('active'); }
     function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
 
     if (hamburger) hamburger.addEventListener('click', openSidebar);
@@ -492,7 +784,6 @@
     }
     updateWeightDisplay();
 
-    // Patch weight form to also update display
     const weightForm = document.getElementById('weight-form');
     if (weightForm) {
         weightForm.addEventListener('submit', () => setTimeout(updateWeightDisplay, 50));
@@ -524,11 +815,10 @@
 
     // ── Photos ─────────────────────────────────
     function initPhotoUpload(inputId, slotId, storageKey, dateElId) {
-        const input = document.getElementById(inputId);
-        const slot  = document.getElementById(slotId);
+        const input  = document.getElementById(inputId);
+        const slot   = document.getElementById(slotId);
         const dateEl = document.getElementById(dateElId);
 
-        // Load existing
         const saved = localStorage.getItem(storageKey);
         if (saved) {
             const data = JSON.parse(saved);
@@ -545,7 +835,7 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function (ev) {
-                const src = ev.target.result;
+                const src  = ev.target.result;
                 const date = new Date().toLocaleDateString();
                 localStorage.setItem(storageKey, JSON.stringify({ src, date }));
                 const img = document.createElement('img');
@@ -562,13 +852,13 @@
 
     // ── Heart Rate Zones ───────────────────────
     function renderHRZones() {
-        const age    = user ? (user.age || 30) : 30;
-        const maxHR  = 220 - age;
-        const zones  = [
-            { name: 'Zone 1 — Rest',     pct: '< 50%',   low: 0,         high: Math.round(maxHR * 0.50), color: '#718096', desc: 'Recovery & warm-up' },
-            { name: 'Zone 2 — Fat Burn', pct: '50–60%',  low: Math.round(maxHR * 0.50), high: Math.round(maxHR * 0.60), color: '#4a90d9', desc: 'Aerobic base building' },
-            { name: 'Zone 3 — Cardio',   pct: '60–80%',  low: Math.round(maxHR * 0.60), high: Math.round(maxHR * 0.80), color: '#ff8c00', desc: 'Endurance & fitness' },
-            { name: 'Zone 4 — Peak',     pct: '> 80%',   low: Math.round(maxHR * 0.80), high: maxHR,                    color: '#ff4757', desc: 'High intensity / VO₂ max' },
+        const age   = user ? (user.age || 30) : 30;
+        const maxHR = 220 - age;
+        const zones = [
+            { name: 'Zone 1 — Rest',     pct: '< 50%',  low: 0,                          high: Math.round(maxHR * 0.50), color: '#718096', desc: 'Recovery & warm-up'     },
+            { name: 'Zone 2 — Fat Burn', pct: '50–60%', low: Math.round(maxHR * 0.50),   high: Math.round(maxHR * 0.60), color: '#4a90d9', desc: 'Aerobic base building'  },
+            { name: 'Zone 3 — Cardio',   pct: '60–80%', low: Math.round(maxHR * 0.60),   high: Math.round(maxHR * 0.80), color: '#ff8c00', desc: 'Endurance & fitness'    },
+            { name: 'Zone 4 — Peak',     pct: '> 80%',  low: Math.round(maxHR * 0.80),   high: maxHR,                    color: '#ff4757', desc: 'High intensity / VO₂ max' },
         ];
         const grid = document.getElementById('hr-zones-grid');
         if (!grid) return;
@@ -584,23 +874,20 @@
 
     // ── Achievements ───────────────────────────
     function renderAchievements() {
-        const sessions = (window.SessionManager ? SessionManager.getSessions() : []);
-        const streak   = ProgressManager.getWorkoutStreak();
-        const prs      = ProgressManager.getPersonalRecords();
-        const weight   = ProgressManager.getWeightHistory();
-
-        const weightLost = weight.length > 1
-            ? weight[0].weight - weight[weight.length - 1].weight
-            : 0;
+        const sessions   = (window.SessionManager ? SessionManager.getSessions() : []);
+        const streak     = ProgressManager.getWorkoutStreak();
+        const prs        = ProgressManager.getPersonalRecords();
+        const weight     = ProgressManager.getWeightHistory();
+        const weightLost = weight.length > 1 ? weight[0].weight - weight[weight.length - 1].weight : 0;
 
         const badges = [
-            { icon: '🏅', name: 'First Workout',     desc: 'Complete your first session',     unlocked: sessions.length >= 1 },
-            { icon: '🔥', name: '7-Day Streak',       desc: '7 consecutive workout days',       unlocked: streak >= 7 },
-            { icon: '💪', name: '30-Day Streak',      desc: '30 consecutive workout days',      unlocked: streak >= 30 },
-            { icon: '👑', name: '100 Workouts',       desc: 'Log 100 total workout sessions',   unlocked: sessions.length >= 100 },
-            { icon: '🏆', name: 'PR Breaker',         desc: 'Set your first personal record',   unlocked: prs.length >= 1 },
-            { icon: '⭐', name: '5kg Lost',           desc: 'Lose 5kg from starting weight',    unlocked: weightLost >= 5 },
-            { icon: '🎯', name: 'Consistency King',   desc: 'Log 20+ sessions in a month',      unlocked: sessions.length >= 20 },
+            { icon: '🏅', name: 'First Workout',   desc: 'Complete your first session',   unlocked: sessions.length >= 1  },
+            { icon: '🔥', name: '7-Day Streak',     desc: '7 consecutive workout days',     unlocked: streak >= 7           },
+            { icon: '💪', name: '30-Day Streak',    desc: '30 consecutive workout days',    unlocked: streak >= 30          },
+            { icon: '👑', name: '100 Workouts',     desc: 'Log 100 total workout sessions', unlocked: sessions.length >= 100},
+            { icon: '🏆', name: 'PR Breaker',       desc: 'Set your first personal record', unlocked: prs.length >= 1       },
+            { icon: '⭐', name: '5 kg Lost',        desc: 'Lose 5 kg from starting weight', unlocked: weightLost >= 5       },
+            { icon: '🎯', name: 'Consistency King', desc: 'Log 20+ sessions in a month',    unlocked: sessions.length >= 20 },
         ];
 
         const grid = document.getElementById('achievements-grid');
@@ -610,7 +897,7 @@
                 <div class="achievement-badge-icon">${b.icon}</div>
                 <div class="achievement-badge-name">${b.name}</div>
                 <div class="achievement-badge-desc">${b.desc}</div>
-                ${b.unlocked ? '<div style="font-size:0.68rem;color:var(--accent-primary);font-weight:700;margin-top:6px">✓ Unlocked</div>' : ''}
+                ${b.unlocked ? '<div style="font-size:0.68rem;color:var(--accent);font-weight:700;margin-top:6px">✓ Unlocked</div>' : ''}
             </div>`).join('');
     }
     renderAchievements();
@@ -619,8 +906,7 @@
     function adjustPRLayout() {
         const layout = document.querySelector('.pr-layout');
         if (!layout) return;
-        if (window.innerWidth < 900) layout.style.gridTemplateColumns = '1fr';
-        else layout.style.gridTemplateColumns = '1fr 340px';
+        layout.style.gridTemplateColumns = window.innerWidth < 900 ? '1fr' : '1fr 340px';
     }
     adjustPRLayout();
     window.addEventListener('resize', adjustPRLayout);
