@@ -270,7 +270,11 @@
   }
 
   /* ── Init ────────────────────────────────── */
+  let _initialized = false;
   function init() {
+    if (_initialized) return;
+    _initialized = true;
+
     // Insert gauge SVG if placeholder exists
     const gaugeHolder = document.querySelector('#gauge-holder');
     if (gaugeHolder) gaugeHolder.innerHTML = buildGaugeSVG();
