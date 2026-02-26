@@ -343,12 +343,28 @@ p {
   transition: opacity var(--transition-fast);
 }
 
+.nav-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+}
+
+.nav-item-icon svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
 .nav-item:hover {
   background: var(--bg-card);
   color: var(--text-primary);
 }
 
-.nav-item:hover svg {
+.nav-item:hover svg,
+.nav-item:hover .nav-item-icon svg {
   opacity: 1;
 }
 
@@ -357,7 +373,8 @@ p {
   color: var(--accent-primary);
 }
 
-.nav-item.active svg {
+.nav-item.active svg,
+.nav-item.active .nav-item-icon svg {
   opacity: 1;
   color: var(--accent-primary);
 }

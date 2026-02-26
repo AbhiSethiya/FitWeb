@@ -654,7 +654,7 @@
                 <h2 id="hook-heading">Most people quit<br>fitness in 30 days.</h2>
             </div>
             <div class="hook-right reveal reveal-delay-2">
-                <div class="hook-stat">87%</div>
+                <div class="hook-stat" data-counter="87" data-suffix="%" id="hook-stat-val">0%</div>
                 <p class="hook-stat-label">of WorkIn&amp;Out users stay consistent past 90 days.</p>
             </div>
         </div>
@@ -982,6 +982,22 @@
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
+                        // Animate counters inside revealed elements
+                        entry.target.querySelectorAll('[data-counter]').forEach(function(el) {
+                            var target = parseFloat(el.dataset.counter);
+                            var suffix = el.dataset.suffix || '';
+                            if (!isNaN(target)) {
+                                var startTime = performance.now();
+                                var duration = 1500;
+                                (function update(currentTime) {
+                                    var elapsed = currentTime - startTime;
+                                    var progress = Math.min(elapsed / duration, 1);
+                                    var eased = 1 - Math.pow(1 - progress, 3);
+                                    el.textContent = Math.round(target * eased) + suffix;
+                                    if (progress < 1) requestAnimationFrame(update);
+                                })(performance.now());
+                            }
+                        });
                         observer.unobserve(entry.target);
                     }
                 });

@@ -15,48 +15,42 @@
         h1,h2,h3,h4,.section-title,.page-heading { font-family: 'Space Grotesk', sans-serif; }
 
         /* ── Sidebar ── */
-        .sidebar-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 10px;
-            font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.05rem;
-            color: var(--text-primary); text-decoration: none;
-        }
-        .logo span { color: #22c55e; }
-        .sidebar-close {
-            background: none; border: none; cursor: pointer; color: var(--text-muted);
-            font-size: 1rem; padding: 6px 8px; border-radius: 8px;
-            line-height: 1; transition: background 0.15s; display: none;
-        }
-        .sidebar-close:hover { background: rgba(255,255,255,0.06); }
-        .nav-links {
-            list-style: none; padding: 12px 10px; margin: 0;
-            flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
-        }
-        .nav-links li { margin: 0; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-            border-radius: 10px; color: var(--text-secondary); font-weight: 500;
-            font-size: 0.9rem; text-decoration: none; transition: all 0.15s ease; position: relative;
-        }
-        .nav-link:hover { background: rgba(34,197,94,0.08); color: #22c55e; }
-        .nav-link.active { background: rgba(34,197,94,0.12); color: #22c55e; font-weight: 600; }
-        .nav-link.active::before {
-            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
-            width: 3px; background: #22c55e; border-radius: 0 3px 3px 0;
-        }
-        .nav-icon { font-size: 1.1rem; flex-shrink: 0; width: 20px; text-align: center; }
-        @media (max-width: 768px) { .sidebar-close { display: flex; align-items: center; justify-content: center; } }
+        .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: var(--nav-width, 260px); background: var(--nav-bg); border-right: 1px solid var(--nav-border); display: flex; flex-direction: column; z-index: 200; transition: transform 0.3s ease; overflow: hidden; }
+        .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 22px 20px 18px; border-bottom: 1px solid var(--nav-border); text-decoration: none; flex-shrink: 0; }
+        .sidebar-logo-mark { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--accent-primary); letter-spacing: -0.5px; white-space: nowrap; line-height: 1; }
+        .sidebar-logo-full { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+        .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 10px; scrollbar-width: none; display: flex; flex-direction: column; gap: 2px; }
+        .sidebar-nav::-webkit-scrollbar { display: none; }
+        .nav-section-label { display: block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); padding: 14px 10px 6px; white-space: nowrap; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--text-secondary); font-weight: 500; font-size: 0.9rem; text-decoration: none; transition: all 0.15s ease; position: relative; white-space: nowrap; border: none; background: none; cursor: pointer; width: 100%; box-sizing: border-box; }
+        .nav-item:hover { background: rgba(34,197,94,0.08); color: var(--text-primary); }
+        .nav-item.active { background: rgba(34,197,94,0.12); color: var(--accent-primary); font-weight: 600; }
+        .nav-item.active::before { content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 3px; background: var(--accent-primary); border-radius: 0 3px 3px 0; }
+        .nav-item-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 22px; }
+        .nav-item-icon svg { width: 18px; height: 18px; opacity: 0.7; transition: opacity 0.15s; }
+        .nav-item:hover .nav-item-icon svg, .nav-item.active .nav-item-icon svg { opacity: 1; }
+        .nav-item.active .nav-item-icon svg { color: var(--accent-primary); }
+        .nav-item-text { transition: opacity 0.3s; }
+        .sidebar-footer { padding: 10px 10px 14px; border-top: 1px solid var(--nav-border); flex-shrink: 0; }
+        .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 10px; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
+        .sidebar-user:hover { background: rgba(255,255,255,0.05); }
+        .sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(34,197,94,0.15); color: var(--accent-primary); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .sidebar-user-info { overflow: hidden; }
+        .sidebar-user-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .sidebar-user-role { font-size: 0.72rem; color: var(--text-muted); }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199; backdrop-filter: blur(2px); }
+        .sidebar-overlay.active { display: block; }
+        @media (max-width: 767px) { .sidebar { transform: translateX(-100%); width: 260px; box-shadow: 4px 0 24px rgba(0,0,0,0.5); } .sidebar.open { transform: translateX(0); } }
+        @media (min-width: 768px) { .main-content { margin-left: 260px; } }
+        .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.05); transition: background 0.15s; border: none; cursor: pointer; position: fixed; top: 14px; left: 14px; z-index: 201; }
+        .hamburger:hover { background: rgba(255,255,255,0.1); }
+        .hamburger span { display: block; height: 2px; width: 18px; margin: 0 auto; background: #9ca3af; border-radius: 2px; transition: transform 0.25s, opacity 0.25s; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        @media (max-width: 767px) { .hamburger { display: flex; } }
 
-        /* ── Topbar hamburger ── */
-        .topbar-hamburger {
-            background: none; border: none; font-size: 1.4rem; cursor: pointer;
-            color: var(--text-primary); padding: 4px 8px; border-radius: 8px;
-            display: none; line-height: 1;
-        }
-        @media (max-width: 768px) { .topbar-hamburger { display: block; } }
+
 
         /* ── Page heading ── */
         .page-heading {
@@ -412,34 +406,76 @@
         }
         .empty-meals-icon { font-size: 3rem; margin-bottom: 12px; }
         .empty-meals-text { font-size: 0.9rem; }
+
+        /* ════════════════════════════════════
+           ADD RECIPE MODAL
+        ════════════════════════════════════ */
+        .add-recipe-form { display: flex; flex-direction: column; gap: 16px; }
+        .add-recipe-form .form-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px; }
+        .add-recipe-form .form-input, .add-recipe-form .form-textarea { background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; color: #f9fafb; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.15s; width: 100%; box-sizing: border-box; }
+        .add-recipe-form .form-input:focus, .add-recipe-form .form-textarea:focus { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.15); }
+        .add-recipe-form .form-textarea { resize: vertical; min-height: 80px; }
+        .add-recipe-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 480px) { .add-recipe-form .form-row { grid-template-columns: 1fr; } }
+        .add-recipe-form .btn-save-recipe { width: 100%; padding: 12px; background: #22c55e; color: #000; border: none; border-radius: 10px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
+        .add-recipe-form .btn-save-recipe:hover { background: #16a34a; }
+        .user-recipes-section { margin-top: 28px; }
+        .user-recipe-card { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; transition: transform 0.2s, box-shadow 0.2s; }
+        .user-recipe-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+        .user-recipe-info { flex: 1; min-width: 0; }
+        .user-recipe-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; color: #f9fafb; margin-bottom: 4px; }
+        .user-recipe-meta { font-size: 0.78rem; color: #6b7280; }
+        .user-recipe-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        .btn-delete-recipe { background: none; border: 1px solid rgba(239,68,68,0.3); color: #f87171; border-radius: 8px; padding: 5px 10px; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; }
+        .btn-delete-recipe:hover { background: rgba(239,68,68,0.1); border-color: #f87171; }
+        .btn-log-user-recipe { background: rgba(34,197,94,0.12); border: none; color: #22c55e; border-radius: 8px; padding: 5px 10px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+        .btn-log-user-recipe:hover { background: rgba(34,197,94,0.2); }
     </style>
 </head>
 <body>
 <div class="app-layout">
 
     <!-- ══════════ SIDEBAR ══════════ -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">🏋️ <span>WorkIn&amp;Out</span></div>
-            <button class="sidebar-close" id="sidebarClose">✕</button>
-        </div>
-        <ul class="nav-links">
-            <li><a href="dashboard.html" class="nav-link"><span class="nav-icon">🏠</span><span>Dashboard</span></a></li>
-            <li><a href="workout.html"   class="nav-link"><span class="nav-icon">💪</span><span>Workouts</span></a></li>
-            <li><a href="bmi.html"       class="nav-link"><span class="nav-icon">⚖️</span><span>BMI</span></a></li>
-            <li><a href="diet.html"      class="nav-link active"><span class="nav-icon">🥗</span><span>Diet</span></a></li>
-            <li><a href="sessions.html"  class="nav-link"><span class="nav-icon">⏱️</span><span>Sessions</span></a></li>
-            <li><a href="progress.html"  class="nav-link"><span class="nav-icon">📈</span><span>Progress</span></a></li>
-            <li><a href="sleep.html"     class="nav-link"><span class="nav-icon">🌿</span><span>Recovery</span></a></li>
-            <li><a href="profile.html"   class="nav-link"><span class="nav-icon">👤</span><span>Profile</span></a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()">☀️ Light Mode</button>
-            <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Logout</button>
-        </div>
+<aside class="sidebar" id="sidebar">
+    <a class="sidebar-logo" href="dashboard.html">
+      <span class="sidebar-logo-mark">W&amp;O</span>
+      <span class="sidebar-logo-full">WorkIn&amp;Out</span>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a class="nav-item" href="dashboard.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="nav-item-text">Dashboard</span></a>
+      <a class="nav-item" href="bmi.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span><span class="nav-item-text">BMI</span></a>
+      <a class="nav-item active" href="diet.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></span><span class="nav-item-text">Diet</span></a>
+      <a class="nav-item" href="workout.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11"/><path d="M6.5 17.5h11"/><path d="M6 4v16"/><path d="M18 4v16"/><path d="M4 8h3"/><path d="M4 16h3"/><path d="M17 8h3"/><path d="M17 16h3"/></svg></span><span class="nav-item-text">Workout</span></a>
+      <a class="nav-item" href="sessions.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><span class="nav-item-text">Sessions</span></a>
+      <span class="nav-section-label">Tracking</span>
+      <a class="nav-item" href="progress.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span class="nav-item-text">Progress</span></a>
+      <a class="nav-item" href="sleep.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span><span class="nav-item-text">Recovery</span></a>
+      <a class="nav-item" href="profile.html"><span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="nav-item-text">Profile</span></a>
     </nav>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <button class="hamburger" id="hamburger">☰</button>
+    <div class="sidebar-footer">
+      <button class="nav-item" data-theme-toggle style="width:100%;text-align:left;">
+        <span class="nav-item-icon"><span class="theme-icon">🌙</span></span>
+        <span class="nav-item-text">Toggle Theme</span>
+      </button>
+      <button class="nav-item" onclick="Auth && Auth.logout()" style="width:100%;text-align:left;color:#f87171;">
+        <span class="nav-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+        <span class="nav-item-text">Logout</span>
+      </button>
+      <div class="sidebar-user" onclick="window.location.href='profile.html'">
+        <div class="sidebar-avatar" id="sidebar-avatar">U</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role">Fitness Member</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <!-- /sidebar -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
 
     <!-- ══════════ MAIN CONTENT ══════════ -->
     <main class="main-content">
@@ -447,7 +483,6 @@
         <!-- Top bar -->
         <div class="topbar">
             <div class="d-flex items-center gap-8">
-                <button class="topbar-hamburger" id="topbarHamburger" aria-label="Menu">☰</button>
                 <div>
                     <div class="page-heading">Diet &amp; Nutrition</div>
                     <div class="page-subheading">Plan your meals and track your macros</div>
@@ -640,6 +675,10 @@
             <div class="section reveal">
                 <div class="section-header">
                     <h3 class="section-title">🍽️ Meal Browser</h3>
+                    <button class="btn-ghost-sm" onclick="openAddRecipeModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add Your Own Recipe
+                    </button>
                 </div>
 
                 <!-- Filter pills -->
@@ -674,6 +713,14 @@
                         <div class="empty-meals-text">Loading meals…</div>
                     </div>
                 </div>
+
+                <!-- User-added recipes -->
+                <div class="user-recipes-section" id="user-recipes-section" style="display:none">
+                    <div class="section-header" style="margin-top:24px">
+                        <h3 class="section-title">📝 My Recipes</h3>
+                    </div>
+                    <div id="user-recipes-list" style="display:flex;flex-direction:column;gap:10px"></div>
+                </div>
             </div>
 
         </div><!-- /page-container -->
@@ -695,6 +742,65 @@
     </div>
 </div>
 
+<!-- Add Recipe Modal -->
+<div class="modal-overlay hidden" id="add-recipe-modal-overlay" onclick="if(event.target===this)closeAddRecipeModal()">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeAddRecipeModal()">✕</button>
+        <div class="modal-title" style="margin-bottom:20px">Add Your Own Recipe</div>
+        <form class="add-recipe-form" id="add-recipe-form" onsubmit="return false;">
+            <div>
+                <label class="form-label">Recipe Name *</label>
+                <input type="text" class="form-input" id="recipe-name" placeholder="e.g. Protein Smoothie Bowl" required maxlength="60">
+            </div>
+            <div class="form-row">
+                <div>
+                    <label class="form-label">Calories (kcal) *</label>
+                    <input type="number" class="form-input" id="recipe-calories" placeholder="450" min="1" max="9999" required>
+                </div>
+                <div>
+                    <label class="form-label">Category</label>
+                    <select class="form-input" id="recipe-category">
+                        <option value="snack">Snack</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label class="form-label">Protein (g)</label>
+                    <input type="number" class="form-input" id="recipe-protein" placeholder="30" min="0" max="999">
+                </div>
+                <div>
+                    <label class="form-label">Carbs (g)</label>
+                    <input type="number" class="form-input" id="recipe-carbs" placeholder="40" min="0" max="999">
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label class="form-label">Fats (g)</label>
+                    <input type="number" class="form-input" id="recipe-fats" placeholder="15" min="0" max="999">
+                </div>
+                <div>
+                    <label class="form-label">Servings</label>
+                    <input type="number" class="form-input" id="recipe-servings" placeholder="1" min="1" max="99" value="1">
+                </div>
+            </div>
+            <div>
+                <label class="form-label">Ingredients (one per line)</label>
+                <textarea class="form-textarea" id="recipe-ingredients" placeholder="2 scoops protein powder&#10;1 cup almond milk&#10;1 banana"></textarea>
+            </div>
+            <div>
+                <label class="form-label">Instructions (one step per line)</label>
+                <textarea class="form-textarea" id="recipe-instructions" placeholder="Blend all ingredients together&#10;Pour into bowl&#10;Top with granola"></textarea>
+            </div>
+            <div id="recipe-form-error" style="color:#f87171;font-size:0.82rem;display:none"></div>
+            <button type="button" class="btn-save-recipe" onclick="saveUserRecipe()">Save Recipe</button>
+        </form>
+    </div>
+</div>
+
 <!-- Scripts -->
 <script src="js/utils.js"></script>
 <script src="js/theme.js"></script>
@@ -702,26 +808,7 @@
 <script src="js/app.js"></script>
 <script src="js/diet.js"></script>
 <script>
-    /* ── Sidebar mobile ── */
-    (function () {
-        function closeSidebar() {
-            document.querySelector('.sidebar').classList.remove('open');
-            document.querySelector('.sidebar-overlay').classList.remove('active');
-            var h = document.querySelector('.hamburger');
-            if (h) h.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
-        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-        document.querySelectorAll('.nav-link').forEach(function (l) {
-            l.addEventListener('click', function () { if (window.innerWidth <= 768) closeSidebar(); });
-        });
-        var th = document.getElementById('topbarHamburger');
-        if (th) th.addEventListener('click', function () {
-            document.querySelector('.sidebar').classList.toggle('open');
-            document.querySelector('.sidebar-overlay').classList.toggle('active');
-        });
-    })();
+    /* Sidebar toggle handled by app.js */
 
     /* ── State ── */
     var _activeGoal   = 'lose_weight';
@@ -1004,6 +1091,114 @@
         ThemeManager.toggle = function () { _origToggle(); syncThemeBtn(); };
     }
 
+    /* ════════════════════════════════════
+       ADD RECIPE MODAL
+    ════════════════════════════════════ */
+    var USER_RECIPES_KEY = 'workinout_user_recipes';
+
+    function getUserRecipes() {
+        try { return JSON.parse(localStorage.getItem(USER_RECIPES_KEY)) || []; } catch(e) { return []; }
+    }
+
+    function saveUserRecipes(recipes) {
+        localStorage.setItem(USER_RECIPES_KEY, JSON.stringify(recipes));
+    }
+
+    window.openAddRecipeModal = function () {
+        document.getElementById('add-recipe-form').reset();
+        document.getElementById('recipe-form-error').style.display = 'none';
+        document.getElementById('add-recipe-modal-overlay').classList.remove('hidden');
+    };
+
+    window.closeAddRecipeModal = function () {
+        document.getElementById('add-recipe-modal-overlay').classList.add('hidden');
+    };
+
+    window.saveUserRecipe = function () {
+        var name = document.getElementById('recipe-name').value.trim();
+        var calories = parseInt(document.getElementById('recipe-calories').value);
+        var errEl = document.getElementById('recipe-form-error');
+
+        if (!name) { errEl.textContent = 'Recipe name is required.'; errEl.style.display = 'block'; return; }
+        if (!calories || calories < 1) { errEl.textContent = 'Please enter valid calorie count.'; errEl.style.display = 'block'; return; }
+
+        var recipe = {
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+            name: name,
+            calories: calories,
+            protein: parseInt(document.getElementById('recipe-protein').value) || 0,
+            carbs: parseInt(document.getElementById('recipe-carbs').value) || 0,
+            fats: parseInt(document.getElementById('recipe-fats').value) || 0,
+            servings: parseInt(document.getElementById('recipe-servings').value) || 1,
+            category: document.getElementById('recipe-category').value,
+            ingredients: document.getElementById('recipe-ingredients').value.trim().split('\n').filter(Boolean),
+            instructions: document.getElementById('recipe-instructions').value.trim().split('\n').filter(Boolean),
+        };
+
+        var recipes = getUserRecipes();
+        recipes.unshift(recipe);
+        saveUserRecipes(recipes);
+        renderUserRecipes();
+        closeAddRecipeModal();
+    };
+
+    window.deleteUserRecipe = function (id) {
+        var recipes = getUserRecipes().filter(function (r) { return r.id !== id; });
+        saveUserRecipes(recipes);
+        renderUserRecipes();
+    };
+
+    function renderUserRecipes() {
+        var recipes = getUserRecipes();
+        var section = document.getElementById('user-recipes-section');
+        var list = document.getElementById('user-recipes-list');
+        if (!recipes.length) { section.style.display = 'none'; return; }
+        section.style.display = 'block';
+        list.innerHTML = '';
+        recipes.forEach(function (r) {
+            var card = document.createElement('div');
+            card.className = 'user-recipe-card';
+
+            var nameEl = document.createElement('div');
+            nameEl.className = 'user-recipe-name';
+            nameEl.textContent = r.name;
+
+            var metaEl = document.createElement('div');
+            metaEl.className = 'user-recipe-meta';
+            metaEl.textContent = r.calories + ' kcal · ' + r.protein + 'g P · ' + r.carbs + 'g C · ' + r.fats + 'g F · ' + r.category.charAt(0).toUpperCase() + r.category.slice(1);
+
+            var infoEl = document.createElement('div');
+            infoEl.className = 'user-recipe-info';
+            infoEl.appendChild(nameEl);
+            infoEl.appendChild(metaEl);
+
+            var logBtn = document.createElement('button');
+            logBtn.className = 'btn-log-user-recipe';
+            logBtn.textContent = 'Log';
+            logBtn.addEventListener('click', function () {
+                if (DietManager && DietManager.logMeal) {
+                    DietManager.logMeal({ name: r.name, calories: r.calories, protein: r.protein, carbs: r.carbs, fats: r.fats, image: '🍴' });
+                    renderLoggedMeals();
+                    refreshLogProgressBars();
+                }
+            });
+
+            var delBtn = document.createElement('button');
+            delBtn.className = 'btn-delete-recipe';
+            delBtn.textContent = 'Delete';
+            delBtn.addEventListener('click', function () { deleteUserRecipe(r.id); });
+
+            var actionsEl = document.createElement('div');
+            actionsEl.className = 'user-recipe-actions';
+            actionsEl.appendChild(logBtn);
+            actionsEl.appendChild(delBtn);
+
+            card.appendChild(infoEl);
+            card.appendChild(actionsEl);
+            list.appendChild(card);
+        });
+    }
+
     /* ── Init ── */
     document.addEventListener('DOMContentLoaded', function () {
         ThemeManager.init();
@@ -1011,6 +1206,7 @@
         App.init();
         DietManager.init();
         syncThemeBtn();
+        renderUserRecipes();
 
         document.getElementById('log-date').textContent =
             new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' });
