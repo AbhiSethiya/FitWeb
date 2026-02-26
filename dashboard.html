@@ -371,13 +371,14 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
     .stat-emoji {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       width: 28px;
       height: 28px;
+      flex-shrink: 0;
     }
-    .stat-emoji svg { display: block; flex-shrink: 0; }
+    .stat-emoji svg { width: 24px; height: 24px; display: block; flex-shrink: 0; }
     .stat-value {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 2rem;
