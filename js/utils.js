@@ -145,7 +145,7 @@
     container.appendChild(toast);
 
     const close = () => {
-      toast.classList.add('hiding');
+      toast.classList.add('removing');
       toast.addEventListener('animationend', () => toast.remove(), { once: true });
     };
 
