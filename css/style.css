@@ -359,7 +359,7 @@ p {
 }
 
 .nav-item:hover {
-  background: var(--bg-card);
+  background: var(--bg-elevated);
   color: var(--text-primary);
 }
 
@@ -527,7 +527,7 @@ p {
 .card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-hover);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-color);
 }
 
 .card-flat {
@@ -753,7 +753,7 @@ p {
 .btn-ghost:hover {
   background: var(--bg-card);
   color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--border-color);
 }
 
 /* Outline accent */
@@ -3047,4 +3047,29 @@ tbody tr:hover td {
     border: 1px solid #ddd;
     box-shadow: none;
   }
+}
+
+/* ═══════════════════════════════════════════
+   33. LIGHT THEME OVERRIDES
+═══════════════════════════════════════════ */
+[data-theme="light"] .card {
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .sidebar {
+  background: var(--nav-bg);
+  border-right-color: var(--nav-border);
+  box-shadow: var(--shadow-sm);
 }
