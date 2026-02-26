@@ -986,7 +986,7 @@
                         entry.target.querySelectorAll('[data-counter]').forEach(function(el) {
                             var target = parseFloat(el.dataset.counter);
                             var suffix = el.dataset.suffix || '';
-                            if (!isNaN(target) && window.Utils && Utils.animateCounter) {
+                            if (!isNaN(target)) {
                                 var startTime = performance.now();
                                 var duration = 1500;
                                 (function update(currentTime) {

@@ -1123,7 +1123,7 @@
         if (!calories || calories < 1) { errEl.textContent = 'Please enter valid calorie count.'; errEl.style.display = 'block'; return; }
 
         var recipe = {
-            id: Date.now(),
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
             name: name,
             calories: calories,
             protein: parseInt(document.getElementById('recipe-protein').value) || 0,
@@ -1154,20 +1154,49 @@
         var list = document.getElementById('user-recipes-list');
         if (!recipes.length) { section.style.display = 'none'; return; }
         section.style.display = 'block';
-        list.innerHTML = recipes.map(function (r) {
-            return '<div class="user-recipe-card">' +
-                '<div class="user-recipe-info">' +
-                    '<div class="user-recipe-name">' + r.name + '</div>' +
-                    '<div class="user-recipe-meta">' + r.calories + ' kcal &middot; ' +
-                        r.protein + 'g P &middot; ' + r.carbs + 'g C &middot; ' + r.fats + 'g F &middot; ' +
-                        r.category.charAt(0).toUpperCase() + r.category.slice(1) + '</div>' +
-                '</div>' +
-                '<div class="user-recipe-actions">' +
-                    '<button class="btn-log-user-recipe" onclick="DietManager && DietManager.logMeal && (DietManager.logMeal({name:' + JSON.stringify(r.name) + ',calories:' + r.calories + ',protein:' + r.protein + ',carbs:' + r.carbs + ',fats:' + r.fats + ',image:\'🍴\'}), renderLoggedMeals(), refreshLogProgressBars())">Log</button>' +
-                    '<button class="btn-delete-recipe" onclick="deleteUserRecipe(' + r.id + ')">Delete</button>' +
-                '</div>' +
-            '</div>';
-        }).join('');
+        list.innerHTML = '';
+        recipes.forEach(function (r) {
+            var card = document.createElement('div');
+            card.className = 'user-recipe-card';
+
+            var nameEl = document.createElement('div');
+            nameEl.className = 'user-recipe-name';
+            nameEl.textContent = r.name;
+
+            var metaEl = document.createElement('div');
+            metaEl.className = 'user-recipe-meta';
+            metaEl.textContent = r.calories + ' kcal · ' + r.protein + 'g P · ' + r.carbs + 'g C · ' + r.fats + 'g F · ' + r.category.charAt(0).toUpperCase() + r.category.slice(1);
+
+            var infoEl = document.createElement('div');
+            infoEl.className = 'user-recipe-info';
+            infoEl.appendChild(nameEl);
+            infoEl.appendChild(metaEl);
+
+            var logBtn = document.createElement('button');
+            logBtn.className = 'btn-log-user-recipe';
+            logBtn.textContent = 'Log';
+            logBtn.addEventListener('click', function () {
+                if (DietManager && DietManager.logMeal) {
+                    DietManager.logMeal({ name: r.name, calories: r.calories, protein: r.protein, carbs: r.carbs, fats: r.fats, image: '🍴' });
+                    renderLoggedMeals();
+                    refreshLogProgressBars();
+                }
+            });
+
+            var delBtn = document.createElement('button');
+            delBtn.className = 'btn-delete-recipe';
+            delBtn.textContent = 'Delete';
+            delBtn.addEventListener('click', function () { deleteUserRecipe(r.id); });
+
+            var actionsEl = document.createElement('div');
+            actionsEl.className = 'user-recipe-actions';
+            actionsEl.appendChild(logBtn);
+            actionsEl.appendChild(delBtn);
+
+            card.appendChild(infoEl);
+            card.appendChild(actionsEl);
+            list.appendChild(card);
+        });
     }
 
     /* ── Init ── */
