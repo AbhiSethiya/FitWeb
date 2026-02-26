@@ -240,7 +240,7 @@
   }
 
   function _onRestComplete() {
-    Utils.showToast('Rest over — time for your next set! 💪', 'info');
+    Utils.showToast('Rest over — time for your next set!', 'info');
     // Vibrate if supported
     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
   }
@@ -268,35 +268,35 @@
 
     return `
       <div class="card text-center mb-12" style="background:var(--gradient-primary)">
-        <div style="font-size:3rem">🎉</div>
+        <div style="font-size:2rem;color:#fff">✓</div>
         <h2 style="color:#fff;margin:8px 0 4px">Workout Complete!</h2>
         <p style="color:rgba(255,255,255,0.85)">${s.planName || 'Session'} finished</p>
       </div>
 
       <div class="stats-grid mb-12">
         <div class="stat-card">
-          <div class="stat-icon teal">⏱</div>
+          <div class="stat-icon teal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           <div class="stat-info">
             <div class="stat-value">${duration}</div>
             <div class="stat-label">Duration</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon purple">✅</div>
+          <div class="stat-icon purple"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>
           <div class="stat-info">
             <div class="stat-value">${summary.totalSets || 0}</div>
             <div class="stat-label">Sets Completed</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon warning">🔢</div>
+          <div class="stat-icon warning"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
           <div class="stat-info">
             <div class="stat-value">${Utils.formatNumber(summary.totalReps || 0)}</div>
             <div class="stat-label">Total Reps</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon danger">🏋️</div>
+          <div class="stat-icon danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5h11M6.5 17.5h11M12 2v20M4 9l2.5 2.5L4 14M20 9l-2.5 2.5L20 14"/></svg></div>
           <div class="stat-info">
             <div class="stat-value">${Utils.formatNumber(summary.totalVolume || 0)}</div>
             <div class="stat-label">Volume (kg)</div>
